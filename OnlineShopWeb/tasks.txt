@@ -1,0 +1,9 @@
+1.Create a singleton class that with remember the current user.
+2.Create a Controller that show information about the current user. The information of the current user is allowed to be static
+3.By using the type List<Classname> create a singleton Class that holds a list of the users
+4.By using the same Controller as in 2. show a list of the users
+5.Try to create a menu in the Browser where you can switch between points 1-4 start different things
+
+6. Singleton for the types of items in a Webshop
+
+Meeting with the whole group at 2024.03.24 at 11:00
