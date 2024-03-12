@@ -2,6 +2,9 @@
 
 internal class Employee : Person, IEmployee
 {
+
+
+  //public double AreaOfCircle { get; set; }
   public override int TestAbstract(int x)
   {
     throw new NotImplementedException();
@@ -23,5 +26,11 @@ internal class Employee : Person, IEmployee
     gender = gender == Gender.Male ? Gender.Female : Gender.Male;
 
     return gender;
+  }
+
+  public double AreaOfCircle(double r)
+  {
+    //this.AreaOfCircle = (r * r) * Math.PI;
+    return (r * r) * Math.PI;
   }
 }
