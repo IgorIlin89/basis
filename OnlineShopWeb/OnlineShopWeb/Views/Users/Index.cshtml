@@ -1,0 +1,57 @@
+﻿@model UsersModel
+@{
+    ViewData["Title"] = "Igors Home Page";
+}
+
+@{
+    String accu = "";
+    foreach (string Element in Model.UserList)
+    {
+        accu += Element + ", ";
+    }
+    accu = accu.Remove(accu.Length - 2);
+}
+
+
+@section Scripts {
+    <script>
+        $('#chooseOption').on("change", function () {
+        //alert("Handler for `click` called.");
+        //.val('user')
+            if ($('#chooseOption').val() == "user") {
+                $('.selectResult').text("@(Model.User)");
+            }
+            if ($('#chooseOption').val() == "userList") {
+                $('.selectResult').text("@(accu)");
+            }
+    });
+    </script>
+}
+
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <p> Es war der Benutzer  @(Model.User) auf dieser Seite</p>
+    <p> Es waren die Benutzer @(accu) auf dieser Seite</p>
+    <p>
+        <select id="chooseOption" name="Options">
+            <option disabled selected> -- select an option -- </option>
+            <option id="testteset" value="user">User</option>
+            <option value="userList">UserList</option>
+        </select>
+    </p>
+
+    <p class ="selectResult">test</p>
+   
+    <textarea name="displaySelected" rows="10" cols="30">
+    </textarea>
+
+
+
+    <p></p>
+
+
+    
+
+</div>

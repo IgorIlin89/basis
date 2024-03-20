@@ -53,3 +53,15 @@ if (person2 is Employee employee)
 {
   Console.WriteLine(employee.AreaOfCircle(2.5));
 }
+
+int i = 123;
+object o = i;    // Boxing
+int j = (int)o;  // Unboxing
+
+
+/* RUNTIME-EXCEPTION
+int x = 123;
+object y = x;    // Boxing
+float z = (float)y;  // Unboxing
+
+*/

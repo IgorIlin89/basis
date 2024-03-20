@@ -1,4 +1,4 @@
-1.Create a singleton class that with remember the current user.
+1.Create a singleton class that will remember the current user.
 2.Create a Controller that show information about the current user. The information of the current user is allowed to be static
 3.By using the type List<Classname> create a singleton Class that holds a list of the users
 4.By using the same Controller as in 2. show a list of the users
