@@ -4,27 +4,31 @@
 }
 
 @{
-    String accu = "";
-    foreach (string Element in Model.UserList)
+    if (Model.UserList != null)
     {
-        accu += Element + ", ";
+        <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    }
+}
+
+@{
+    var accu = "";
+    foreach (var element in Model.UserList)
+    {
+        accu += element + ", ";
     }
     accu = accu.Remove(accu.Length - 2);
 }
 
-
 @section Scripts {
     <script>
         $('#chooseOption').on("change", function () {
-        //alert("Handler for `click` called.");
-        //.val('user')
             if ($('#chooseOption').val() == "user") {
                 $('.selectResult').text("@(Model.User)");
             }
             if ($('#chooseOption').val() == "userList") {
                 $('.selectResult').text("@(accu)");
             }
-    });
+        });
     </script>
 }
 
@@ -42,8 +46,8 @@
         </select>
     </p>
 
-    <p class ="selectResult">test</p>
-   
+    <p class="selectResult">test</p>
+
     <textarea name="displaySelected" rows="10" cols="30">
     </textarea>
 
@@ -52,6 +56,6 @@
     <p></p>
 
 
-    
+
 
 </div>

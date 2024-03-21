@@ -7,8 +7,7 @@ builder.Services.AddControllersWithViews();
 
 //Register my own services
 builder.Services.AddSingleton<ISingletonSample, SingletonSample>(); //The default variant to do it correctly
-//builder.Services.AddSingleton<SingletonSample>();
-//builder.Services.AddSingleton(new SingletonSample());
+builder.Services.AddSingleton<IUserService, UserService>();
 
 var app = builder.Build();
 
