@@ -21,6 +21,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
 
             @{
@@ -38,6 +39,10 @@
                         <td> @(Html.ActionLink("Details", "Details", "User", new { id = user.UserId }))</td>
                         <td> @(Html.ActionLink("Edit", "Edit", "User", new { id = user.UserId }))</td>
                         <td> @(Html.ActionLink("Delete", "Delete", "UserList", new { id = user.UserId }))</td>
+                        <td> <form asp-action="Delete" asp-controller="UserList" method="post">
+                                <input type="submit" value="Delete" />
+                        </form>
+                        </td>
                     </tr>
                 }
 

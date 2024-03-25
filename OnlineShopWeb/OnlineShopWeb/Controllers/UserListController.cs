@@ -23,6 +23,7 @@ namespace OnlineShopWeb.Controllers
             return View(model);
         }
 
+        [HttpPost]
         public IActionResult Delete(int id)
         {
             var model = new UserListModel

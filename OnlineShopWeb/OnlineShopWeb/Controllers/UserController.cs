@@ -35,7 +35,7 @@ public class UserController : Controller
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Age = model.Age;
-            user.Location.Country = model.Location.Country;
+            //user.Location.Country = model.Location.Country;
 
             return RedirectToAction("Index", "UserList");
         }
