@@ -1,0 +1,51 @@
+﻿@model UserListModel
+@{
+    ViewData["Title"] = "Igors Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <p> Es war der Benutzer  @(Model.UserList.ElementAt(0).FirstName) auf dieser Seite</p>
+    <p>
+        <table>
+            <tr>
+                <th>UserId</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Age</th>
+                <th>Country</th>
+                <th>City</th>
+                <th>Street</th>
+                <th>Postal Code</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+
+            @{
+                foreach (var user in Model.UserList)
+                {
+                    <tr>
+                        <td> @(user.UserId)</td>
+                        <td> @(user.FirstName)</td>
+                        <td> @(user.LastName)</td>
+                        <td> @(user.Age)</td>
+                        <td> @(user.Location.Country)</td>
+                        <td> @(user.Location.City)</td>
+                        <td> @(user.Location.Street)</td>
+                        <td> @(user.Location.PostalCode)</td>
+                        <td> @(Html.ActionLink("Details", "Details", "User", new { id = user.UserId }))</td>
+                        <td> @(Html.ActionLink("Edit", "Edit", "User", new { id = user.UserId }))</td>
+                        <td> @(Html.ActionLink("Delete", "Delete", "UserList", new { id = user.UserId }))</td>
+                    </tr>
+                }
+
+
+            }
+
+        </table>
+
+    </p>
+
+</div>

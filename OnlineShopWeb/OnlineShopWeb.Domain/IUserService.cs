@@ -3,7 +3,7 @@ namespace OnlineShopWeb.Domain
 {
     public interface IUserService
     {
-        string GetUser();
-        List<string> GetUserList();
+        User? GetUser(int userId);
+        List<User> GetUserList();
     }
 }

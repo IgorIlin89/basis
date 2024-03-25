@@ -1,0 +1,14 @@
+﻿@model OnlineShopWeb.Domain.User
+@{
+    ViewData["Title"] = "Igors Home Page";
+}
+
+<p> @(Model.UserId)</p>
+<p> @(Model.FirstName)</p>
+<p> @(Model.LastName)</p>
+<p> @(Model.Age)</p>
+<p> @(Model.Location?.Country)</p>
+<p> @(Model.Location?.City)</p>
+<p> @(Model.Location?.Street)</p>
+<p> @(Model.Location?.PostalCode)</p>
+<p> @(Html.ActionLink("Back", "Index", "UserList"))</p>

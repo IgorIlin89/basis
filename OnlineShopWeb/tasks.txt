@@ -1,9 +1,21 @@
 1.Create a singleton class that will remember the current user.
 2.Create a Controller that show information about the current user. The information of the current user is allowed fixed because we cant register
-3.By using the type List<Classname> create a singleton Class that holds a list of the users. Makae Objects, Adresses also objects
+3.By using the type List<Classname> create a singleton Class that holds a list of the users. Make Objects, Adresses also objects
 4.By using the same Controller as in 2. show a list of the users with their details. HTML Elements: table, th for header, tr, td
 5.Try to create a menu in the Browser where you can switch between points 1-4 start different things
 
 6. Singleton for the types of items in a Webshop
 
 Meeting with the whole group at 2024.03.24 at 11:00
+
+-------------------
+
+1. In Models create a userModel
+2. Convert UserList from Domain to UserModel, make mapping in controller
+3. Second button in the Table called "Details", show there what is now in edit.
+4. In Edit button put HTML Elements for input
+5. Make sure that the edits on the data works
+6. 3rd button "Delete"
+
+7. All fields editable, with only one update button
+8. Create a page with these requirements for products ( domain, controller, view, model, datastorage)

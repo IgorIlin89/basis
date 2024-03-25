@@ -9,11 +9,16 @@ using System.Collections.Generic;
 namespace OnlineShopWeb.Domain;
 
 public class UserService : IUserService
-// getrennte singletons fuer user und fuer users
 {
-    private string _userId = "Igor";
-    private List<string> UserList = new List<string> { "Igor", "Yury", "Billy", "Dirk" };
+    private List<User> UserList = new List<User> {
+        new User(0,"Igor","Ilin",34,new Location("Germany","Hamburg", "Rahlstedt","Fantasie Weg",22763)),
+        new User(1,"Yury","Spiridonov", 38, new Location("Germany", "Hamburg", "Harburg","Habsburger Weg",21364)),
+        new User(2,"Dirk","Esk", 33, new Location("Germany", "Hamburg", "Altona","Straßburger Straße",22324))
+    };
 
-    public string GetUser() { return _userId; }
-    public List<string> GetUserList() { return UserList; }
+    public User? GetUser(int userId)
+    {
+        return UserList.Where(o => o.UserId == userId).FirstOrDefault();
+    }
+    public List<User> GetUserList() { return UserList; }
 }
