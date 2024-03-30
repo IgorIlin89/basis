@@ -5,5 +5,6 @@ namespace OnlineShopWeb.Domain
     {
         User? GetUser(int userId);
         List<User> GetUserList();
+        public bool Delete(int userid);
     }
 }

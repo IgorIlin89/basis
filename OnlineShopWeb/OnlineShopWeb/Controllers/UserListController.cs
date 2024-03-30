@@ -23,17 +23,10 @@ namespace OnlineShopWeb.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult Delete(int id)
         {
-            var model = new UserListModel
-            {
-                UserList = _userService.GetUserList()
-            };
-
-            //model.UserList.Remove(new User() { UserId = id });
-            model.UserList.RemoveAt(id);
-
+            _userService.Delete(id);
             return RedirectToAction("Index", "UserList");
         }
     }

@@ -1,4 +1,4 @@
-﻿@model OnlineShopWeb.Domain.User
+﻿@model OnlineShopWeb.Models.UserModel
 @{
     ViewData["Title"] = "Igors Home Page";
 }
@@ -35,6 +35,14 @@
     <label for="Age">Age:</label>
     <input type="text" asp-for="Age" />
     <span asp-validation-for="Age" class="text-danger"></span>
+
+    <p></p>
+
+    <label for="Location.Country">Country:</label>
+    <input type="text" asp-for="Location.Country" />
+    <span asp-validation-for="Location.Country" class="text-danger"></span>
+
+    <p></p>
 
     <p></p>
 

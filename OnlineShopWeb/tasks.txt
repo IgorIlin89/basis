@@ -19,3 +19,18 @@ Meeting with the whole group at 2024.03.24 at 11:00
 
 7. All fields editable, with only one update button
 8. Create a page with these requirements for products ( domain, controller, view, model, datastorage)
+
+
+-------
+
+userService is responsible for deleting users
+UserController -> Details check for if null
+
+-----
+
+details better format with user id -> id
+edit -> cleaner, back button like update button, clutter on top remove
+
+product category is a dropdown list
+
+create method for users and for products above the tabels

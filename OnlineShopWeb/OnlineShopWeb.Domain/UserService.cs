@@ -21,4 +21,10 @@ public class UserService : IUserService
         return UserList.Where(o => o.UserId == userId).FirstOrDefault();
     }
     public List<User> GetUserList() { return UserList; }
+
+    public bool Delete(int userid)
+    {
+        var userToDelete = UserList.Where(o => o.UserId == userid).FirstOrDefault();
+        return UserList.Remove(userToDelete);
+    }
 }

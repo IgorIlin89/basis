@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OnlineShopWeb.Domain;
+﻿namespace OnlineShopWeb.Domain;
 
 public class Location
 {
-    public Location() { }
     public string Country { get; set; }
     public string City { get; set; }
     public string? District { get; set; }
