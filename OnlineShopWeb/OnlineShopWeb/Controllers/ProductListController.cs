@@ -1,12 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShopWeb.Domain;
+using OnlineShopWeb.Models;
 
-namespace OnlineShopWeb.Controllers
+namespace OnlineShopWeb.Controllers;
+
+public class ProductListController : Controller
 {
-    public class ProductListController : Controller
+    private readonly IProductService _productService;
+
+    public ProductListController(IProductService productService)
     {
-        public IActionResult Index()
+        _productService = productService;
+    }
+
+    [HttpGet]
+    public IActionResult Index()
+    {
+        var model = new ProductListModel
         {
-            return View();
-        }
+            ProductList = _productService.GetProductList()
+        };
+        return View(model);
+    }
+
+    [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        _productService.Delete(id);
+        return RedirectToAction("Index", "ProductList");
     }
 }

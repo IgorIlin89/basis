@@ -11,9 +11,9 @@ namespace OnlineShopWeb.Domain;
 public class UserService : IUserService
 {
     private List<User> UserList = new List<User> {
-        new User(0,"Igor","Ilin",34,new Location("Germany","Hamburg", "Rahlstedt","Fantasie Weg",22763)),
-        new User(1,"Yury","Spiridonov", 38, new Location("Germany", "Hamburg", "Harburg","Habsburger Weg",21364)),
-        new User(2,"Dirk","Esk", 33, new Location("Germany", "Hamburg", "Altona","Straßburger Straße",22324))
+        new User(0,"Igor","Ilin",34,new Location("Germany","Hamburg","Fantasie Weg",22763)),
+        new User(1,"Yury","Spiridonov", 38, new Location("Germany", "Hamburg","Habsburger Weg",21364)),
+        new User(2,"Dirk","Esk", 33, new Location("Germany", "Hamburg","Straßburger Straße",22324))
     };
 
     public User? GetUser(int userId)
@@ -26,5 +26,10 @@ public class UserService : IUserService
     {
         var userToDelete = UserList.Where(o => o.UserId == userid).FirstOrDefault();
         return UserList.Remove(userToDelete);
+    }
+
+    public void Add(int userid, string firstName, string lastName, int Age, string country, string city, string street, int postalCode)
+    {
+        UserList.Add(new User(userid, firstName, lastName, Age, new Location(country, city, street, postalCode)));
     }
 }

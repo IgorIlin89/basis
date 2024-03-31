@@ -12,10 +12,13 @@
 <p></p>
 <p></p>
 
-<form asp-action="Edit" asp-controller="User" method="post">
+<form asp-action="Add" asp-controller="User" method="post">
 
+    <label for="UserId">UserId:</label>
+    <input type="text" asp-for="UserId" />
+    <span asp-validation-for="UserId" class="text-danger"></span>
 
-    <input type="hidden" asp-for="UserId" />
+    <p></p>
 
     <label for="FirstName">First name:</label>
     <input type="text" asp-for="FirstName" />
@@ -35,7 +38,7 @@
 
     <p></p>
 
-    <label for="Location.Country">Country:</label>
+    <label for="Country">Country:</label>
     <input type="text" asp-for="Location.Country" />
     <span asp-validation-for="Location.Country" class="text-danger"></span>
 

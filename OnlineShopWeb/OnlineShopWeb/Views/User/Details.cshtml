@@ -3,12 +3,17 @@
     ViewData["Title"] = "Igors Home Page";
 }
 
-<p> @(Model.UserId)</p>
-<p> @(Model.FirstName)</p>
-<p> @(Model.LastName)</p>
-<p> @(Model.Age)</p>
-<p> @(Model.Location?.Country)</p>
-<p> @(Model.Location?.City)</p>
-<p> @(Model.Location?.Street)</p>
-<p> @(Model.Location?.PostalCode)</p>
-<p> @(Html.ActionLink("Back", "Index", "UserList"))</p>
+<p>UserId : @(Model.UserId)</p>
+<p>First Name : @(Model.FirstName)</p>
+<p>Last Name : @(Model.LastName)</p>
+<p>Age : @(Model.Age)</p>
+<p>Country : @(Model.Location.Country)</p>
+<p>City : @(Model.Location.City)</p>
+<p>Street : @(Model.Location.City)</p>
+<p>Postal Code : @(Model.Location.PostalCode)</p>
+
+<p>
+    <form asp-action="Index" asp-controller="UserList" method="get">
+        <input type="submit" value="Back" />
+    </form>
+</p>

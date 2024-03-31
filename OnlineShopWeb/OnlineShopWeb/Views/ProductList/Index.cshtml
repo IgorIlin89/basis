@@ -1,0 +1,60 @@
+﻿@model ProductListModel
+@{
+    ViewData["Title"] = "Igors Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <p></p>
+    <form asp-action="Add" asp-controller="Product" method="get">
+        <input type="submit" value="Add" />
+    </form>
+
+    <p></p>
+    <table>
+        <tr>
+            <th>ProductId</th>
+            <th>Name</th>
+            <th>Producer</th>
+            <th>Category</th>
+            <th>Picture</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        @{
+            foreach (var product in Model.ProductList)
+            {
+                <tr>
+                    <td> @(product.ProductId)</td>
+                    <td> @(product.Name)</td>
+                    <td> @(product.Producer)</td>
+                    <td> @(product.Category)</td>
+                    <td> @(product.Picture)</td>
+                    <td>
+                        <form asp-action="Details" asp-route-id="@product.ProductId" asp-controller="Product" method="get">
+                            <input type="submit" value="Details" />
+                        </form>
+                    </td>
+                    <td>
+                        <form asp-action="Edit" asp-route-id="@product.ProductId" asp-controller="Product" method="get">
+                            <input type="submit" value="Edit" />
+                        </form>
+                    </td>
+                    <td>
+                        <form asp-action="Delete" asp-route-id="@product.ProductId" asp-controller="ProductList" method="get">
+                            <input type="submit" value="Delete" />
+                        </form>
+                    </td>
+                </tr>
+            }
+
+
+        }
+
+    </table>
+
+
+    

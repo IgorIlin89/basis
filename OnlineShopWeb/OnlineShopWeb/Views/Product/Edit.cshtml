@@ -1,0 +1,49 @@
+﻿@using OnlineShopWeb.Domain
+@model OnlineShopWeb.Models.ProductModel
+@{
+    ViewData["Title"] = "Igors Home Page";
+}
+
+<p>
+    <form asp-action="Index" asp-controller="ProductList" method="get">
+        <input type="submit" value="Back" />
+    </form>
+</p>
+
+<p></p>
+<p></p>
+
+<form asp-action="Edit" asp-controller="Product" method="post">
+
+
+    <input type="hidden" asp-for="ProductId" />
+
+    <label for="Name">Name:</label>
+    <input type="text" asp-for="Name" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+
+    <p></p>
+
+    <label for="Producer">Producer:</label>
+    <input type="text" asp-for="Producer" />
+    <span asp-validation-for="Producer" class="text-danger"></span>
+
+    <p></p>
+
+    <label>Category :</label>
+    @Html.DropDownList("Category",
+            Html.GetEnumSelectList<EProductCategorys>(),
+            "Select Category")
+
+    <p></p>
+
+    <label for="Picture">Picture:</label>
+    <input type="text" asp-for="Picture" />
+    <span asp-validation-for="Picture" class="text-danger"></span>
+
+    <p></p>
+    <p></p>
+
+    <input type="submit" value="Update" />
+
+</form>

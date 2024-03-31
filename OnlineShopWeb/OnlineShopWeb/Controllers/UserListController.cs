@@ -2,32 +2,31 @@
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
 
-namespace OnlineShopWeb.Controllers
+namespace OnlineShopWeb.Controllers;
+
+public class UserListController : Controller
 {
-    public class UserListController : Controller
+    private readonly IUserService _userService;
+    public UserListController(IUserService userService)
     {
-        private readonly IUserService _userService;
-        public UserListController(IUserService userService)
-        {
-            _userService = userService;
-        }
+        _userService = userService;
+    }
 
-        [HttpGet]
-        public IActionResult Index()
+    [HttpGet]
+    public IActionResult Index()
+    {
+        var model = new UserListModel
         {
-            var model = new UserListModel
-            {
-                UserList = _userService.GetUserList()
-            };
+            UserList = _userService.GetUserList()
+        };
 
-            return View(model);
-        }
+        return View(model);
+    }
 
-        [HttpGet]
-        public IActionResult Delete(int id)
-        {
-            _userService.Delete(id);
-            return RedirectToAction("Index", "UserList");
-        }
+    [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        _userService.Delete(id);
+        return RedirectToAction("Index", "UserList");
     }
 }

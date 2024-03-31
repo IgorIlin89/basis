@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace OnlineShopWeb.Domain;
 
-public class ProductService
+public class ProductService : IProductService
 {
     private List<Product> ProductList = new List<Product>
     {
-        new Product { ProductId = 0, Name="Persil", Producer="Henkel", Category="Cleaning", Picture="Persil123"},
-        new Product { ProductId = 1, Name="Weingummi", Producer="Haribo", Category="Sweets", Picture="Haribo123"},
-        new Product { ProductId = 2, Name="Pizza Salami", Producer="Dr. Oetker", Category="Food", Picture="Pizza123"}
+        new Product { ProductId = 0, Name="Persil", Producer="Henkel", Category= EProductCategorys.Cleaning, Picture="Persil123.jpg"},
+        new Product { ProductId = 1, Name="Weingummi", Producer="Haribo", Category= EProductCategorys.Sweets, Picture="Haribo123.jpg"},
+        new Product { ProductId = 2, Name="Pizza Salami", Producer="Dr. Oetker", Category= EProductCategorys.Food, Picture="Pizza123.jpg"}
     };
 
-    public List<Product> GetProductList() {  return ProductList; }
+    public List<Product> GetProductList() { return ProductList; }
 
     public Product? GetProduct(int productId)
     {
@@ -28,9 +28,8 @@ public class ProductService
         return ProductList.Remove(productToDelete);
     }
 
-    public bool Delete(string name)
+    public void AddProduct(int productId, string name, string producer, EProductCategorys category, string picture)
     {
-        var productToDelete = ProductList.Where(o => o.Name == name).FirstOrDefault();
-        return ProductList.Remove(productToDelete);
+        ProductList.Add(new Product { ProductId = productId, Name = name, Producer = producer, Category=category, Picture = picture });
     }
 }

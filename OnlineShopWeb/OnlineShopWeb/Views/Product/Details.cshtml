@@ -1,0 +1,21 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model OnlineShopWeb.Models.ProductModel
+@{
+    ViewData["Title"] = "Igors Home Page";
+}
+
+<p>ProductId : @(Model.ProductId)</p>
+<p>Name : @(Model.Name)</p>
+<p>Producer : @(Model.Producer)</p>
+<p>Category : @(Model.Category)</p>
+<p>Picture : @(Model.Picture)</p>
+
+<p>
+    <form asp-action="Index" asp-controller="ProductList" method="get">
+        <input type="submit" value="Back" />
+    </form>
+</p>

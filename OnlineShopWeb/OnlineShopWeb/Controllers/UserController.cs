@@ -22,14 +22,16 @@ public class UserController : Controller
             UserId = user.UserId,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Age = user.Age, // If ? in user domain its error
-            Location = new LocationModel {
-                Country = user.Location.Country == null ? "default" : user.Location.Country,
-                //City = user.Location.City.FirstOrDefault("test")
+            Age = user.Age,
+            Location = new LocationModel
+            {
+                Country = user.Location.Country,
+                City = user.Location.City,
+                Street = user.Location.Street,
+                PostalCode = user.Location.PostalCode
             }
         };
-        
-            //
+
         return View(model);
     }
 
@@ -42,7 +44,14 @@ public class UserController : Controller
             UserId = user.UserId,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Age = user.Age
+            Age = user.Age,
+            Location = new LocationModel
+            {
+                Country = user.Location.Country,
+                City = user.Location.City,
+                Street = user.Location.Street,
+                PostalCode = user.Location.PostalCode
+            }
         };
 
         return View(model);
@@ -58,12 +67,35 @@ public class UserController : Controller
             user.LastName = model.LastName;
             user.Age = model.Age;
             user.Location.Country = model.Location.Country;
+            user.Location.City = model.Location.City;
+            user.Location.Street = model.Location.Street;
+            user.Location.PostalCode = model.Location.PostalCode;
 
             return RedirectToAction("Index", "UserList");
         }
         else
         {
             return View(model);//css and sass, responsive ui framework bootstrap
+        }
+    }
+
+    [HttpGet]
+    public IActionResult Add()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Add(UserModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            _userService.Add(model.UserId, model.FirstName, model.LastName, model.Age, model.Location.Country, model.Location.City, model.Location.Street, model.Location.PostalCode);
+            return RedirectToAction("Index", "UserList");
+        }
+        else
+        {
+            return View(model);
         }
     }
 }
