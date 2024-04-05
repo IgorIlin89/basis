@@ -7,6 +7,7 @@ namespace OnlineShopWeb.Controllers;
 public class UserListController : Controller
 {
     private readonly IUserService _userService;
+
     public UserListController(IUserService userService)
     {
         _userService = userService;
