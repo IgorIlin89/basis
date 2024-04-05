@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -56,6 +58,7 @@ public class UserController : Controller
     [HttpGet]
     public IActionResult Edit(int id)
     {
+        ViewBag.ActionName = "Edit";
         var user = _userService.GetUser(id);
         var model = new UserModel
         {
@@ -100,7 +103,8 @@ public class UserController : Controller
     [HttpGet]
     public IActionResult Add()
     {
-        return View();
+        ViewBag.ActionName = "Add";
+        return View("~/Views/User/Edit.cshtml");
     }
 
     [HttpPost]

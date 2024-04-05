@@ -7,9 +7,7 @@
     <h1 class="display-4">Welcome</h1>
 
     <p></p>
-    <form asp-action="Add" asp-controller="User" method="get">
-        <input type="submit" value="Add" />
-    </form>
+    @(Html.ActionLink("Add", "Add", "User"))
 
     <p>
         <table>
@@ -39,21 +37,9 @@
                         <td> @(user.Location.City)</td>
                         <td> @(user.Location.Street)</td>
                         <td> @(user.Location.PostalCode)</td>
-                        <td>
-                            <form asp-action="Details" asp-route-id="@user.UserId" asp-controller="User" method="get">
-                                <input type="submit" value="Details" />
-                            </form>
-                        </td>
-                        <td>
-                            <form asp-action="Edit" asp-route-id="@user.UserId" asp-controller="User" method="get">
-                                <input type="submit" value="Edit" />
-                            </form>
-                        </td>
-                        <td>
-                            <form asp-action="Delete" asp-route-id="@user.UserId" asp-controller="User" method="get">
-                                <input type="submit" value="Delete" />
-                            </form>
-                        </td>
+                        <td> @(Html.ActionLink("Details", "Details", "User", new { id = user.UserId }))</td>
+                        <td> @(Html.ActionLink("Edit", "Edit", "User", new { id = user.UserId }))</td>
+                        <td> @(Html.ActionLink("Delete", "Delete", "User", new { id = user.UserId }))</td>
                     </tr>
                 }
 
