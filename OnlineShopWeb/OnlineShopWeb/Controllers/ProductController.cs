@@ -14,6 +14,23 @@ public class ProductController : Controller
     }
 
     [HttpGet]
+    public IActionResult Index()
+    {
+        var model = new ProductListModel
+        {
+            ProductList = _productService.GetProductList()
+        };
+        return View(model);
+    }
+
+    [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        _productService.Delete(id);
+        return RedirectToAction("Index", "Product");
+    }
+
+    [HttpGet]
     public IActionResult Details(int id)
     {
         var product = _productService.GetProduct(id);
@@ -59,7 +76,7 @@ public class ProductController : Controller
             product.Producer = model.Producer;
             product.Category = model.Category;
             product.Picture = model.Picture;
-            return RedirectToAction("Index", "ProductList");
+            return RedirectToAction("Index", "Product");
         }
         else
         {
@@ -79,7 +96,7 @@ public class ProductController : Controller
         if (ModelState.IsValid)
         {
             _productService.AddProduct(model.ProductId, model.Name, model.Producer, model.Category, model.Picture);
-            return RedirectToAction("Index", "ProductList");
+            return RedirectToAction("Index", "Product");
         }
         else
         {

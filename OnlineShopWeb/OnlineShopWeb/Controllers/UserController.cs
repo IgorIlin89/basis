@@ -14,6 +14,24 @@ public class UserController : Controller
     }
 
     [HttpGet]
+    public IActionResult Index()
+    {
+        var model = new UserListModel
+        {
+            UserList = _userService.GetUserList()
+        };
+
+        return View(model);
+    }
+
+    [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        _userService.Delete(id);
+        return RedirectToAction("Index", "User");
+    }
+
+    [HttpGet]
     public IActionResult Details(int id)
     {
         var user = _userService.GetUser(id);
@@ -71,7 +89,7 @@ public class UserController : Controller
             user.Location.Street = model.Location.Street;
             user.Location.PostalCode = model.Location.PostalCode;
 
-            return RedirectToAction("Index", "UserList");
+            return RedirectToAction("Index", "User");
         }
         else
         {
@@ -91,7 +109,7 @@ public class UserController : Controller
         if (ModelState.IsValid)
         {
             _userService.Add(model.UserId, model.FirstName, model.LastName, model.Age, model.Location.Country, model.Location.City, model.Location.Street, model.Location.PostalCode);
-            return RedirectToAction("Index", "UserList");
+            return RedirectToAction("Index", "User");
         }
         else
         {
