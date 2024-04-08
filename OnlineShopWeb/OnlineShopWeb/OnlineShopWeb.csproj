@@ -10,8 +10,4 @@
     <ProjectReference Include="..\OnlineShopWeb.Domain\OnlineShopWeb.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Coupon\" />
-  </ItemGroup>
-
 </Project>

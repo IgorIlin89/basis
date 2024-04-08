@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace OnlineShopWeb.Domain;
 
-public enum ETypeOfDiscount
+public enum TypeOfDiscount
 {
-    Percentage,
-    Total
+    Percentage = 0,
+    Total = 1
 }

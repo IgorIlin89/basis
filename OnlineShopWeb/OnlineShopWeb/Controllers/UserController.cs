@@ -60,6 +60,7 @@ public class UserController : Controller
     {
         ViewBag.ActionName = "Edit";
         var user = _userService.GetUser(id);
+
         var model = new UserModel
         {
             UserId = user.UserId,
@@ -117,7 +118,10 @@ public class UserController : Controller
         }
         else
         {
-            return View(model);
+            //several times sending is error, 
+            return View("~/Views/User/Edit.cshtml");
+            //interesting when age is a string
+            //return View(model);
         }
     }
 }

@@ -37,35 +37,35 @@ create method for users and for products above the tabels
 
 ------------
 
-Combine UserListControler and UserList
-Combine ProductlistControler and ProducctList
+Combine UserListControler and UserList - DONE
+Combine ProductlistControler and ProducctList - DONE
 Combine Views ProductList and Product
-Combine Views UserList and User
-Combine Views add and Edit. You can directly go to a view in Controller. Screenshot made
+Combine Views UserList and User - DONE
+Combine Views add and Edit. You can directly go to a view in Controller. Screenshot made - DONE
 
 form asp-action in Most Cases to HtmlLink except in Edit. To change appearance of ActionLink use css
 In Bootstrap css find example for primary and secondary buttons
 
-In Html for newline dont use <p>, instead use .css
-For newline with content use <div> instead of <p>
+In Html for newline dont use <p>, instead use .css - DONE
+For newline with content use <div> instead of <p> - DONE
 in HTmllink use style tags for padding etc.
 
-Dont use whole line for parameters in methods for example, make newline inbetween
+Dont use whole line for parameters in methods for example, make newline inbetween - DONE
 
-in if else, if in else basically nothing happens than remove if
+in if else, if in else basically nothing happens than remove if - DONE
 
-Data goes from server to client, if client cant make bad inputs in client it doesnt matter, null protection must be allways included in server
-Make nullable ?
+Data goes from server to client, if client cant make bad inputs in client it doesnt matter, null protection must be allways included in server - DONE
+Make nullable ? - DONE
 
-In names of ENums no "E" in beginning, names are in singular, not plural. For example ProductCategory
-Enums make with codes so order doesnt matter
+In names of ENums no "E" in beginning, names are in singular, not plural. For example ProductCategory - DONE
+Enums make with codes so order doesnt matter - DONE
 
 Thinking about what you want to validate in fields
 
-DropDown -> stays as is just with codes, but make it so that user needs to click atleast once on dropdown window
-Remove counter remnants
+DropDown -> stays as is just with codes, but make it so that user needs to click atleast once on dropdown window - DONE
+Remove counter remnants - DONE
 
-form asp-action use for post, not for get. Get make with html
-htlm hidden field etc.
+form asp-action use for post, not for get. Get make with html - DONE
+htlm hidden field etc. - DONE
 
 Make Coupon

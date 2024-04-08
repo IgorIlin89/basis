@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace OnlineShopWeb.Domain;
 
-public enum EProductCategorys
+public enum ProductCategory
 {
-    Default,
-    Cleaning,
-    Sweets,
-    Food
+    Unknown = 1,
+    Cleaning = 2,
+    Sweets = 3,
+    Food = 4
 }

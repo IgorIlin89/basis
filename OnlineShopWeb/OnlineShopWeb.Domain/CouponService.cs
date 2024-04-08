@@ -6,41 +6,32 @@ using System.Threading.Tasks;
 
 namespace OnlineShopWeb.Domain;
 
-internal class CouponService
+public class CouponService : ICouponService
 {
-    /*
+
     private List<Coupon> CouponList = new List<Coupon>
     {
-        new Coupon { CouponId = 0, Code = "swD23", AmountOfDiscount = 15, TypeOfDiscount = ETypeOfDiscount.Percentage, MaxNumberOfUses = 100 },
-        new Coupon { CouponId = 1, Code = "dsf4wsdf", AmountOfDiscount = 150, TypeOfDiscount = ETypeOfDiscount.Total, MaxNumberOfUses = 750 },
-        new Coupon { CouponId = 2, Code = "sdfsdgfgh5fh", AmountOfDiscount = 25, TypeOfDiscount = ETypeOfDiscount.Percentage, MaxNumberOfUses = 500 }
+        new Coupon { CouponId = 0, Code = "swD23", AmountOfDiscount = 15, TypeOfDiscount = TypeOfDiscount.Percentage, MaxNumberOfUses = 100 },
+        new Coupon { CouponId = 1, Code = "dsf4wsdf", AmountOfDiscount = 150, TypeOfDiscount = TypeOfDiscount.Total, MaxNumberOfUses = 750 },
+        new Coupon { CouponId = 2, Code = "sdfsdgfgh5fh", AmountOfDiscount = 25, TypeOfDiscount = TypeOfDiscount.Percentage, MaxNumberOfUses = 500 }
     };
-    */
 
-    /*
-     * private List<Product> ProductList = new List<Product>
-        {
-            new Product { ProductId = 0, Name="Persil", Producer="Henkel", Category= EProductCategorys.Cleaning, Picture="Persil123.jpg"},
-            new Product { ProductId = 1, Name="Weingummi", Producer="Haribo", Category= EProductCategorys.Sweets, Picture="Haribo123.jpg"},
-            new Product { ProductId = 2, Name="Pizza Salami", Producer="Dr. Oetker", Category= EProductCategorys.Food, Picture="Pizza123.jpg"}
-        };
+    public List<Coupon> GetCouponList() { return CouponList; }
 
-        public List<Product> GetProductList() { return ProductList; }
+    public Coupon? GetCoupon(int couponId)
+    {
+        return CouponList.Where(o => o.CouponId == couponId).FirstOrDefault();
+    }
 
-        public Product? GetProduct(int productId)
-        {
-            return ProductList.Where(o => o.ProductId == productId).FirstOrDefault();
-        }
+    public bool Delete(int couponId)
+    {
+        var couponToDelete = CouponList.Where(o => o.CouponId == couponId).FirstOrDefault();
+        return CouponList.Remove(couponToDelete);
+    }
 
-        public bool Delete(int productId)
-        {
-            var productToDelete = ProductList.Where(o => o.ProductId == productId).FirstOrDefault();
-            return ProductList.Remove(productToDelete);
-        }
+    public void AddCoupon(int couponId, string code, double amountOfDiscount, TypeOfDiscount typeOfDiscount, long? maxNumberOfUses)
+    {
+        CouponList.Add(new Coupon { CouponId = couponId, Code = code, AmountOfDiscount = amountOfDiscount, TypeOfDiscount = typeOfDiscount, MaxNumberOfUses = maxNumberOfUses });
+    }
 
-        public void AddProduct(int productId, string name, string producer, EProductCategorys category, string picture)
-        {
-            ProductList.Add(new Product { ProductId = productId, Name = name, Producer = producer, Category=category, Picture = picture });
-        }
-    */
 }

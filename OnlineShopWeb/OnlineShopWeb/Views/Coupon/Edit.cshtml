@@ -1,0 +1,55 @@
+﻿@using OnlineShopWeb.Domain
+@model OnlineShopWeb.Models.CouponModel
+@{
+    ViewData["Title"] = "Igors Home Page";
+}
+
+<p>@(Html.ActionLink("Back", "Index", "Coupon"))</p>
+
+<br />
+<br />
+
+<form asp-action="@ViewBag.ActionName" asp-controller="Coupon" method="post">
+
+    @{
+        if (ViewBag.ActionName == "Add")
+        {
+            <label for="CouponId">CouponId:</label>
+            <input type="text" asp-for="CouponId" />
+            <span asp-validation-for="CouponId" class="text-danger"></span>
+            <p></p>
+        }
+        else if (ViewBag.ActionName == "Edit")
+        {
+            <input type="hidden" asp-for="CouponId" />
+        }
+    }
+
+    <label for="Code">Code:</label>
+    <input type="text" asp-for="Code" />
+    <span asp-validation-for="Code" class="text-danger"></span>
+
+    <br />
+
+    <label for="Amount of Discount">Amount of Discount:</label>
+    <input type="text" asp-for="AmountOfDiscount" />
+    <span asp-validation-for="AmountOfDiscount" class="text-danger"></span>
+
+    <br />
+
+    <label>Type of Discount :</label>
+    @Html.DropDownList("TypeOfDiscount",
+            Html.GetEnumSelectList<TypeOfDiscount>(), "-- Select One --", new { @required = "required" })
+
+    <br />
+
+    <label for="Maximum Number of Uses">Maximum Number of Uses:</label>
+    <input type="text" asp-for="MaxNumberOfUses" />
+    <span asp-validation-for="MaxNumberOfUses" class="text-danger"></span>
+
+    <br />
+    <br />
+
+    <input type="submit" value="Update" />
+
+</form>

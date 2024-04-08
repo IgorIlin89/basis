@@ -10,9 +10,9 @@ public class ProductService : IProductService
 {
     private List<Product> ProductList = new List<Product>
     {
-        new Product { ProductId = 0, Name="Persil", Producer="Henkel", Category= EProductCategorys.Cleaning, Picture="Persil123.jpg"},
-        new Product { ProductId = 1, Name="Weingummi", Producer="Haribo", Category= EProductCategorys.Sweets, Picture="Haribo123.jpg"},
-        new Product { ProductId = 2, Name="Pizza Salami", Producer="Dr. Oetker", Category= EProductCategorys.Food, Picture="Pizza123.jpg"}
+        new Product { ProductId = 0, Name="Persil", Producer="Henkel", Category= ProductCategory.Cleaning, Picture="Persil123.jpg"},
+        new Product { ProductId = 1, Name="Weingummi", Producer="Haribo", Category= ProductCategory.Sweets, Picture="Haribo123.jpg"},
+        new Product { ProductId = 2, Name="Pizza Salami", Producer="Dr. Oetker", Category= ProductCategory.Food, Picture="Pizza123.jpg"}
     };
 
     public List<Product> GetProductList() { return ProductList; }
@@ -28,7 +28,7 @@ public class ProductService : IProductService
         return ProductList.Remove(productToDelete);
     }
 
-    public void AddProduct(int productId, string name, string producer, EProductCategorys category, string picture)
+    public void AddProduct(int productId, string name, string producer, ProductCategory category, string picture)
     {
         ProductList.Add(new Product { ProductId = productId, Name = name, Producer = producer, Category=category, Picture = picture });
     }

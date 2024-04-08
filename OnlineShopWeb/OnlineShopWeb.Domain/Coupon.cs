@@ -11,6 +11,6 @@ public class Coupon
     public int CouponId;
     public string Code;
     public double AmountOfDiscount;
-    public ETypeOfDiscount TypeOfDiscount;
+    public TypeOfDiscount TypeOfDiscount;
     public long? MaxNumberOfUses;
 }

@@ -5,8 +5,8 @@
 
 <p>@(Html.ActionLink("Back", "Index", "User"))</p>
 
-<p></p>
-<p></p>
+<br />
+<br />
 
 <form asp-action="@ViewBag.ActionName" asp-controller="User" method="post">
 
@@ -30,44 +30,44 @@
     <input type="text" asp-for="FirstName" />
     <span asp-validation-for="FirstName" class="text-danger"></span>
 
-    <p></p>
+    <br />
 
     <label for="LastName">Last name:</label>
     <input type="text" asp-for="LastName" />
     <span asp-validation-for="LastName" class="text-danger"></span>
 
-    <p></p>
+    <br />
 
     <label for="Age">Age:</label>
     <input type="text" asp-for="Age" />
     <span asp-validation-for="Age" class="text-danger"></span>
 
-    <p></p>
+    <br />
 
     <label for="Location.Country">Country:</label>
     <input type="text" asp-for="Location.Country" />
     <span asp-validation-for="Location.Country" class="text-danger"></span>
 
-    <p></p>
+    <br />
 
     <label for="Location.City">City:</label>
     <input type="text" asp-for="Location.City" />
     <span asp-validation-for="Location.City" class="text-danger"></span>
 
-    <p></p>
+    <br />
 
     <label for="Location.Street">Street:</label>
     <input type="text" asp-for="Location.Street" />
     <span asp-validation-for="Location.Street" class="text-danger"></span>
 
-    <p></p>
+    <br />
 
     <label for="Location.PostalCode">Postal Code:</label>
     <input type="text" asp-for="Location.PostalCode" />
     <span asp-validation-for="Location.PostalCode" class="text-danger"></span>
 
-    <p></p>
-    <p></p>
+    <br />
+    <br />
 
     <input type="submit" value="Update" />
 

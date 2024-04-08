@@ -1,0 +1,48 @@
+﻿@model CouponListModel
+@{
+    ViewData["Title"] = "Igors Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <br />
+
+    @(Html.ActionLink("Add", "Add", "Coupon"))
+
+    <br />
+
+    <table>
+        <tr>
+            <th>CouponId</th>
+            <th>Code</th>
+            <th>Amount of Discount</th>
+            <th>Type of Discount</th>
+            <th>Maximal Number of Uses</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        @{
+            foreach (var product in Model.CouponList)
+            {
+                <tr>
+                    <td> @(product.CouponId)</td>
+                    <td> @(product.Code)</td>
+                    <td> @(product.AmountOfDiscount)</td>
+                    <td> @(product.TypeOfDiscount)</td>
+                    <td> @(product.MaxNumberOfUses)</td>
+                    <td> @(Html.ActionLink("Details", "Details", "Coupon", new { id = product.CouponId }))</td>
+                    <td> @(Html.ActionLink("Edit", "Edit", "Coupon", new { id = product.CouponId }))</td>
+                    <td> @(Html.ActionLink("Delete", "Delete", "Coupon", new { product.CouponId }))</td>
+                </tr>
+            }
+
+
+        }
+
+    </table>
+
+
+

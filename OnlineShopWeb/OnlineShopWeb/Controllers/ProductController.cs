@@ -50,6 +50,7 @@ public class ProductController : Controller
     [HttpGet]
     public IActionResult Edit(int id)
     {
+        ViewBag.ActionName = "Edit";
         var product = _productService.GetProduct(id);
 
         var model = new ProductModel
@@ -76,6 +77,7 @@ public class ProductController : Controller
             product.Producer = model.Producer;
             product.Category = model.Category;
             product.Picture = model.Picture;
+
             return RedirectToAction("Index", "Product");
         }
         else
@@ -87,7 +89,8 @@ public class ProductController : Controller
     [HttpGet]
     public IActionResult Add()
     {
-        return View();
+        ViewBag.ActionName = "Add";
+        return View("~/Views/Product/Edit.cshtml");
     }
 
     [HttpPost]

@@ -6,9 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 //Register my own services
-builder.Services.AddSingleton<ISingletonSample, SingletonSample>(); //The default variant to do it correctly
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IProductService, ProductService > ();
+builder.Services.AddSingleton<IProductService, ProductService>();
+builder.Services.AddSingleton<ICouponService, CouponService>();
 
 var app = builder.Build();
 
