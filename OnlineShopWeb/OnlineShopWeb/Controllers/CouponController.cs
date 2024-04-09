@@ -71,10 +71,10 @@ public class CouponController : Controller
     {
         if (ModelState.IsValid)
         {
-            var coupon = _couponService.GetCoupon(model.CouponId.GetValueOrDefault());
-
-            if (coupon != null)
+            if (model.CouponId != null)
             {
+                var coupon = _couponService.GetCoupon(model.CouponId.Value);
+
                 coupon.Code = model.Code;
                 coupon.AmountOfDiscount = model.AmountOfDiscount;
                 coupon.TypeOfDiscount = model.TypeOfDiscount;

@@ -86,10 +86,12 @@ public class UserController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = _userService.GetUser(model.UserId.GetValueOrDefault());
+            
 
-            if (user != null)
+            if (model.UserId != null)
             {
+                var user = _userService.GetUser(model.UserId.Value);
+
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.Age = model.Age;
