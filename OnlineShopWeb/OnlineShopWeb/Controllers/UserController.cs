@@ -86,8 +86,6 @@ public class UserController : Controller
     {
         if (ModelState.IsValid)
         {
-            
-
             if (model.UserId != null)
             {
                 var user = _userService.GetUser(model.UserId.Value);

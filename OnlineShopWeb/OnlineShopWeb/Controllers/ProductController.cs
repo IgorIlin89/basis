@@ -73,8 +73,6 @@ public class ProductController : Controller
     {
         if (ModelState.IsValid)
         {
-            
-
             if (model.ProductId != null)
             {
                 var product = _productService.GetProduct(model.ProductId.Value);
