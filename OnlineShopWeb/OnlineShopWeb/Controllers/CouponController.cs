@@ -83,8 +83,7 @@ public class CouponController : Controller
             }
             else
             {
-                var length = _couponService.GetCouponList().Count();
-                _couponService.AddCoupon(length + 1,
+                _couponService.AddCoupon(_couponService.GetCouponList().Count() + 1,
                     model.Code,
                     model.AmountOfDiscount,
                     model.TypeOfDiscount,
