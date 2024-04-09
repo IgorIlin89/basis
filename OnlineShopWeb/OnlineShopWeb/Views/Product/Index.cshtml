@@ -8,7 +8,7 @@
 
     <br />
 
-    @(Html.ActionLink("Add", "Add", "Product"))
+    @(Html.ActionLink("Add", "Update", "Product", null, new { @class = "btn btn-secondary" }))
 
     <br />
 
@@ -33,9 +33,9 @@
                     <td> @(product.Producer)</td>
                     <td> @(product.Category)</td>
                     <td> @(product.Picture)</td>
-                    <td> @(Html.ActionLink("Details", "Details", "Product", new { id = product.ProductId }))</td>
-                    <td> @(Html.ActionLink("Edit", "Edit", "Product", new { id = product.ProductId }))</td>
-                    <td> @(Html.ActionLink("Delete", "Delete", "Product", new { product.ProductId }))</td>
+                    <td> @(Html.ActionLink("Details", "Details", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(Html.ActionLink("Edit", "Update", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(Html.ActionLink("Delete", "Delete", "Product", new { product.ProductId }, new { @class = "btn btn-secondary" }))</td>
                 </tr>
             }
 
@@ -45,4 +45,4 @@
     </table>
 
 
-    
+

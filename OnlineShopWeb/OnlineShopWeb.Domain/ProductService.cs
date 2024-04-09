@@ -10,9 +10,9 @@ public class ProductService : IProductService
 {
     private List<Product> ProductList = new List<Product>
     {
-        new Product { ProductId = 0, Name="Persil", Producer="Henkel", Category= ProductCategory.Cleaning, Picture="Persil123.jpg"},
-        new Product { ProductId = 1, Name="Weingummi", Producer="Haribo", Category= ProductCategory.Sweets, Picture="Haribo123.jpg"},
-        new Product { ProductId = 2, Name="Pizza Salami", Producer="Dr. Oetker", Category= ProductCategory.Food, Picture="Pizza123.jpg"}
+        new Product { ProductId = 1, Name="Persil", Producer="Henkel", Category= ProductCategory.Cleaning, Picture="Persil123.jpg"},
+        new Product { ProductId = 2, Name="Weingummi", Producer="Haribo", Category= ProductCategory.Sweets, Picture="Haribo123.jpg"},
+        new Product { ProductId = 3, Name="Pizza Salami", Producer="Dr. Oetker", Category= ProductCategory.Food, Picture="Pizza123.jpg"}
     };
 
     public List<Product> GetProductList() { return ProductList; }

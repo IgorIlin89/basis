@@ -56,72 +56,65 @@ public class UserController : Controller
     }
 
     [HttpGet]
-    public IActionResult Edit(int id)
+    public IActionResult Update(int? id)
     {
-        ViewBag.ActionName = "Edit";
-        var user = _userService.GetUser(id);
+        var model = new UserModel();
 
-        var model = new UserModel
+        if (id != null)
         {
-            UserId = user.UserId,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Age = user.Age,
-            Location = new LocationModel
+            var user = _userService.GetUser(id.Value);
+
+
+            model.UserId = user.UserId;
+            model.FirstName = user.FirstName;
+            model.LastName = user.LastName;
+            model.Age = user.Age;
+            model.Location = new LocationModel
             {
                 Country = user.Location.Country,
                 City = user.Location.City,
                 Street = user.Location.Street,
                 PostalCode = user.Location.PostalCode
-            }
-        };
+            };
+        }
 
         return View(model);
     }
 
     [HttpPost]
-    public IActionResult Edit(UserModel model)
+    public IActionResult Update(UserModel model)
     {
         if (ModelState.IsValid)
         {
-            var user = _userService.GetUser(model.UserId);
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.Age = model.Age;
-            user.Location.Country = model.Location.Country;
-            user.Location.City = model.Location.City;
-            user.Location.Street = model.Location.Street;
-            user.Location.PostalCode = model.Location.PostalCode;
+            var user = _userService.GetUser(model.UserId.GetValueOrDefault());
 
+            if (user != null)
+            {
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Age = model.Age;
+                user.Location.Country = model.Location.Country;
+                user.Location.City = model.Location.City;
+                user.Location.Street = model.Location.Street;
+                user.Location.PostalCode = model.Location.PostalCode;
+            }
+            else
+            {
+            _userService.Add(_userService.GetUserList().Count +1, 
+                model.FirstName,
+                model.LastName, 
+                model.Age, 
+                model.Location.Country,
+                model.Location.City, 
+                model.Location.Street,
+                model.Location.PostalCode);
+
+            }
             return RedirectToAction("Index", "User");
         }
         else
         {
-            return View(model);//css and sass, responsive ui framework bootstrap
-        }
-    }
-
-    [HttpGet]
-    public IActionResult Add()
-    {
-        ViewBag.ActionName = "Add";
-        return View("~/Views/User/Edit.cshtml");
-    }
-
-    [HttpPost]
-    public IActionResult Add(UserModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            _userService.Add(model.UserId, model.FirstName, model.LastName, model.Age, model.Location.Country, model.Location.City, model.Location.Street, model.Location.PostalCode);
-            return RedirectToAction("Index", "User");
-        }
-        else
-        {
-            //several times sending is error, 
-            return View("~/Views/User/Edit.cshtml");
-            //interesting when age is a string
-            //return View(model);
+            return View(model);
         }
     }
 }

@@ -3,28 +3,15 @@
     ViewData["Title"] = "Igors Home Page";
 }
 
-<p>@(Html.ActionLink("Back", "Index", "User"))</p>
+<p>@(Html.ActionLink("Back", "Index", "User", null, new { @class = "btn btn-secondary" }))</p>
 
 <br />
 <br />
 
-<form asp-action="@ViewBag.ActionName" asp-controller="User" method="post">
+<form asp-action="Update" asp-controller="User" method="post">
 
-    @{
-        if(ViewBag.ActionName == "Add")
-        {
-            <label for="UserId">UserId:</label>
-            <input type="text" asp-for="UserId" />
-            <span asp-validation-for="UserId" class="text-danger"></span>
-            <p></p>
-        }
-        else if (ViewBag.ActionName == "Edit")
-        {
-            <input type="hidden" asp-for="UserId" />
-        }
-    }
 
-    
+    <input type="hidden" asp-for="UserId" />
 
     <label for="FirstName">First name:</label>
     <input type="text" asp-for="FirstName" />

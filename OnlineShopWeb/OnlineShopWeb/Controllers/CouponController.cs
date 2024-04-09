@@ -63,7 +63,7 @@ public class CouponController : Controller
         }
 
 
-        return View("~/Views/Coupon/Update.cshtml", model);
+        return View(model);
     }
 
     [HttpPost]

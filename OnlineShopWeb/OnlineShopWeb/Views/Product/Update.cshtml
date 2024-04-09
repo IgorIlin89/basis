@@ -4,26 +4,16 @@
     ViewData["Title"] = "Igors Home Page";
 }
 
-<p>@(Html.ActionLink("Back", "Index", "Product"))</p>
+<p>@(Html.ActionLink("Back", "Index", "Product", null, new { @class = "btn btn-secondary" }))</p>
 
 <br />
 <br />
 
-<form asp-action="@ViewBag.ActionName" asp-controller="Product" method="post">
+<form asp-action="Update" asp-controller="Product" method="post">
 
-    @{
-        if (ViewBag.ActionName == "Add")
-        {
-            <label for="ProductId">ProductId:</label>
-            <input type="text" asp-for="ProductId" />
-            <span asp-validation-for="ProductId" class="text-danger"></span>
-            <p></p>
-        }
-        else if (ViewBag.ActionName == "Edit")
-        {
-            <input type="hidden" asp-for="ProductId" />
-        }
-    }
+
+    <input type="hidden" asp-for="ProductId" />
+
 
     <label for="Name">Name:</label>
     <input type="text" asp-for="Name" />

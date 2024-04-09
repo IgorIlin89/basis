@@ -8,7 +8,6 @@ namespace OnlineShopWeb.Domain;
 
 public enum ProductCategory
 {
-    Unknown = 0,
     Cleaning = 1,
     Sweets = 2,
     Food = 3,

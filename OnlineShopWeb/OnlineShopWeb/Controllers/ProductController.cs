@@ -48,57 +48,49 @@ public class ProductController : Controller
     }
 
     [HttpGet]
-    public IActionResult Edit(int id)
+    public IActionResult Update(int? id)
     {
-        ViewBag.ActionName = "Edit";
-        var product = _productService.GetProduct(id);
+        var model = new ProductModel();
 
-        var model = new ProductModel
+        if (id != null)
         {
-            ProductId = product.ProductId,
-            Name = product.Name,
-            Producer = product.Producer,
-            Category = product.Category,
-            Picture = product.Picture,
-        };
+            var product = _productService.GetProduct(id.Value);
+
+            model.ProductId = product.ProductId;
+            model.Name = product.Name;
+            model.Producer = product.Producer;
+            model.Category = product.Category;
+            model.Picture = product.Picture;
+        }
+
 
         return View(model);
     }
 
+
     [HttpPost]
-    public IActionResult Edit(ProductModel model)
+    public IActionResult Update(ProductModel model)
     {
         if (ModelState.IsValid)
         {
-            var product = _productService.GetProduct(model.ProductId);
+            var product = _productService.GetProduct(model.ProductId.GetValueOrDefault());
 
-            product.ProductId = model.ProductId;
-            product.Name = model.Name;
-            product.Producer = model.Producer;
-            product.Category = model.Category;
-            product.Picture = model.Picture;
+            if (product != null)
+            {
+                product.Name = model.Name;
+                product.Producer = model.Producer;
+                product.Category = model.Category;
+                product.Picture = model.Picture;
+            }
+            else
+            {
+                _productService.AddProduct(_productService.GetProductList().Count() + 1,
+                    model.Name,
+                    model.Producer,
+                    model.Category,
+                    model.Picture);
+            }
 
-            return RedirectToAction("Index", "Product");
-        }
-        else
-        {
-            return View(model);
-        }
-    }
-
-    [HttpGet]
-    public IActionResult Add()
-    {
-        ViewBag.ActionName = "Add";
-        return View("~/Views/Product/Edit.cshtml");
-    }
-
-    [HttpPost]
-    public IActionResult Add(ProductModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            _productService.AddProduct(model.ProductId, model.Name, model.Producer, model.Category, model.Picture);
             return RedirectToAction("Index", "Product");
         }
         else

@@ -8,7 +8,7 @@
 
     <br />
 
-    @(Html.ActionLink("Add", "Add", "User"))
+    @(Html.ActionLink("Add", "Update", "User", null, new { @class = "btn btn-secondary" }))
 
     <br />
 
@@ -40,9 +40,9 @@
                         <td> @(user.Location.City)</td>
                         <td> @(user.Location.Street)</td>
                         <td> @(user.Location.PostalCode)</td>
-                        <td> @(Html.ActionLink("Details", "Details", "User", new { id = user.UserId }))</td>
-                        <td> @(Html.ActionLink("Edit", "Edit", "User", new { id = user.UserId }))</td>
-                        <td> @(Html.ActionLink("Delete", "Delete", "User", new { id = user.UserId }))</td>
+                        <td> @(Html.ActionLink("Details", "Details", "User", new { id = user.UserId }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(Html.ActionLink("Edit", "Update", "User", new { id = user.UserId }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(Html.ActionLink("Delete", "Delete", "User", new { id = user.UserId }, new { @class = "btn btn-secondary" }))</td>
                     </tr>
                 }
 
