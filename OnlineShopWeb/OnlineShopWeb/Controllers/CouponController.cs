@@ -47,64 +47,55 @@ public class CouponController : Controller
     }
 
     [HttpGet]
-    public IActionResult Edit(int id)
+    public IActionResult Update(int? id)
     {
-        ViewBag.ActionName = "Edit";
-        var coupon = _couponService.GetCoupon(id);
+        var model = new CouponModel();
 
-        var model = new CouponModel
+        if (id != null)
         {
-            CouponId = coupon.CouponId,
-            Code = coupon.Code,
-            AmountOfDiscount = coupon.AmountOfDiscount,
-            TypeOfDiscount = coupon.TypeOfDiscount,
-            MaxNumberOfUses = coupon.MaxNumberOfUses,
-        };
+            var coupon = _couponService.GetCoupon(id.Value);
 
-        return View(model);
+            model.CouponId = coupon.CouponId;
+            model.Code = coupon.Code;
+            model.AmountOfDiscount = coupon.AmountOfDiscount;
+            model.TypeOfDiscount = coupon.TypeOfDiscount;
+            model.MaxNumberOfUses = coupon.MaxNumberOfUses;
+        }
+
+
+        return View("~/Views/Coupon/Update.cshtml", model);
     }
 
     [HttpPost]
-    public IActionResult Edit(CouponModel model)
+    public IActionResult Update(CouponModel model)
     {
         if (ModelState.IsValid)
         {
             var coupon = _couponService.GetCoupon(model.CouponId.GetValueOrDefault());
 
-            coupon.CouponId = model.CouponId.GetValueOrDefault();
-            coupon.Code = model.Code;
-            coupon.AmountOfDiscount = model.AmountOfDiscount;
-            coupon.TypeOfDiscount = model.TypeOfDiscount;
-            coupon.MaxNumberOfUses = model.MaxNumberOfUses;
+            if (coupon != null)
+            {
+                coupon.Code = model.Code;
+                coupon.AmountOfDiscount = model.AmountOfDiscount;
+                coupon.TypeOfDiscount = model.TypeOfDiscount;
+                coupon.MaxNumberOfUses = model.MaxNumberOfUses;
+
+            }
+            else
+            {
+                var length = _couponService.GetCouponList().Count();
+                _couponService.AddCoupon(length + 1,
+                    model.Code,
+                    model.AmountOfDiscount,
+                    model.TypeOfDiscount,
+                    model.MaxNumberOfUses);
+            }
 
             return RedirectToAction("Index", "Coupon");
         }
         else
         {
             return View(model);
-        }
-
-    }
-
-    [HttpGet]
-    public IActionResult Add()
-    {
-        ViewBag.ActionName = "Add";
-        return View("~/Views/Coupon/Edit.cshtml");
-    }
-
-    [HttpPost]
-    public IActionResult Add(CouponModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            _couponService.AddCoupon(model.CouponId.GetValueOrDefault(), model.Code, model.AmountOfDiscount, model.TypeOfDiscount, model.MaxNumberOfUses);
-            return RedirectToAction("Index", "Coupon");
-        }
-        else
-        {
-            ViewBag.ActionName = "Add";
-            return View("~/Views/Coupon/Edit.cshtml",model);
         }
     }
 }

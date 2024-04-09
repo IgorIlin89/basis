@@ -11,9 +11,9 @@ public class CouponService : ICouponService
 
     private List<Coupon> CouponList = new List<Coupon>
     {
-        new Coupon { CouponId = 0, Code = "swD23", AmountOfDiscount = 15, TypeOfDiscount = TypeOfDiscount.Percentage, MaxNumberOfUses = 100 },
-        new Coupon { CouponId = 1, Code = "dsf4wsdf", AmountOfDiscount = 150, TypeOfDiscount = TypeOfDiscount.Total, MaxNumberOfUses = 750 },
-        new Coupon { CouponId = 2, Code = "sdfsdgfgh5fh", AmountOfDiscount = 25, TypeOfDiscount = TypeOfDiscount.Percentage, MaxNumberOfUses = 500 }
+        new Coupon { CouponId = 1, Code = "swD23", AmountOfDiscount = 15, TypeOfDiscount = TypeOfDiscount.Percentage, MaxNumberOfUses = 100 },
+        new Coupon { CouponId = 2, Code = "dsf4wsdf", AmountOfDiscount = 150, TypeOfDiscount = TypeOfDiscount.Total, MaxNumberOfUses = 750 },
+        new Coupon { CouponId = 3, Code = "sdfsdgfgh5fh", AmountOfDiscount = 25, TypeOfDiscount = TypeOfDiscount.Percentage, MaxNumberOfUses = 500 }
     };
 
     public List<Coupon> GetCouponList() { return CouponList; }

@@ -9,22 +9,13 @@
 <br />
 <br />
 
-<form asp-action="@ViewBag.ActionName" asp-controller="Coupon" method="post">
+<form asp-action=Update asp-controller="Coupon" method="post">
 
-    @{
-        if (ViewBag.ActionName == "Add")
-        {
-            <label for="CouponId">CouponId:</label>
-            <input type="text" asp-for="CouponId" />
-            <span asp-validation-for="CouponId" class="text-danger"></span>
-            <br />
 
-        }
-        else if (ViewBag.ActionName == "Edit")
-        {
-            <input type="hidden" asp-for="CouponId" />
-        }
-    }
+    <input type="hidden" asp-for="CouponId" />
+
+    <br />
+
 
     <label for="Code">Code:</label>
     <input type="text" asp-for="Code" />

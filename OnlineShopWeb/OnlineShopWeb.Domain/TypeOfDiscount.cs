@@ -8,7 +8,6 @@ namespace OnlineShopWeb.Domain;
 
 public enum TypeOfDiscount
 {
-    Unknown = 0,
     Percentage = 1,
     Total = 2
 }
