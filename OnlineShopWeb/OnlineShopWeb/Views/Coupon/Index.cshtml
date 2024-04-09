@@ -33,7 +33,7 @@
                     <td> @(product.AmountOfDiscount)</td>
                     <td> @(product.TypeOfDiscount)</td>
                     <td> @(product.MaxNumberOfUses)</td>
-                    <td> @(Html.ActionLink("Details", "Details", "Coupon", new { id = product.CouponId }))</td>
+                    <td> @(Html.ActionLink("Details", "Details", "Coupon", new { id = product.CouponId }, new { @class = "btn btn-secondary" }))</td>
                     <td> @(Html.ActionLink("Edit", "Edit", "Coupon", new { id = product.CouponId }))</td>
                     <td> @(Html.ActionLink("Delete", "Delete", "Coupon", new { product.CouponId }))</td>
                 </tr>

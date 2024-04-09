@@ -69,9 +69,9 @@ public class CouponController : Controller
     {
         if (ModelState.IsValid)
         {
-            var coupon = _couponService.GetCoupon(model.CouponId);
+            var coupon = _couponService.GetCoupon(model.CouponId.GetValueOrDefault());
 
-            coupon.CouponId = model.CouponId;
+            coupon.CouponId = model.CouponId.GetValueOrDefault();
             coupon.Code = model.Code;
             coupon.AmountOfDiscount = model.AmountOfDiscount;
             coupon.TypeOfDiscount = model.TypeOfDiscount;
@@ -98,12 +98,13 @@ public class CouponController : Controller
     {
         if (ModelState.IsValid)
         {
-            _couponService.AddCoupon(model.CouponId, model.Code, model.AmountOfDiscount, model.TypeOfDiscount, model.MaxNumberOfUses);
+            _couponService.AddCoupon(model.CouponId.GetValueOrDefault(), model.Code, model.AmountOfDiscount, model.TypeOfDiscount, model.MaxNumberOfUses);
             return RedirectToAction("Index", "Coupon");
         }
         else
         {
-            return View("~/Views/Coupon/Edit.cshtml");
+            ViewBag.ActionName = "Add";
+            return View("~/Views/Coupon/Edit.cshtml",model);
         }
     }
 }
