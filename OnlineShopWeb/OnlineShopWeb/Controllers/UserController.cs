@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShopWeb.Database;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
 using System.Diagnostics;
@@ -9,18 +10,34 @@ namespace OnlineShopWeb.Controllers;
 public class UserController : Controller
 {
     private readonly IUserService _userService;
+    private readonly ISampleRepository _sampleRepository;
 
-    public UserController(IUserService userService)
+    public UserController(IUserService userService,
+        ISampleRepository sampleRepository)
     {
         _userService = userService;
+        _sampleRepository = sampleRepository;
     }
 
     [HttpGet]
     public IActionResult Index()
     {
+        var customers = _sampleRepository.GetCustomers();
+        var userList = new List<User>();
+        foreach(var customer in customers)
+        {
+            userList.Add(new User(
+                customer.Id,
+                customer.Name,
+                customer.Name,
+                0,
+                new Location("", "", "", 12345)
+            ));
+        }
+
         var model = new UserListModel
         {
-            UserList = _userService.GetUserList()
+            UserList = userList
         };
 
         return View(model);
@@ -62,19 +79,25 @@ public class UserController : Controller
 
         if (id is not null)
         {
-            var user = _userService.GetUser(id.Value);
+            //var user = _userService.GetUser(id.Value);
+            var customer = _sampleRepository.GetCustomer(id.Value);
 
+            //TODO
+            if(customer is null)
+            {
+                //todo logging
+            }
 
-            model.UserId = user.UserId;
-            model.FirstName = user.FirstName;
-            model.LastName = user.LastName;
-            model.Age = user.Age;
+            model.UserId = customer.Id;
+            model.FirstName = customer.Name;
+            model.LastName = customer.Name;
+            model.Age = 0;
             model.Location = new LocationModel
             {
-                Country = user.Location.Country,
-                City = user.Location.City,
-                Street = user.Location.Street,
-                PostalCode = user.Location.PostalCode
+                //Country = "",
+                //City = "",
+                //Street = "",
+                //PostalCode = ""
             };
         }
 
@@ -100,14 +123,10 @@ public class UserController : Controller
             }
             else
             {
-            _userService.Add(_userService.GetUserList().Count +1, 
-                model.FirstName,
-                model.LastName, 
-                model.Age, 
-                model.Location.Country,
-                model.Location.City, 
-                model.Location.Street,
-                model.Location.PostalCode);
+                _sampleRepository.AddCustomer(new Customer
+                {
+                    Name = model.FirstName
+                });
 
             }
             return RedirectToAction("Index", "User");

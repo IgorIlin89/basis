@@ -1,3 +1,4 @@
+using OnlineShopWeb.Database;
 using OnlineShopWeb.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,19 +7,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 //Register my own services
-builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<IProductService, ProductService > ();
-builder.Services.AddSingleton<IProductService, ProductService>();
-builder.Services.AddSingleton<ICouponService, CouponService>();
+builder.Services
+    .AddSingleton<IUserService, UserService>()
+    .AddSingleton<IProductService, ProductService>()
+    .AddSingleton<IProductService, ProductService>()
+    .AddSingleton<ICouponService, CouponService>();
+
+//register database
+builder.Services.AddDatabase(builder.Configuration);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-  app.UseExceptionHandler("/Home/Error");
-  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-  app.UseHsts();
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();

@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Pr
 		tasks.txt = tasks.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShopWeb.Database", "OnlineShopWeb.Database\OnlineShopWeb.Database.csproj", "{05F30D8D-B42E-4064-B068-20756E9F14AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{64AF658C-81EF-44C3-92B8-E09BBC1508DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64AF658C-81EF-44C3-92B8-E09BBC1508DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64AF658C-81EF-44C3-92B8-E09BBC1508DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05F30D8D-B42E-4064-B068-20756E9F14AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05F30D8D-B42E-4064-B068-20756E9F14AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05F30D8D-B42E-4064-B068-20756E9F14AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05F30D8D-B42E-4064-B068-20756E9F14AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
