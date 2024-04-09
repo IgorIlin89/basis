@@ -60,7 +60,7 @@ public class UserController : Controller
     {
         var model = new UserModel();
 
-        if (id != null)
+        if (id is not null)
         {
             var user = _userService.GetUser(id.Value);
 
@@ -86,7 +86,7 @@ public class UserController : Controller
     {
         if (ModelState.IsValid)
         {
-            if (model.UserId != null)
+            if (model.UserId is not null)
             {
                 var user = _userService.GetUser(model.UserId.Value);
 

@@ -51,7 +51,7 @@ public class CouponController : Controller
     {
         var model = new CouponModel();
 
-        if (id != null)
+        if (id is not null)
         {
             var coupon = _couponService.GetCoupon(id.Value);
 
@@ -71,7 +71,7 @@ public class CouponController : Controller
     {
         if (ModelState.IsValid)
         {
-            if (model.CouponId != null)
+            if (model.CouponId is not null)
             {
                 var coupon = _couponService.GetCoupon(model.CouponId.Value);
 

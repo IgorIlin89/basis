@@ -52,7 +52,7 @@ public class ProductController : Controller
     {
         var model = new ProductModel();
 
-        if (id != null)
+        if (id is not null)
         {
             var product = _productService.GetProduct(id.Value);
 
@@ -73,7 +73,7 @@ public class ProductController : Controller
     {
         if (ModelState.IsValid)
         {
-            if (model.ProductId != null)
+            if (model.ProductId is not null)
             {
                 var product = _productService.GetProduct(model.ProductId.Value);
 
