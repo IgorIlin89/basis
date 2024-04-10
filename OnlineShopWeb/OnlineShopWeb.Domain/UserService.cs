@@ -10,10 +10,41 @@ namespace OnlineShopWeb.Domain;
 
 public class UserService : IUserService
 {
-    private List<User> UserList = new List<User> {
-        new User(1,"Igor","Ilin",34,new Location("Germany","Hamburg","Fantasie Weg",22763)),
-        new User(2,"Yury","Spiridonov", 38, new Location("Germany", "Hamburg","Habsburger Weg",21364)),
-        new User(3,"Dirk","Esk", 33, new Location("Germany", "Hamburg","Straßburger Straße",22324))
+    private List<User> UserList = new List<User>
+    {
+        new User {
+            UserId = 1,
+            FirstName = "Igor",
+            LastName = "Ilin",Age = 34,
+            Location = new Location{
+                Country = "Germany",
+                City = "Hamburg",
+                Street = "Fantasie Weg",
+                PostalCode = 22763
+            }},
+
+        new User {
+            UserId = 2,
+            FirstName = "Yury",
+            LastName = "Spiridonov",
+            Age = 38,
+            Location = new Location{
+                Country = "Germany",
+                City = "Hamburg",
+                Street = "Habsburger Weg"
+                ,PostalCode = 21364
+            }},
+
+        new User {
+            UserId = 3,
+            FirstName = "Dirk",
+            LastName = "Esk",
+            Age = 33,
+            Location = new Location{Country = "Germany",
+                City = "Hamburg",
+                Street = "Straßburger Straße",
+                PostalCode = 22324
+            }}
     };
 
     public User? GetUser(int userId)
@@ -30,6 +61,19 @@ public class UserService : IUserService
 
     public void Add(int userid, string firstName, string lastName, int Age, string country, string city, string street, int postalCode)
     {
-        UserList.Add(new User(userid, firstName, lastName, Age, new Location(country, city, street, postalCode)));
+        UserList.Add(new User
+        {
+            UserId = userid,
+            FirstName = firstName,
+            LastName = lastName,
+            Age = Age,
+            Location = new Location
+            {
+                Country = country,
+                City = city,
+                Street = street,
+                PostalCode = postalCode
+            }
+        });
     }
 }

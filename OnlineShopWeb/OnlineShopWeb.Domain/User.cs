@@ -9,14 +9,4 @@ public class User
     public string LastName { get; set; }
     public int Age { get; set; }
     public Location? Location { get; set; }
-
-    public User(int userId, string firstName, string lastName, int age, Location location)
-    {
-        UserId = userId;
-        FirstName = firstName;
-        LastName = lastName;
-        Age = age;
-        Location = location;
-    }
-
 }
