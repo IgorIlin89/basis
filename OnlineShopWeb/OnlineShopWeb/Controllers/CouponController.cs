@@ -74,13 +74,13 @@ public class CouponController : Controller
         {
             if (model.CouponId is not null)
             {
-                var coupon = _couponRepository.GetCoupon(model.CouponId.Value);
-
-                coupon.Code = model.Code;
-                coupon.AmountOfDiscount = model.AmountOfDiscount;
-                coupon.TypeOfDiscount = model.TypeOfDiscount;
-                coupon.MaxNumberOfUses = model.MaxNumberOfUses;
-
+                _couponRepository.EditCoupon(new Coupon
+                    {
+                    Code = model.Code,
+                    AmountOfDiscount = model.AmountOfDiscount,
+                    TypeOfDiscount = model.TypeOfDiscount,
+                    MaxNumberOfUses = model.MaxNumberOfUses,
+                });
             }
             else
             {

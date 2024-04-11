@@ -25,17 +25,17 @@
         </tr>
 
         @{
-            foreach (var product in Model.CouponList)
+            foreach (var coupon in Model.CouponList)
             {
                 <tr>
-                    <td> @(product.Id)</td>
-                    <td> @(product.Code)</td>
-                    <td> @(product.AmountOfDiscount)</td>
-                    <td> @(product.TypeOfDiscount)</td>
-                    <td> @(product.MaxNumberOfUses)</td>
-                    <td> @(Html.ActionLink("Details", "Details", "Coupon", new { id = product.Id }, new { @class = "btn btn-secondary" }))</td>
-                    <td> @(Html.ActionLink("Edit", "Update", "Coupon", new { id = product.Id }, new { @class = "btn btn-secondary" }))</td>
-                    <td> @(Html.ActionLink("Delete", "Delete", "Coupon", new { id = product.Id }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(coupon.Id)</td>
+                    <td> @(coupon.Code)</td>
+                    <td> @(coupon.AmountOfDiscount)</td>
+                    <td> @(coupon.TypeOfDiscount)</td>
+                    <td> @(coupon.MaxNumberOfUses)</td>
+                    <td> @(Html.ActionLink("Details", "Details", "Coupon", new { id = coupon.Id }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(Html.ActionLink("Edit", "Update", "Coupon", new { id = coupon.Id }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(Html.ActionLink("Delete", "Delete", "Coupon", new { id = coupon.Id }, new { @class = "btn btn-secondary" }))</td>
                 </tr>
             }
 

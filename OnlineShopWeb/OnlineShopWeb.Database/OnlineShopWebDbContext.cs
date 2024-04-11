@@ -19,6 +19,7 @@ public class OnlineShopWebDbContext : DbContext
         modelBuilder.Entity<Product>().ToTable("Product");
         modelBuilder.Entity<User>().ToTable("User");
         modelBuilder.Entity<Coupon>().ToTable("Coupon").HasKey( o => o.Id);
+        //modelBuilder.Entity<Coupon>().ToTable("Coupon").HasKey( o => o.Id);
     }
 }
 

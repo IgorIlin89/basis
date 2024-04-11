@@ -9,28 +9,43 @@ namespace OnlineShopWeb.Database;
 
 internal class CouponRepository : ICouponRepository
 {
+    private readonly OnlineShopWebDbContext _dbContext;
+    public CouponRepository(OnlineShopWebDbContext onlineShopWebDbContext)
+    {
+        _dbContext = onlineShopWebDbContext;
+    }
     public void AddCoupon(Coupon coupon)
     {
-        throw new NotImplementedException();
+        _dbContext.Coupon.Add(coupon);
+        _dbContext.SaveChanges();
     }
 
     public void DeleteCoupon(int id)
     {
-        throw new NotImplementedException();
+        var entityEntry = GetCoupon(id);
+        _dbContext.Remove(entityEntry);
+        _dbContext.SaveChanges();
     }
 
     public void EditCoupon(Coupon coupon)
     {
-        throw new NotImplementedException();
+        var entityEntry = GetCoupon(coupon.Id);
+
+        entityEntry.Code = coupon.Code;
+        entityEntry.AmountOfDiscount = coupon.AmountOfDiscount;
+        entityEntry.TypeOfDiscount = coupon.TypeOfDiscount;
+        entityEntry.MaxNumberOfUses = coupon.MaxNumberOfUses;
+
+        _dbContext.SaveChanges();
     }
 
     public Coupon? GetCoupon(int id)
     {
-        throw new NotImplementedException();
+        return _dbContext.Coupon.FirstOrDefault(o => o.Id == id);
     }
 
     public List<Coupon> GetCouponList()
     {
-        throw new NotImplementedException();
+        return _dbContext.Coupon.ToList();
     }
 }

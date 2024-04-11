@@ -38,6 +38,7 @@ public class UserController : Controller
     public IActionResult Details(int id)
     {
         var user = _userRepository.GetUser(id);
+
         var model = new UserModel
         {
             UserId = user.Id,
@@ -62,7 +63,6 @@ public class UserController : Controller
         if (id is not null)
         {
             var user = _userRepository.GetUser(id.Value);
-
 
             model.UserId = user.Id;
             model.FirstName = user.FirstName.Trim();
