@@ -22,6 +22,7 @@
                 <th>Country</th>
                 <th>City</th>
                 <th>Street</th>
+                <th>HouseNumber</th>
                 <th>Postal Code</th>
                 <th></th>
                 <th></th>
@@ -32,17 +33,18 @@
                 foreach (var user in Model.UserList)
                 {
                     <tr>
-                        <td> @(user.UserId)</td>
+                        <td> @(user.Id)</td>
                         <td> @(user.FirstName)</td>
                         <td> @(user.LastName)</td>
                         <td> @(user.Age)</td>
-                        <td> @(user.Location.Country)</td>
-                        <td> @(user.Location.City)</td>
-                        <td> @(user.Location.Street)</td>
-                        <td> @(user.Location.PostalCode)</td>
-                        <td> @(Html.ActionLink("Details", "Details", "User", new { id = user.UserId }, new { @class = "btn btn-secondary" }))</td>
-                        <td> @(Html.ActionLink("Edit", "Update", "User", new { id = user.UserId }, new { @class = "btn btn-secondary" }))</td>
-                        <td> @(Html.ActionLink("Delete", "Delete", "User", new { id = user.UserId }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(user.Country)</td>
+                        <td> @(user.City)</td>
+                        <td> @(user.Street)</td>
+                        <td> @(user.HouseNumber)</td>
+                        <td> @(user.PostalCode)</td>
+                        <td> @(Html.ActionLink("Details", "Details", "User", new { id = user.Id }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(Html.ActionLink("Edit", "Update", "User", new { id = user.Id }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(Html.ActionLink("Delete", "Delete", "User", new { id = user.Id }, new { @class = "btn btn-secondary" }))</td>
                     </tr>
                 }
 

@@ -14,7 +14,9 @@ public static class DbServiceCollectionExtensions
             configure.UseSqlServer(configuration.GetConnectionString("OnlineShopWebDb"));
         });
 
-        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>()
+        .AddScoped<ICouponRepository, CouponRepository>()
+        .AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }

@@ -6,11 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//Register my own services
-builder.Services
-    .AddSingleton<IUserService, UserService> ()
-    .AddSingleton<ICouponService , CouponService>();
-
 builder.Services.AddDatabase(builder.Configuration);
 
 var app = builder.Build();

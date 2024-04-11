@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShopWeb.Database;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
 
@@ -6,11 +7,11 @@ namespace OnlineShopWeb.Controllers;
 
 public class CouponController : Controller
 {
-    private readonly ICouponService _couponService;
+    private readonly ICouponRepository _couponRepository;
 
-    public CouponController(ICouponService couponservice)
+    public CouponController(ICouponRepository couponRepository)
     {
-        _couponService = couponservice;
+        _couponRepository = couponRepository;
     }
 
     [HttpGet]
@@ -18,7 +19,7 @@ public class CouponController : Controller
     {
         var model = new CouponListModel
         {
-            CouponList = _couponService.GetCouponList()
+            CouponList = _couponRepository.GetCouponList()
         };
         return View(model);
     }
@@ -26,18 +27,18 @@ public class CouponController : Controller
     [HttpGet]
     public IActionResult Delete(int id)
     {
-        _couponService.Delete(id);
+        _couponRepository.DeleteCoupon(id);
         return RedirectToAction("Index", "Coupon");
     }
 
     [HttpGet]
     public IActionResult Details(int id)
     {
-        var coupon = _couponService.GetCoupon(id);
+        var coupon = _couponRepository.GetCoupon(id);
 
         var model = new CouponModel
         {
-            CouponId = coupon.CouponId,
+            CouponId = coupon.Id,
             Code = coupon.Code,
             AmountOfDiscount = coupon.AmountOfDiscount,
             TypeOfDiscount = coupon.TypeOfDiscount,
@@ -53,9 +54,9 @@ public class CouponController : Controller
 
         if (id is not null)
         {
-            var coupon = _couponService.GetCoupon(id.Value);
+            var coupon = _couponRepository.GetCoupon(id.Value);
 
-            model.CouponId = coupon.CouponId;
+            model.CouponId = coupon.Id;
             model.Code = coupon.Code;
             model.AmountOfDiscount = coupon.AmountOfDiscount;
             model.TypeOfDiscount = coupon.TypeOfDiscount;
@@ -73,7 +74,7 @@ public class CouponController : Controller
         {
             if (model.CouponId is not null)
             {
-                var coupon = _couponService.GetCoupon(model.CouponId.Value);
+                var coupon = _couponRepository.GetCoupon(model.CouponId.Value);
 
                 coupon.Code = model.Code;
                 coupon.AmountOfDiscount = model.AmountOfDiscount;
@@ -83,11 +84,15 @@ public class CouponController : Controller
             }
             else
             {
-                _couponService.AddCoupon(_couponService.GetCouponList().Count() + 1,
-                    model.Code,
-                    model.AmountOfDiscount,
-                    model.TypeOfDiscount,
-                    model.MaxNumberOfUses);
+                _couponRepository.AddCoupon(
+                    
+                    new Coupon { 
+                    Code = model.Code,
+                    AmountOfDiscount = model.AmountOfDiscount,
+                    TypeOfDiscount = model.TypeOfDiscount,
+                    MaxNumberOfUses = model.MaxNumberOfUses
+                    }
+                    );
             }
 
             return RedirectToAction("Index", "Coupon");

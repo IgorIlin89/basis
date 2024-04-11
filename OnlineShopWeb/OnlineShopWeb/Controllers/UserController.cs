@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShopWeb.Database;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
 using System.Diagnostics;
@@ -8,11 +9,11 @@ namespace OnlineShopWeb.Controllers;
 
 public class UserController : Controller
 {
-    private readonly IUserService _userService;
+    private readonly IUserRepository _userRepository;
 
-    public UserController(IUserService userService)
+    public UserController(IUserRepository userRepository)
     {
-        _userService = userService;
+        _userRepository = userRepository;
     }
 
     [HttpGet]
@@ -20,7 +21,7 @@ public class UserController : Controller
     {
         var model = new UserListModel
         {
-            UserList = _userService.GetUserList()
+            UserList = _userRepository.GetUserList()
         };
 
         return View(model);
@@ -29,27 +30,25 @@ public class UserController : Controller
     [HttpGet]
     public IActionResult Delete(int id)
     {
-        _userService.Delete(id);
+        _userRepository.DeleteUser(id);
         return RedirectToAction("Index", "User");
     }
 
     [HttpGet]
     public IActionResult Details(int id)
     {
-        var user = _userService.GetUser(id);
+        var user = _userRepository.GetUser(id);
         var model = new UserModel
         {
-            UserId = user.UserId,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
+            UserId = user.Id,
+            FirstName = user.FirstName.Trim(),
+            LastName = user.LastName.Trim(),
             Age = user.Age,
-            Location = new LocationModel
-            {
-                Country = user.Location.Country,
-                City = user.Location.City,
-                Street = user.Location.Street,
-                PostalCode = user.Location.PostalCode
-            }
+            Country = user.Country.Trim(),
+            City = user.City.Trim(),
+            Street = user.Street.Trim(),
+            HouseNumber = user.HouseNumber,
+            PostalCode = user.PostalCode
         };
 
         return View(model);
@@ -62,20 +61,19 @@ public class UserController : Controller
 
         if (id is not null)
         {
-            var user = _userService.GetUser(id.Value);
+            var user = _userRepository.GetUser(id.Value);
 
 
-            model.UserId = user.UserId;
-            model.FirstName = user.FirstName;
-            model.LastName = user.LastName;
+            model.UserId = user.Id;
+            model.FirstName = user.FirstName.Trim();
+            model.LastName = user.LastName.Trim();
             model.Age = user.Age;
-            model.Location = new LocationModel
-            {
-                Country = user.Location.Country,
-                City = user.Location.City,
-                Street = user.Location.Street,
-                PostalCode = user.Location.PostalCode
-            };
+            model.Country = user.Country.Trim();
+            model.City = user.City.Trim();
+            model.Street = user.Street.Trim();
+            model.HouseNumber = user.HouseNumber;
+            model.PostalCode = user.PostalCode;
+
         }
 
         return View(model);
@@ -88,26 +86,36 @@ public class UserController : Controller
         {
             if (model.UserId is not null)
             {
-                var user = _userService.GetUser(model.UserId.Value);
-
-                user.FirstName = model.FirstName;
-                user.LastName = model.LastName;
-                user.Age = model.Age;
-                user.Location.Country = model.Location.Country;
-                user.Location.City = model.Location.City;
-                user.Location.Street = model.Location.Street;
-                user.Location.PostalCode = model.Location.PostalCode;
+                _userRepository.EditUser(
+                    new User
+                    {
+                        Id = model.UserId.Value,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Age = model.Age,
+                        Country = model.Country,
+                        City = model.City,
+                        Street = model.Street,
+                        HouseNumber = model.HouseNumber,
+                        PostalCode = model.PostalCode
+                    }
+                );
             }
             else
             {
-            _userService.Add(_userService.GetUserList().Count +1, 
-                model.FirstName,
-                model.LastName, 
-                model.Age, 
-                model.Location.Country,
-                model.Location.City, 
-                model.Location.Street,
-                model.Location.PostalCode);
+                _userRepository.AddUser(
+                    new User
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Age = model.Age,
+                        Country = model.Country,
+                        City = model.City,
+                        Street = model.Street,
+                        HouseNumber = model.HouseNumber,
+                        PostalCode = model.PostalCode
+                    }
+                );
 
             }
             return RedirectToAction("Index", "User");

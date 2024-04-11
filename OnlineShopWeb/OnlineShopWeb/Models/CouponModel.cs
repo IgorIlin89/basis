@@ -1,4 +1,5 @@
 ﻿using OnlineShopWeb.Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShopWeb.Models;
 

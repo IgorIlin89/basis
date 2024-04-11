@@ -20,7 +20,7 @@ internal class ProductRepository : IProductRepository
         return product;
     }
 
-    public Product Edit(Product product)
+    public void EditProduct(Product product)
     {
         var entityEntry = GetProduct(product.Id);
         entityEntry.Name = product.Name;
@@ -28,7 +28,6 @@ internal class ProductRepository : IProductRepository
         entityEntry.Category = product.Category;
         entityEntry.Picture = product.Picture;
         _dbContext.SaveChanges();
-        return new Product();
     }
 
     public void DeleteProduct(int id)
@@ -43,7 +42,7 @@ internal class ProductRepository : IProductRepository
         return _dbContext.Product.FirstOrDefault(o => o.Id == id);
     }
 
-    public List<Product> GetProducts()
+    public List<Product> GetProductList()
     {
         return _dbContext.Product.ToList();
     }

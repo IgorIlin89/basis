@@ -5,12 +5,12 @@ namespace OnlineShopWeb.Database;
 
 public interface IProductRepository
 {
-    List<Product> GetProducts();
+    List<Product> GetProductList();
 
     Product? GetProduct(int id);
 
     Product AddProduct(Product product);
 
     void DeleteProduct(int id);
-    public Product Edit(Product product);
+    public void EditProduct(Product product);
 }

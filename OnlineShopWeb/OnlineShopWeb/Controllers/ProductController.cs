@@ -19,7 +19,7 @@ public class ProductController : Controller
     {
         var model = new ProductListModel
         {
-            ProductList = _productRepository.GetProducts()
+            ProductList = _productRepository.GetProductList()
         };
         return View(model);
     }
@@ -39,10 +39,10 @@ public class ProductController : Controller
         var model = new ProductModel
         {
             ProductId = product.Id,
-            Name = product.Name,
-            Producer = product.Producer,
+            Name = product.Name.Trim(),
+            Producer = product.Producer.Trim(),
             Category = product.Category,
-            Picture = product.Picture,
+            Picture = product.Picture.Trim(),
         };
 
         return View(model);
@@ -58,10 +58,10 @@ public class ProductController : Controller
             var product = _productRepository.GetProduct(id.Value);
 
             model.ProductId = product.Id;
-            model.Name = product.Name;
-            model.Producer = product.Producer;
+            model.Name = product.Name.Trim();
+            model.Producer = product.Producer.Trim();
             model.Category = product.Category;
-            model.Picture = product.Picture;
+            model.Picture = product.Picture.Trim();
         }
 
 
