@@ -28,14 +28,14 @@
             foreach (var product in Model.ProductList)
             {
                 <tr>
-                    <td> @(product.ProductId)</td>
+                    <td> @(product.Id)</td>
                     <td> @(product.Name)</td>
                     <td> @(product.Producer)</td>
                     <td> @(product.Category)</td>
                     <td> @(product.Picture)</td>
-                    <td> @(Html.ActionLink("Details", "Details", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
-                    <td> @(Html.ActionLink("Edit", "Update", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
-                    <td> @(Html.ActionLink("Delete", "Delete", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(Html.ActionLink("Details", "Details", "Product", new { id = product.Id }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(Html.ActionLink("Edit", "Update", "Product", new { id = product.Id }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(Html.ActionLink("Delete", "Delete", "Product", new { id = product.Id }, new { @class = "btn btn-secondary" }))</td>
                 </tr>
             }
 

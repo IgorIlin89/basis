@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShopWeb.Database;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
 
@@ -6,11 +7,11 @@ namespace OnlineShopWeb.Controllers;
 
 public class ProductController : Controller
 {
-    private readonly IProductService _productService;
+    private readonly IProductRepository _productRepository;
 
-    public ProductController(IProductService productservice)
+    public ProductController(IProductRepository productRepository)
     {
-        _productService = productservice;
+        _productRepository = productRepository;
     }
 
     [HttpGet]
@@ -18,7 +19,7 @@ public class ProductController : Controller
     {
         var model = new ProductListModel
         {
-            ProductList = _productService.GetProductList()
+            ProductList = _productRepository.GetProducts()
         };
         return View(model);
     }
@@ -26,18 +27,18 @@ public class ProductController : Controller
     [HttpGet]
     public IActionResult Delete(int id)
     {
-        _productService.Delete(id);
+        _productRepository.DeleteProduct(id);
         return RedirectToAction("Index", "Product");
     }
 
     [HttpGet]
     public IActionResult Details(int id)
     {
-        var product = _productService.GetProduct(id);
+        var product = _productRepository.GetProduct(id);
 
         var model = new ProductModel
         {
-            ProductId = product.ProductId,
+            ProductId = product.Id,
             Name = product.Name,
             Producer = product.Producer,
             Category = product.Category,
@@ -54,9 +55,9 @@ public class ProductController : Controller
 
         if (id is not null)
         {
-            var product = _productService.GetProduct(id.Value);
+            var product = _productRepository.GetProduct(id.Value);
 
-            model.ProductId = product.ProductId;
+            model.ProductId = product.Id;
             model.Name = product.Name;
             model.Producer = product.Producer;
             model.Category = product.Category;
@@ -75,7 +76,7 @@ public class ProductController : Controller
         {
             if (model.ProductId is not null)
             {
-                var product = _productService.GetProduct(model.ProductId.Value);
+                var product = _productRepository.GetProduct(model.ProductId.Value);
 
                 product.Name = model.Name;
                 product.Producer = model.Producer;
@@ -84,11 +85,15 @@ public class ProductController : Controller
             }
             else
             {
-                _productService.AddProduct(_productService.GetProductList().Count() + 1,
-                    model.Name,
-                    model.Producer,
-                    model.Category,
-                    model.Picture);
+                _productRepository.AddProduct(
+                    new Product
+                    {
+                        Name = model.Name,
+                        Producer = model.Producer,
+                        Category = model.Category,
+                        Picture = model.Picture
+                    }
+                    );
             }
 
             return RedirectToAction("Index", "Product");
