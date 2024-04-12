@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OnlineShopWeb.Domain;
+﻿namespace OnlineShopWeb.Domain;
 
 public class Coupon
 {
-    public int Id;
-    public string Code;
-    public double AmountOfDiscount;
-    public TypeOfDiscount TypeOfDiscount;
-    public long? MaxNumberOfUses;
+    public int Id { get; set; }
+    public string Code { get; set; }
+    public double AmountOfDiscount { get; set; }
+    public TypeOfDiscount TypeOfDiscount { get; set; }
+    public long? MaxNumberOfUses { get; set; }
 }

@@ -19,10 +19,26 @@ public class UserController : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        var model = new UserListModel
+        var userList = _userRepository.GetUserList();
+        var model = new UserListModel();
+
+        foreach (var user in userList)
         {
-            UserList = _userRepository.GetUserList()
-        };
+            model.UserModelList.Add(
+                new UserModel
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Age = user.Age,
+                    Country = user.Country,
+                    City = user.City,
+                    Street = user.Street,
+                    HouseNumber = user.HouseNumber,
+                    PostalCode = user.PostalCode,
+                });
+        }
+
 
         return View(model);
     }

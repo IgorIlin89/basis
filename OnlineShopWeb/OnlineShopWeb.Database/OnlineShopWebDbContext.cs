@@ -16,9 +16,9 @@ public class OnlineShopWebDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Product>().ToTable("Product");
-        modelBuilder.Entity<User>().ToTable("User");
-        modelBuilder.Entity<Coupon>().ToTable("Coupon").HasKey( o => o.Id);
+        //modelBuilder.Entity<Product>();
+        //modelBuilder.Entity<User>();
+        //modelBuilder.Entity<Coupon>();
         //modelBuilder.Entity<Coupon>().ToTable("Coupon").HasKey( o => o.Id);
     }
 }

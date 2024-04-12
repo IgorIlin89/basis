@@ -17,10 +17,22 @@ public class ProductController : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        var model = new ProductListModel
+        var productList = _productRepository.GetProductList();
+        var model = new ProductListModel();
+
+        foreach (var product in productList)
         {
-            ProductList = _productRepository.GetProductList()
-        };
+            model.ProductModelList.Add(
+                new ProductModel
+                {
+                    ProductId = product.Id,
+                    Name = product.Name,
+                    Producer = product.Producer,
+                    Category = product.Category,
+                    Picture = product.Picture,
+                });
+        }
+
         return View(model);
     }
 
@@ -76,12 +88,15 @@ public class ProductController : Controller
         {
             if (model.ProductId is not null)
             {
-                var product = _productRepository.GetProduct(model.ProductId.Value);
-
-                product.Name = model.Name;
-                product.Producer = model.Producer;
-                product.Category = model.Category;
-                product.Picture = model.Picture;
+                _productRepository.EditProduct(
+                    new Product
+                    {
+                        Id = model.ProductId.Value,
+                        Name = model.Name,
+                        Producer = model.Producer,
+                        Category = model.Category,
+                        Picture = model.Picture,
+                    });
             }
             else
             {

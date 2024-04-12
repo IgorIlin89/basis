@@ -4,5 +4,5 @@ namespace OnlineShopWeb.Models;
 
 public class UserListModel
 {
-    public required List<User> UserList { get; set; }
+    public List<UserModel> UserModelList { get; set; } = new List<UserModel>();
 }

@@ -17,10 +17,23 @@ public class CouponController : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        var model = new CouponListModel
+        var couponList = _couponRepository.GetCouponList();
+        var model = new CouponListModel();
+
+        foreach (var coupon in couponList)
         {
-            CouponList = _couponRepository.GetCouponList()
-        };
+            model.CouponModelList.Add(
+                new CouponModel
+                {
+                    CouponId = coupon.Id,
+                    Code = coupon.Code,
+                    AmountOfDiscount = coupon.AmountOfDiscount,
+                    TypeOfDiscount = coupon.TypeOfDiscount,
+                    MaxNumberOfUses = coupon.MaxNumberOfUses,
+                }
+            );
+        }
+
         return View(model);
     }
 
@@ -75,7 +88,8 @@ public class CouponController : Controller
             if (model.CouponId is not null)
             {
                 _couponRepository.EditCoupon(new Coupon
-                    {
+                {
+                    Id = model.CouponId.Value,
                     Code = model.Code,
                     AmountOfDiscount = model.AmountOfDiscount,
                     TypeOfDiscount = model.TypeOfDiscount,
@@ -85,12 +99,13 @@ public class CouponController : Controller
             else
             {
                 _couponRepository.AddCoupon(
-                    
-                    new Coupon { 
-                    Code = model.Code,
-                    AmountOfDiscount = model.AmountOfDiscount,
-                    TypeOfDiscount = model.TypeOfDiscount,
-                    MaxNumberOfUses = model.MaxNumberOfUses
+
+                    new Coupon
+                    {
+                        Code = model.Code,
+                        AmountOfDiscount = model.AmountOfDiscount,
+                        TypeOfDiscount = model.TypeOfDiscount,
+                        MaxNumberOfUses = model.MaxNumberOfUses
                     }
                     );
             }

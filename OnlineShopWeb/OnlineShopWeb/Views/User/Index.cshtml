@@ -30,10 +30,10 @@
             </tr>
 
             @{
-                foreach (var user in Model.UserList)
+                foreach (var user in Model.UserModelList)
                 {
                     <tr>
-                        <td> @(user.Id)</td>
+                        <td> @(user.UserId)</td>
                         <td> @(user.FirstName)</td>
                         <td> @(user.LastName)</td>
                         <td> @(user.Age)</td>
@@ -42,9 +42,9 @@
                         <td> @(user.Street)</td>
                         <td> @(user.HouseNumber)</td>
                         <td> @(user.PostalCode)</td>
-                        <td> @(Html.ActionLink("Details", "Details", "User", new { id = user.Id }, new { @class = "btn btn-secondary" }))</td>
-                        <td> @(Html.ActionLink("Edit", "Update", "User", new { id = user.Id }, new { @class = "btn btn-secondary" }))</td>
-                        <td> @(Html.ActionLink("Delete", "Delete", "User", new { id = user.Id }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(Html.ActionLink("Details", "Details", "User", new { id = user.UserId }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(Html.ActionLink("Edit", "Update", "User", new { id = user.UserId }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(Html.ActionLink("Delete", "Delete", "User", new { id = user.UserId }, new { @class = "btn btn-secondary" }))</td>
                     </tr>
                 }
 

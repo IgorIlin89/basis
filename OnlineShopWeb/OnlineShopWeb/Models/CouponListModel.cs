@@ -4,5 +4,5 @@ namespace OnlineShopWeb.Models;
 
 public class CouponListModel
 {
-    public List<Coupon> CouponList { get; set; }
+    public List<CouponModel> CouponModelList { get; set; } = new List<CouponModel>();
 }
