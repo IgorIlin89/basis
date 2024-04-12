@@ -1,5 +1,6 @@
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Database;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDatabase(builder.Configuration);
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.HttpOnly = true;
+        //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.LoginPath = "/Login/SignIn/";
+        options.AccessDeniedPath = "/Error/Forbidden/";
+    });
+
+
+builder.Services.AddAuthorization(o =>
+{
+    o.AddPolicy(AuthorizeControllerModelConvention.PolicyName, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+    });
+});
 
 var app = builder.Build();
 
@@ -23,6 +44,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

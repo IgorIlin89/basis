@@ -4,7 +4,6 @@ namespace OnlineShopWeb.Domain;
 
 public class User
 {
-    [Key]
     public int Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -14,4 +13,6 @@ public class User
     public string Street { get; set; }
     public int HouseNumber { get; set; }
     public int PostalCode { get; set; }
+
+    public string Password { get; set; }
 }

@@ -7,7 +7,8 @@ public interface IUserRepository
 {
     List<User> GetUserList();
 
-    User? GetUser(int id);
+    User? GetUserById(int id);
+    User? GetUserByName(string firstName);
 
     void AddUser(User user);
 

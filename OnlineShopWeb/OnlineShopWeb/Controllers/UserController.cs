@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Database;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
@@ -6,7 +7,6 @@ using System.Diagnostics;
 using System.Reflection;
 
 namespace OnlineShopWeb.Controllers;
-
 public class UserController : Controller
 {
     private readonly IUserRepository _userRepository;
@@ -53,7 +53,7 @@ public class UserController : Controller
     [HttpGet]
     public IActionResult Details(int id)
     {
-        var user = _userRepository.GetUser(id);
+        var user = _userRepository.GetUserById(id);
 
         var model = new UserModel
         {
@@ -78,7 +78,7 @@ public class UserController : Controller
 
         if (id is not null)
         {
-            var user = _userRepository.GetUser(id.Value);
+            var user = _userRepository.GetUserById(id.Value);
 
             model.UserId = user.Id;
             model.FirstName = user.FirstName.Trim();
@@ -141,4 +141,16 @@ public class UserController : Controller
             return View(model);
         }
     }
+
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    public IActionResult Register()
+    {
+        return View();
+    }
+
+
 }

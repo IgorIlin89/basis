@@ -1,0 +1,63 @@
+﻿@model OnlineShopWeb.Models.UserModel
+@{
+    ViewData["Title"] = "Igors Home Page";
+}
+
+<p>@(Html.ActionLink("Back", "Index", "Login", null, new { @class = "btn btn-secondary" }))</p>
+
+<br />
+<br />
+
+<form asp-action="Update" asp-controller="User" method="post">
+
+    <label for="FirstName">First name:</label>
+    <input type="text" asp-for="FirstName" />
+    <span asp-validation-for="FirstName" class="text-danger"></span>
+
+    <br />
+
+    <label for="LastName">Last name:</label>
+    <input type="text" asp-for="LastName" />
+    <span asp-validation-for="LastName" class="text-danger"></span>
+
+    <br />
+
+    <label for="Age">Age:</label>
+    <input type="text" asp-for="Age" />
+    <span asp-validation-for="Age" class="text-danger"></span>
+
+    <br />
+
+    <label for="Country">Country:</label>
+    <input type="text" asp-for="Country" />
+    <span asp-validation-for="Country" class="text-danger"></span>
+
+    <br />
+
+    <label for="City">City:</label>
+    <input type="text" asp-for="City" />
+    <span asp-validation-for="City" class="text-danger"></span>
+
+    <br />
+
+    <label for="Street">Street:</label>
+    <input type="text" asp-for="Street" />
+    <span asp-validation-for="Street" class="text-danger"></span>
+    <br />
+
+    <label for="HouseNumber">House Number:</label>
+    <input type="text" asp-for="HouseNumber" />
+    <span asp-validation-for="HouseNumber" class="text-danger"></span>
+
+    <br />
+
+    <label for="PostalCode">Postal Code:</label>
+    <input type="text" asp-for="PostalCode" />
+    <span asp-validation-for="PostalCode" class="text-danger"></span>
+
+    <br />
+    <br />
+
+    <input type="submit" value="Register" />
+
+</form>

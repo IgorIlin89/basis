@@ -24,14 +24,14 @@ internal class UserRepository : IUserRepository
 
     public void DeleteUser(int id)
     {
-        var entityEntry = GetUser(id);
+        var entityEntry = GetUserById(id);
         _dbContext.Remove(entityEntry);
         _dbContext.SaveChanges();
     }
 
     public void EditUser(User user)
     {
-        var entityEntry = GetUser(user.Id);
+        var entityEntry = GetUserById(user.Id);
         entityEntry.Id = user.Id;
         entityEntry.FirstName = user.FirstName;
         entityEntry.LastName = user.LastName;
@@ -45,13 +45,20 @@ internal class UserRepository : IUserRepository
         _dbContext.SaveChanges();
     }
 
-    public User? GetUser(int id)
+    public User? GetUserById(int id)
     {
         return _dbContext.User.FirstOrDefault(o => o.Id == id);
+    }
+
+    public User? GetUserByName(string firstName)
+    {
+        return _dbContext.User.FirstOrDefault(o => o.FirstName == firstName);
     }
 
     public List<User> GetUserList()
     {
         return _dbContext.User.ToList();
     }
+
+
 }
