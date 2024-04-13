@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Models;
-using OnlineShopWeb.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using OnlineShopWeb.Domain;
+using OnlineShopWeb.Database.Interfaces;
 
 namespace OnlineShopWeb.Controllers;
 

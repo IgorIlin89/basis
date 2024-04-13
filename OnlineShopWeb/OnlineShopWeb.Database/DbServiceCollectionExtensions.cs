@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OnlineShopWeb.Database.Interfaces;
 
 namespace OnlineShopWeb.Database;
 

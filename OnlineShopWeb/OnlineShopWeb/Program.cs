@@ -1,6 +1,7 @@
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,11 @@ builder.Services.AddAuthorization(o =>
     {
         policy.RequireAuthenticatedUser();
     });
+});
+
+builder.Services.AddMvc(options =>
+{
+    options.Conventions.Add(new AuthorizeControllerModelConvention());
 });
 
 var app = builder.Build();

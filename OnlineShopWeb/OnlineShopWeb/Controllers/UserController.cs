@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Database;
+using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
 using System.Diagnostics;

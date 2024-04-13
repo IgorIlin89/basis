@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OnlineShopWeb.Domain;
 
-namespace OnlineShopWeb.Database;
+namespace OnlineShopWeb.Database.Interfaces;
 
 public interface IUserRepository
 {
