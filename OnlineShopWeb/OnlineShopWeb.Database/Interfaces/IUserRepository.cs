@@ -9,6 +9,9 @@ public interface IUserRepository
 
     User? GetUserById(int id);
     User? GetUserByName(string firstName);
+    public User? GetUserByEMail(string eMail);
+
+    public bool CheckUserPassword(string password);
 
     void AddUser(User user);
 

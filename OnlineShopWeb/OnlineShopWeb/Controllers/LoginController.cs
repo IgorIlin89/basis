@@ -2,6 +2,7 @@
 using OnlineShopWeb.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Database.Interfaces;
@@ -29,17 +30,23 @@ public class LoginController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = _userRepository.GetUserByName(model.UserName);
+            var user = _userRepository.GetUserByEMail(model.EMail);
             if(user is null)
             {
                 ModelState.AddModelError("Model","User does not exist");
                 return View(model);
             }
-            //TODO password validation
+
+            if(user.Password.Trim() != model.Password.Trim())
+            {
+                ModelState.AddModelError("Model", "Wrong Password");
+                return View(model);
+            }
+
             await SignIn(user);
 
         }
-        return View(model);
+        return RedirectToAction("Index", "Product");
     }
 
     protected async Task SignIn(User user)
@@ -59,7 +66,48 @@ public class LoginController : Controller
             ExpiresUtc = DateTimeOffset.Now.AddDays(1),
         };
 
-
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties);
+    }
+
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync();
+        return RedirectToAction("SignIn", "Login");
+    }
+
+    [HttpGet]
+    public IActionResult Register()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Register(RegistrationModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            if(model.Password == model.RepeatPassword)
+            {
+                _userRepository.AddUser(
+                    new User
+                    {
+                        EMail = model.EMail,
+                        Password = model.Password.Trim(),
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Age = model.Age,
+                        Country = model.Country,
+                        City = model.City,
+                        Street = model.Street,
+                        HouseNumber = model.HouseNumber,
+                        PostalCode = model.PostalCode
+                    });
+            }else
+            {
+                ModelState.AddModelError("Model","The repeated Password was not the same");
+                return View(model);
+            }
+        }
+        return View(model);
     }
 }

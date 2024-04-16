@@ -1,20 +1,22 @@
 ﻿@model OnlineShopWeb.Models.LoginModel
 @{
     ViewData["Title"] = "Igors Home Page";
+    Layout = null;
+
 }
 
-<p>@(Html.ActionLink("Register", "Register", "User", null, new { @class = "btn btn-secondary" }))</p>
+<p>@(Html.ActionLink("Register", "Register", "Login", null, new { @class = "btn btn-secondary" }))</p>
 
 <br />
 <br />
 
 <form asp-action="SignIn" asp-controller="Login" method="post">
 
-    @Html.ValidationSummary("", new { @class = "text-danger" });
+    @Html.ValidationSummary("", new { @class = "text-danger" })
 
-    <label for="UserName">Username:</label>
-    <input type="text" asp-for="UserName" />
-    <span asp-validation-for="UserName" class="text-danger"></span>
+    <label for="EMail">E-Mail:</label>
+    <input type="text" asp-for="EMail" />
+    <span asp-validation-for="EMail" class="text-danger"></span>
 
     <br />
 

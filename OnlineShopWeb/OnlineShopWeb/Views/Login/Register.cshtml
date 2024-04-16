@@ -1,4 +1,4 @@
-﻿@model OnlineShopWeb.Models.UserModel
+﻿@model OnlineShopWeb.Models.RegistrationModel
 @{
     ViewData["Title"] = "Igors Home Page";
 }
@@ -8,7 +8,27 @@
 <br />
 <br />
 
-<form asp-action="Update" asp-controller="User" method="post">
+<form asp-action="Register" asp-controller="Login" method="post">
+
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    <label for="EMail">EMail:</label>
+    <input type="text" asp-for="EMail" />
+    <span asp-validation-for="EMail" class="text-danger"></span>
+
+    <br />
+
+    <label for="Password">Password:</label>
+    <input type="text" asp-for="Password" />
+    <span asp-validation-for="Password" class="text-danger"></span>
+
+    <br />
+
+    <label for="RepeatPassword">Repeat Password:</label>
+    <input type="text" asp-for="RepeatPassword" />
+    <span asp-validation-for="RepeatPassword" class="text-danger"></span>
+
+    <br />
 
     <label for="FirstName">First name:</label>
     <input type="text" asp-for="FirstName" />

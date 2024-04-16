@@ -1,10 +1,5 @@
 ﻿using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShopWeb.Database;
 
@@ -33,7 +28,6 @@ internal class UserRepository : IUserRepository
     public void EditUser(User user)
     {
         var entityEntry = GetUserById(user.Id);
-        entityEntry.Id = user.Id;
         entityEntry.FirstName = user.FirstName;
         entityEntry.LastName = user.LastName;
         entityEntry.Age = user.Age;
@@ -54,6 +48,18 @@ internal class UserRepository : IUserRepository
     public User? GetUserByName(string firstName)
     {
         return _dbContext.User.FirstOrDefault(o => o.FirstName == firstName);
+    }
+
+    public User? GetUserByEMail(string eMail)
+    {
+        return _dbContext.User.FirstOrDefault(o => o.EMail == eMail);
+    }
+
+    public bool CheckUserPassword(string email)
+    {
+        //var user = _dbContext.User.FirstOrDefault(o => o.EMail == email);
+        //_dbContext.User.
+        return true;
     }
 
     public List<User> GetUserList()

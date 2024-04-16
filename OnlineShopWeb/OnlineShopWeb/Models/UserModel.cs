@@ -5,6 +5,7 @@ namespace OnlineShopWeb.Models;
 public class UserModel
 {
     public int? UserId { get; set; }
+    public string EMail { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public int Age { get; set; }
