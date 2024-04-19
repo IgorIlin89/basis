@@ -1,0 +1,65 @@
+﻿@using System.Text.Json;
+@model ShoppingCartListModel
+@{
+    ViewData["Title"] = "Igors Home Page";
+    string serializedList = JsonSerializer.Serialize(Model.ShoppingCartModelList);
+}
+
+@section Scripts {
+    <script>
+
+    </script>
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <br />
+
+    <table>
+        <tr>
+            <th>Product Id</th>
+            <th>Product Name</th>
+            <th></th>
+        </tr>
+
+        @{
+            foreach (var shoppingCartItem in Model.ShoppingCartModelList)
+            {
+                <tr>
+                    <td> @(shoppingCartItem.ProductId)</td>
+                    <td> @(shoppingCartItem.ProductName)</td>
+                    <td> @(Html.ActionLink("Delete", "Delete", "ShoppingCart", new { id = shoppingCartItem.Id }, new { @class = "btn btn-secondary" }))</td>
+                </tr>
+            }
+
+
+        }
+
+
+
+    </table>
+
+    <form asp-action="BuyAllItemsInShoppingCart" asp-controller="ShoppingCart" method="post">
+
+
+        @* //string serializedListModel = JsonSerializer.Serialize(Model.ShoppingCartModelList);
+
+        <input type="hidden" asp-for="serializedList" Tewsdfst />
+
+        <input type="hidden" asp-for="serializedList" />
+
+
+        <p></p> *@
+
+        <input type="text" asp-for="CouponCode" />
+        <span asp-route-couponCode="CouponCode" class="text-danger"></span>
+
+        <br />
+        <input type="submit" value="Buy Everything" />
+
+    </form>
+
+    @* @(Html.ActionLink("Buy everything", "BuyAllItemsInShoppingCart", "ShoppingCart", new { shoppingCartModelList = Model.ShoppingCartModelList, couponCode = "test" }, new { @class = "btn btn-secondary" })) *@
+
+

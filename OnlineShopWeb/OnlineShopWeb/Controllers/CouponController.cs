@@ -47,7 +47,7 @@ public class CouponController : Controller
     [HttpGet]
     public IActionResult Details(int id)
     {
-        var coupon = _couponRepository.GetCoupon(id);
+        var coupon = _couponRepository.GetCouponById(id);
 
         var model = new CouponModel
         {
@@ -67,7 +67,7 @@ public class CouponController : Controller
 
         if (id is not null)
         {
-            var coupon = _couponRepository.GetCoupon(id.Value);
+            var coupon = _couponRepository.GetCouponById(id.Value);
 
             model.CouponId = coupon.Id;
             model.Code = coupon.Code;

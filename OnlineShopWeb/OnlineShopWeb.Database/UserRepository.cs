@@ -55,13 +55,6 @@ internal class UserRepository : IUserRepository
         return _dbContext.User.FirstOrDefault(o => o.EMail == eMail);
     }
 
-    public bool CheckUserPassword(string email)
-    {
-        //var user = _dbContext.User.FirstOrDefault(o => o.EMail == email);
-        //_dbContext.User.
-        return true;
-    }
-
     public List<User> GetUserList()
     {
         return _dbContext.User.ToList();

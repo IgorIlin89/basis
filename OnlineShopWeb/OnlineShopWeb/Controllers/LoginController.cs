@@ -2,7 +2,6 @@
 using OnlineShopWeb.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Database.Interfaces;
@@ -44,6 +43,7 @@ public class LoginController : Controller
             }
 
             await SignIn(user);
+            HttpContext.Session.SetInt32("UserId", user.Id);
 
         }
         return RedirectToAction("Index", "Product");
@@ -82,7 +82,7 @@ public class LoginController : Controller
     }
 
     [HttpPost]
-    public IActionResult Register(RegistrationModel model)
+    public async Task<IActionResult> Register(RegistrationModel model)
     {
         if (ModelState.IsValid)
         {
@@ -102,7 +102,10 @@ public class LoginController : Controller
                         HouseNumber = model.HouseNumber,
                         PostalCode = model.PostalCode
                     });
-            }else
+                await SignIn(_userRepository.GetUserByEMail(model.EMail));
+                return RedirectToAction("Index", "User");
+            }
+            else
             {
                 ModelState.AddModelError("Model","The repeated Password was not the same");
                 return View(model);

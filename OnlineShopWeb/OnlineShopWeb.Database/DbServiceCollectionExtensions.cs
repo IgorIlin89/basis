@@ -17,7 +17,9 @@ public static class DbServiceCollectionExtensions
 
         services.AddScoped<IProductRepository, ProductRepository>()
         .AddScoped<ICouponRepository, CouponRepository>()
-        .AddScoped<IUserRepository, UserRepository>();
+        .AddScoped<IUserRepository, UserRepository>()
+        .AddScoped<IShoppingCartRepository, ShoppingCartRepository>()
+        .AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
 
         return services;
     }

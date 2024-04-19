@@ -1,0 +1,35 @@
+﻿@model TransactionHistoryListModel
+@{
+    ViewData["Title"] = "Igors Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <br />
+
+    <table>
+        <tr>
+            <th>Product Name</th>
+            <th>Coupon Id</th>
+            <th>Payment Date</th>
+            <th></th>
+        </tr>
+
+        @{
+            foreach (var element in Model.TransactionHistoryModelList)
+            {
+                <tr>
+                    <td> @(element.ProductName)</td>
+                    <td> @(element.CouponId)</td>
+                    <td> @(element.PaymentDate)</td>
+                    <td> @(Html.ActionLink("Delete", "Delete", "TransactionHistory", new { id = element.Id }, new { @class = "btn btn-secondary" }))</td>
+                </tr>
+            }
+
+
+        }
+
+
+
+    </table>

@@ -7,7 +7,8 @@ public interface ICouponRepository
 {
     List<Coupon> GetCouponList();
 
-    Coupon? GetCoupon(int id);
+    Coupon? GetCouponById(int? id);
+    Coupon? GetCouponByCode(string? code);
 
     void AddCoupon(Coupon coupon);
 

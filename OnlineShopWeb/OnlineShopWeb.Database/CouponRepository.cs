@@ -23,14 +23,14 @@ internal class CouponRepository : ICouponRepository
 
     public void DeleteCoupon(int id)
     {
-        var entityEntry = GetCoupon(id);
+        var entityEntry = GetCouponById(id);
         _dbContext.Remove(entityEntry);
         _dbContext.SaveChanges();
     }
 
     public void EditCoupon(Coupon coupon)
     {
-        var entityEntry = GetCoupon(coupon.Id);
+        var entityEntry = GetCouponById(coupon.Id);
 
         entityEntry.Code = coupon.Code;
         entityEntry.AmountOfDiscount = coupon.AmountOfDiscount;
@@ -40,9 +40,14 @@ internal class CouponRepository : ICouponRepository
         _dbContext.SaveChanges();
     }
 
-    public Coupon? GetCoupon(int id)
+    public Coupon? GetCouponById(int? id)
     {
         return _dbContext.Coupon.FirstOrDefault(o => o.Id == id);
+    }
+
+    public Coupon? GetCouponByCode(string? code)
+    {
+        return _dbContext.Coupon.FirstOrDefault(o => o.Code == code);
     }
 
     public List<Coupon> GetCouponList()

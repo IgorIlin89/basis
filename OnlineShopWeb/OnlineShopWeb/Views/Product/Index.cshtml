@@ -22,6 +22,7 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
 
         @{
@@ -36,10 +37,9 @@
                     <td> @(Html.ActionLink("Details", "Details", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
                     <td> @(Html.ActionLink("Edit", "Update", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
                     <td> @(Html.ActionLink("Delete", "Delete", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(Html.ActionLink("Add to Shopping Cart", "AddToShoppingCart", "ShoppingCart", new { productId = product.ProductId, userId = Context.Session.GetInt32("UserId") }, new { @class = "btn btn-secondary" }))</td>
                 </tr>
             }
-
-
         }
 
     </table>

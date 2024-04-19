@@ -11,8 +11,6 @@ public interface IUserRepository
     User? GetUserByName(string firstName);
     public User? GetUserByEMail(string eMail);
 
-    public bool CheckUserPassword(string password);
-
     void AddUser(User user);
 
     void DeleteUser(int id);
