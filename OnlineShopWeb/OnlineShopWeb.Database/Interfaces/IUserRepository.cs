@@ -15,4 +15,5 @@ public interface IUserRepository
 
     void DeleteUser(int id);
     void EditUser(User user);
+    public void ChangePassword(int userId, string password);
 }

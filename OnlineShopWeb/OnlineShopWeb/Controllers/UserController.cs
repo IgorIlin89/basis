@@ -28,6 +28,7 @@ public class UserController : Controller
                 new UserModel
                 {
                     UserId = user.Id,
+                    EMail = user.EMail,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Age = user.Age,
@@ -58,6 +59,7 @@ public class UserController : Controller
         var model = new UserModel
         {
             UserId = user.Id,
+            EMail = user.EMail.Trim(),
             FirstName = user.FirstName.Trim(),
             LastName = user.LastName.Trim(),
             Age = user.Age,
@@ -81,6 +83,7 @@ public class UserController : Controller
             var user = _userRepository.GetUserById(id.Value);
 
             model.UserId = user.Id;
+            model.EMail = user.EMail.Trim();
             model.FirstName = user.FirstName.Trim();
             model.LastName = user.LastName.Trim();
             model.Age = user.Age;
@@ -106,6 +109,7 @@ public class UserController : Controller
                     new User
                     {
                         Id = model.UserId.Value,
+                        EMail = model.EMail,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         Age = model.Age,
@@ -122,6 +126,7 @@ public class UserController : Controller
                 _userRepository.AddUser(
                     new User
                     {
+                        EMail = model.EMail,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         Age = model.Age,

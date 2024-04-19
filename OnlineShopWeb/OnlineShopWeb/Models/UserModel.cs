@@ -14,5 +14,5 @@ public class UserModel
     public string Street { get; set; }
     public int HouseNumber { get; set; }
     public int PostalCode { get; set; }
-    public string Password { get; set; }
+    public string? Password { get; set; }
 }

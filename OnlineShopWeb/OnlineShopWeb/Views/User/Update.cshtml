@@ -11,7 +11,13 @@
 <form asp-action="Update" asp-controller="User" method="post">
 
 
-    <input type="hidden" asp-for="UserId" />
+    <input type="hidden" asp-for="UserId"/>
+
+    <label for="EMail">E-Mail:</label>
+    <input type="text" asp-for="EMail" />
+    <span asp-validation-for="EMail" class="text-danger"></span>
+
+    <br />
 
     <label for="FirstName">First name:</label>
     <input type="text" asp-for="FirstName" />

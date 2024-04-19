@@ -44,6 +44,12 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="TransactionHistory" asp-action="Index">Transaction History</a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Update" asp-route-id=@Context.Session.GetInt32("UserId")>Edit yout Data</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="ChangePassword" asp-route-userId=@Context.Session.GetInt32("UserId")>Change Password</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
                                 </li>
                             }

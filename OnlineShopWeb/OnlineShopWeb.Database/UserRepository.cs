@@ -60,5 +60,12 @@ internal class UserRepository : IUserRepository
         return _dbContext.User.ToList();
     }
 
+    public void ChangePassword(int userId, string password)
+    {
+        var user = GetUserById(userId);
+        user.Password = password;
+        _dbContext.SaveChanges();
+    }
+
 
 }
