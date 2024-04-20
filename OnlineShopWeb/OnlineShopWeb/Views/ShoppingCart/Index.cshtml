@@ -7,7 +7,19 @@
 
 @section Scripts {
     <script>
+        $(document).ready(function () {
+            $("#jsbuy2").on("click", function () {
+                alert("Handler for `click` called.");
+            });
+        });
 
+        $.ajax({
+            url: '/ShoppingCartController/BuyAllItemsInShoppingCart',
+            type: 'POST',
+            data: { jsonData: '@(serializedList)' },
+            success: function (result) {
+            }
+        });
     </script>
 }
 
@@ -42,7 +54,9 @@
 
     <form asp-action="BuyAllItemsInShoppingCart" asp-controller="ShoppingCart" method="post">
 
-
+        @*  1.ModelBinding : Input -> asp-value /asp-for
+        2.Backend has to take string, that can be a json
+        3.Frontend sends string via javasacript *@
         @* //string serializedListModel = JsonSerializer.Serialize(Model.ShoppingCartModelList);
 
         <input type="hidden" asp-for="serializedList" Tewsdfst />
@@ -59,6 +73,70 @@
         <input type="submit" value="Buy Everything" />
 
     </form>
+
+
+    <br />
+    <br />
+    <br />
+
+    COOKIES!
+
+    <table>
+        <tr>
+            <th>Product Id</th>
+            <th></th>
+        </tr>
+
+        @{
+            int number;
+            foreach (var element in Context.Request.Cookies)
+            {
+                
+                if (!Int32.TryParse(element.Value, out number))
+                {
+                    continue;
+                }
+                <tr>
+                    @{
+                        <td> @(element.Value)</td>
+                        <td> @(Html.ActionLink("Delete", "CookieDelete", "ShoppingCart", new { key = element.Key }, new { @class = "btn btn-secondary" }))</td>
+                    }
+
+                </tr>
+            }
+
+
+        }
+
+
+
+    </table>
+
+
+
+    <form asp-action="CookieBuyAllItemsInShoppingCart" asp-controller="ShoppingCart" method="post">
+
+        <input type="text" asp-for="CouponCode" />
+        <span asp-route-couponCode="CouponCode" class="text">Coupon Code</span>
+
+        <br />
+        <input type="submit" value="Cookies-Buy Everything" />
+    </form>
+
+    <br />
+    <br />
+    <br />
+
+
+    <form method="post">
+
+        <input type="text" asp-for="CouponCode" />
+        <span asp-route-couponCode="CouponCode" class="text">Coupon Code</span>
+
+        <br />
+        <input id="jsbuy" type="submit" value="Javascript Buy Everything" />
+    </form>
+
 
     @* @(Html.ActionLink("Buy everything", "BuyAllItemsInShoppingCart", "ShoppingCart", new { shoppingCartModelList = Model.ShoppingCartModelList, couponCode = "test" }, new { @class = "btn btn-secondary" })) *@
 

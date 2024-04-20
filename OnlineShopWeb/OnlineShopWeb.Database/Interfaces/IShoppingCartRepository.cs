@@ -8,4 +8,5 @@ public interface IShoppingCartRepository
     void BuyShoppingCartItem(int shoppingCartId, int? couponId);
     void DeleteProductFromCart(int shoppingCartId);
     List<ShoppingCart> GetProductsInCartList(int userId);
+    public void CookieBuyShoppingCartItem(TransactionHistory transactionHistory);
 }

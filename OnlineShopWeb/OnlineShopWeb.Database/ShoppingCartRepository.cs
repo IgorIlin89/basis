@@ -4,6 +4,7 @@ using OnlineShopWeb.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,6 +48,12 @@ internal class ShoppingCartRepository : IShoppingCartRepository
             CouponId = couponId,
             PaymentDate = DateTime.Now
         });
+        _dbContext.SaveChanges();
+    }
+
+    public void CookieBuyShoppingCartItem(TransactionHistory transactionHistory)
+    {
+        _dbContext.TransactionHistory.Add(transactionHistory);
         _dbContext.SaveChanges();
     }
 

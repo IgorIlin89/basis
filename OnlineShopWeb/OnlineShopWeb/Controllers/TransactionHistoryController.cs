@@ -25,13 +25,8 @@ public class TransactionHistoryController : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        if (HttpContext.Session.GetInt32("UserId") is null)
-        {
-            return RedirectToAction("Index", "Product");
-        }
-
         var model = new TransactionHistoryListModel();
-        var list = _transactionHistoryRepository.GetTransactionHistoryList(HttpContext.Session.GetInt32("UserId").Value);
+        var list = _transactionHistoryRepository.GetTransactionHistoryList(Int32.Parse(HttpContext.User.Identity.Name));
 
         foreach (var element in list)
         {

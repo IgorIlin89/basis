@@ -44,7 +44,6 @@ public class LoginController : Controller
             }
 
             await SignIn(user);
-            HttpContext.Session.SetInt32("UserId", user.Id);
 
         }
         return RedirectToAction("Index", "Product");
@@ -53,7 +52,8 @@ public class LoginController : Controller
     protected async Task SignIn(User user)
     {
         var claims = new[] {
-            new Claim(ClaimTypes.Name, user.FirstName),
+            new Claim(ClaimTypes.Name, user.Id.ToString()),
+            new Claim("FirstName", user.FirstName),
         };
 
 
@@ -113,37 +113,5 @@ public class LoginController : Controller
             }
         }
         return View(model);
-    }
-
-    [HttpGet]
-    public IActionResult ChangePassword(int userId)
-    {
-        var model = new PasswordChangeModel
-        {
-            UserId = userId,
-        };
-        return View(model);
-    }
-    public IActionResult ChangePassword(PasswordChangeModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            if (model.OldPassword == _userRepository.GetUserById(model.UserId).Password && model.Password == model.RepeatPassword)
-            {
-                _userRepository.ChangePassword(model.UserId, model.Password);
-                return RedirectToAction("Index", "Product");
-            }
-            else
-            {
-                ModelState.AddModelError("Model", "The old Password or the repeated Password was not correct");
-                return View(model);
-            }
-            //model.OldPassword == _userRepository.GetUserById(model.UserId).Password ? _userRepository.ChangePassword(model.UserId, model.Password) : return View();
-        }
-        else
-        {
-            //ModelState.AddModelError("Model", "Fill in all fields");
-            return View(model);
-        }
     }
 }
