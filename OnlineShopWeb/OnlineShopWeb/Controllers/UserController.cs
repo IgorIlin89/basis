@@ -78,9 +78,9 @@ public class UserController : Controller
     {
         var model = new UserModel();
 
-        if (id is not null)
+        if (HttpContext.User.Identity.Name is not null)
         {
-            var user = _userRepository.GetUserById(id.Value);
+            var user = _userRepository.GetUserById(Int32.Parse(HttpContext.User.Identity.Name));
 
             model.UserId = user.Id;
             model.EMail = user.EMail.Trim();
