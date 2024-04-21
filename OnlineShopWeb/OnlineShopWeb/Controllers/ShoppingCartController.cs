@@ -4,8 +4,6 @@ using OnlineShopWeb.Models;
 using System.Text.Json;
 using OnlineShopWeb.Domain;
 using ExtensionMethods;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Collections.Generic;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -27,8 +25,6 @@ public class ShoppingCartController : Controller
     public IActionResult Index()
     {
         var model = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(HttpContext.Request.Cookies["ShoppingCartDictionaryModel"]);
-        //var list = _shoppingCartRepository.GetProductsInCartList(HttpContext.Name());
-
         return View(model);
     }
 
@@ -54,18 +50,6 @@ public class ShoppingCartController : Controller
 
         HttpContext.Response.Cookies.Append("ShoppingCartDictionaryModel", JsonSerializer.Serialize(dictionary));
         return RedirectToAction("Index", "Product");
-
-        // It would be great to put the string of the name into a variable
-
-        // I set the Cookie at Sign in now, no need to check anymore if it allready exists.
-        //var dictionary = (HttpContext.Request.Cookies["ShoppingCartDictionaryModel"] is null) ? 
-        //    new ShoppingCartDictionaryModel() : 
-        //    JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(HttpContext.Request.Cookies["ShoppingCartDictionaryModel"]);
-
-
-        //HttpContext.Response.Cookies.Delete("ShoppingCartDictionaryModel"); seems not necessary, watched in debugger
-        //didnt work with a list ==> c# cannot convert lambda expression to type because it is not a delegate type
-        //if(shoppingCartList.ShoppingCartModelList.Contains( o => o.ProductInCart.Id == productToShoppingCart.Id))
     }
 
     [HttpGet]
@@ -82,10 +66,6 @@ public class ShoppingCartController : Controller
 
         HttpContext.Response.Cookies.Append("ShoppingCartDictionaryModel", JsonSerializer.Serialize(dictionary));
         return RedirectToAction("Index", "ShoppingCart");
-
-        //dictionary.ShoppingCartModelDictionary = dictionary.ShoppingCartModelDictionary[key].count-- == 0 ?
-        //dictionary.ShoppingCartModelDictionary.Remove(key) :
-        //dictionary.ShoppingCartModelDictionary[key].count--;
     }
 
     [HttpPost]

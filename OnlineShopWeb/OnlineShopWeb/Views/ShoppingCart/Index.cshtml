@@ -2,27 +2,7 @@
 @model ShoppingCartDictionaryModel
 @{
     ViewData["Title"] = "Igors Home Page";
-    // string serializedList = JsonSerializer.Serialize(Model.ShoppingCartModelDictionary);
-    //var dictionary = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(Context.Request.Cookies["ShoppingCartDictionaryModel"]);
 }
-
-@* @section Scripts {
-    <script>
-        $(document).ready(function () {
-            $("#jsbuy2").on("click", function () {
-                alert("Handler for `click` called.");
-            });
-        });
-
-        $.ajax({
-            url: '/ShoppingCartController/BuyAllItemsInShoppingCart',
-            type: 'POST',
-            data: { jsonData: '@(serializedList)' },
-            success: function (result) {
-            }
-        });
-    </script>
-} *@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
