@@ -1,11 +1,12 @@
 ﻿@using System.Text.Json;
-@model ShoppingCartListModel
+@model ShoppingCartDictionaryModel
 @{
     ViewData["Title"] = "Igors Home Page";
-    string serializedList = JsonSerializer.Serialize(Model.ShoppingCartModelList);
+    // string serializedList = JsonSerializer.Serialize(Model.ShoppingCartModelDictionary);
+    //var dictionary = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(Context.Request.Cookies["ShoppingCartDictionaryModel"]);
 }
 
-@section Scripts {
+@* @section Scripts {
     <script>
         $(document).ready(function () {
             $("#jsbuy2").on("click", function () {
@@ -21,123 +22,100 @@
             }
         });
     </script>
-}
+} *@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
 
     <br />
 
+    Your Products!
+
+    <br />
+    <br />
+    <br />
+
     <table>
         <tr>
             <th>Product Id</th>
             <th>Product Name</th>
+            <th>How many you buy</th>
             <th></th>
         </tr>
 
         @{
-            foreach (var shoppingCartItem in Model.ShoppingCartModelList)
+            foreach (var element in Model.ShoppingCartModelDictionary)
             {
-                <tr>
-                    <td> @(shoppingCartItem.ProductId)</td>
-                    <td> @(shoppingCartItem.ProductName)</td>
-                    <td> @(Html.ActionLink("Delete", "Delete", "ShoppingCart", new { id = shoppingCartItem.Id }, new { @class = "btn btn-secondary" }))</td>
-                </tr>
-            }
-
-
-        }
-
-
-
-    </table>
-
-    <form asp-action="BuyAllItemsInShoppingCart" asp-controller="ShoppingCart" method="post">
-
-        @*  1.ModelBinding : Input -> asp-value /asp-for
-        2.Backend has to take string, that can be a json
-        3.Frontend sends string via javasacript *@
-        @* //string serializedListModel = JsonSerializer.Serialize(Model.ShoppingCartModelList);
-
-        <input type="hidden" asp-for="serializedList" Tewsdfst />
-
-        <input type="hidden" asp-for="serializedList" />
-
-
-        <p></p> *@
-
-        <input type="text" asp-for="CouponCode" />
-        <span asp-route-couponCode="CouponCode" class="text">Coupon Code</span>
-
-        <br />
-        <input type="submit" value="Buy Everything" />
-
-    </form>
-
-
-    <br />
-    <br />
-    <br />
-
-    COOKIES!
-
-    <table>
-        <tr>
-            <th>Product Id</th>
-            <th></th>
-        </tr>
-
-        @{
-            int number;
-            foreach (var element in Context.Request.Cookies)
-            {
-                
-                if (!Int32.TryParse(element.Value, out number))
-                {
-                    continue;
-                }
                 <tr>
                     @{
-                        <td> @(element.Value)</td>
-                        <td> @(Html.ActionLink("Delete", "CookieDelete", "ShoppingCart", new { key = element.Key }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(element.Value.ProductInCart.ProductId)</td>
+                        <td> @(element.Value.ProductInCart.Name)</td>
+                        <td> @(element.Value.count)</td>
+                        <td> @(Html.ActionLink("Delete", "DeleteFromShoppingCart", "ShoppingCart", new { key = element.Key }, new { @class = "btn btn-secondary" }))</td>
                     }
 
                 </tr>
             }
-
-
         }
-
-
 
     </table>
 
+    <br />
+    <br />
 
+    Your Coupons!
 
-    <form asp-action="CookieBuyAllItemsInShoppingCart" asp-controller="ShoppingCart" method="post">
+    <table>
+        <tr>
+            <th>Coupon Code</th>
+            <th>Amount of Discount</th>
+            <th>Type of Discount</th>
+            <th></th>
+        </tr>
 
-        <input type="text" asp-for="CouponCode" />
-        <span asp-route-couponCode="CouponCode" class="text">Coupon Code</span>
+        @{
+            foreach (var element in Model.CouponModelDictionary)
+            {
+                <tr>
+                    @{
+                        <td> @(element.Value.Code)</td>
+                        <td> @(element.Value.AmountOfDiscount)</td>
+                        <td> @(element.Value.TypeOfDiscount)</td>
+                        <td> @(Html.ActionLink("Delete", "DeleteCoupon", "ShoppingCart", new { CouponId = element.Value.CouponId }, new { @class = "btn btn-secondary" }))</td>
+                    }
 
+                </tr>
+            }
+        }
+
+    </table>
+
+    <br />
+    <br />
+    <br />
+
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    <form asp-action="AddCoupon" asp-controller="ShoppingCart" method="post">
+        <input type="text" name="couponCode"/>
+        <span asp-route-couponCode="couponCode" class="text"> Add Coupon Code</span>
         <br />
-        <input type="submit" value="Cookies-Buy Everything" />
+        <input type="submit" value="Add Coupon" />
     </form>
 
     <br />
-    <br />
-    <br />
+    @(Html.ActionLink("Buy everything", "BuyAllItemsInShoppingCart", "ShoppingCart", new { }, new { @class = "btn btn-secondary" }))
 
 
-    <form method="post">
+@*     <form method="post">
 
         <input type="text" asp-for="CouponCode" />
         <span asp-route-couponCode="CouponCode" class="text">Coupon Code</span>
 
         <br />
         <input id="jsbuy" type="submit" value="Javascript Buy Everything" />
-    </form>
+    </form> *@
 
 
-    @* @(Html.ActionLink("Buy everything", "BuyAllItemsInShoppingCart", "ShoppingCart", new { shoppingCartModelList = Model.ShoppingCartModelList, couponCode = "test" }, new { @class = "btn btn-secondary" })) *@
 
 

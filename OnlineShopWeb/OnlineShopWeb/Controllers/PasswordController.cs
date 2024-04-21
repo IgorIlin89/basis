@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ExtensionMethods;
+using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Models;
 
@@ -13,15 +14,15 @@ public class PasswordController : Controller
         _userRepository = userRepository;
     }
 
-    //It doesnt work with the HttpGet, why?
-    //[HttpGet]
+    [HttpGet]
     public IActionResult ChangePassword()
     {
         var model = new PasswordChangeModel
         {
-            UserId = Int32.Parse(HttpContext.User.Identity.Name),
+            UserId = HttpContext.Name(),
         };
-        return View(model);
+
+        return View("Views/User/ChangePassword.cshtml",model);
     }
 
     [HttpPost]

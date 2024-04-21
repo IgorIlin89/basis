@@ -19,6 +19,8 @@
             <th>Amount of Discount</th>
             <th>Type of Discount</th>
             <th>Maximal Number of Uses</th>
+            <th>StartDate</th>
+            <th>EndDate</th>
             <th></th>
             <th></th>
             <th></th>
@@ -33,6 +35,8 @@
                     <td> @(coupon.AmountOfDiscount)</td>
                     <td> @(coupon.TypeOfDiscount)</td>
                     <td> @(coupon.MaxNumberOfUses)</td>
+                    <td> @(coupon.StartDate)</td>
+                    <td> @(coupon.EndDate)</td>
                     <td> @(Html.ActionLink("Details", "Details", "Coupon", new { id = coupon.CouponId }, new { @class = "btn btn-secondary" }))</td>
                     <td> @(Html.ActionLink("Edit", "Update", "Coupon", new { id = coupon.CouponId }, new { @class = "btn btn-secondary" }))</td>
                     <td> @(Html.ActionLink("Delete", "Delete", "Coupon", new { id = coupon.CouponId }, new { @class = "btn btn-secondary" }))</td>

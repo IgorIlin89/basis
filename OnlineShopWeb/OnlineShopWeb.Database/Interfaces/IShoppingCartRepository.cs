@@ -4,9 +4,7 @@ namespace OnlineShopWeb.Database.Interfaces;
 
 public interface IShoppingCartRepository
 {
-    void AddProductToCart(int productId, int userId, int couponId);
-    void BuyShoppingCartItem(int shoppingCartId, int? couponId);
-    void DeleteProductFromCart(int shoppingCartId);
+    void BuyShoppingCartItem(TransactionHistory transactionHistory);
     List<ShoppingCart> GetProductsInCartList(int userId);
-    public void CookieBuyShoppingCartItem(TransactionHistory transactionHistory);
+    ShoppingCart? GetShoppingCartItemById(int id);
 }

@@ -6,6 +6,7 @@ using System.Security.Claims;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Database.Interfaces;
 using System.Reflection.Metadata.Ecma335;
+using System.Text.Json;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -53,7 +54,8 @@ public class LoginController : Controller
     {
         var claims = new[] {
             new Claim(ClaimTypes.Name, user.Id.ToString()),
-            new Claim("FirstName", user.FirstName),
+            new Claim(ClaimTypes.GivenName, user.GivenName),
+            new Claim(ClaimTypes.Surname, user.Surname),
         };
 
 
@@ -66,6 +68,8 @@ public class LoginController : Controller
             AllowRefresh = true,
             ExpiresUtc = DateTimeOffset.Now.AddDays(1),
         };
+
+        HttpContext.Response.Cookies.Append("ShoppingCartDictionaryModel", JsonSerializer.Serialize(new ShoppingCartDictionaryModel()));
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties);
     }
@@ -89,22 +93,29 @@ public class LoginController : Controller
         {
             if (model.Password == model.RepeatPassword)
             {
-                _userRepository.AddUser(
-                    new User
-                    {
-                        EMail = model.EMail,
-                        Password = model.Password.Trim(),
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Age = model.Age,
-                        Country = model.Country,
-                        City = model.City,
-                        Street = model.Street,
-                        HouseNumber = model.HouseNumber,
-                        PostalCode = model.PostalCode
-                    });
-                await SignIn(_userRepository.GetUserByEMail(model.EMail));
-                return RedirectToAction("Index", "User");
+                if (_userRepository.GetUserByEMail(model.EMail) is null)
+                {
+                    _userRepository.AddUser(
+                        new User
+                        {
+                            EMail = model.EMail,
+                            Password = model.Password.Trim(),
+                            GivenName = model.FirstName,
+                            Surname = model.LastName,
+                            Age = model.Age,
+                            Country = model.Country,
+                            City = model.City,
+                            Street = model.Street,
+                            HouseNumber = model.HouseNumber,
+                            PostalCode = model.PostalCode
+                        });
+                    await SignIn(_userRepository.GetUserByEMail(model.EMail));
+                    return RedirectToAction("Index", "User");
+                }
+                else {
+                    ModelState.AddModelError("Model", "The E-Mail adress is already taken");
+                    return View(model);
+                }
             }
             else
             {

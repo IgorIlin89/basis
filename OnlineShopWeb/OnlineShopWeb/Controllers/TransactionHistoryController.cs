@@ -35,7 +35,7 @@ public class TransactionHistoryController : Controller
                 Id = element.Id,
                 UserId = element.UserId,
                 ProductId = element.ProductId,
-                CouponId = element.CouponId,
+                CouponIds = element.CouponIds,
                 ProductName = _productRepository.GetProduct(element.ProductId).Name,
                 PaymentDate = element.PaymentDate,
                 

@@ -11,6 +11,6 @@ public class TransactionHistory
     public int Id { get; set; }
     public int UserId {  get; set; }
     public int ProductId {  get; set; }
-    public int? CouponId {  get; set; }
+    public string? CouponIds {  get; set; }
     public DateTimeOffset PaymentDate { get; set; }
 }

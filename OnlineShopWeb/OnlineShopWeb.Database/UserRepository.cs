@@ -28,8 +28,8 @@ internal class UserRepository : IUserRepository
     public void EditUser(User user)
     {
         var entityEntry = GetUserById(user.Id);
-        entityEntry.FirstName = user.FirstName;
-        entityEntry.LastName = user.LastName;
+        entityEntry.GivenName = user.GivenName;
+        entityEntry.Surname = user.Surname;
         entityEntry.Age = user.Age;
         entityEntry.Country = user.Country;
         entityEntry.City = user.City;
@@ -47,7 +47,7 @@ internal class UserRepository : IUserRepository
 
     public User? GetUserByName(string firstName)
     {
-        return _dbContext.User.FirstOrDefault(o => o.FirstName == firstName);
+        return _dbContext.User.FirstOrDefault(o => o.GivenName == firstName);
     }
 
     public User? GetUserByEMail(string eMail)

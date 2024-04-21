@@ -30,6 +30,8 @@ public class CouponController : Controller
                     AmountOfDiscount = coupon.AmountOfDiscount,
                     TypeOfDiscount = coupon.TypeOfDiscount,
                     MaxNumberOfUses = coupon.MaxNumberOfUses,
+                    StartDate = coupon.StartDate,
+                    EndDate = coupon.EndDate,
                 }
             );
         }
@@ -56,6 +58,8 @@ public class CouponController : Controller
             AmountOfDiscount = coupon.AmountOfDiscount,
             TypeOfDiscount = coupon.TypeOfDiscount,
             MaxNumberOfUses = coupon.MaxNumberOfUses,
+            StartDate = coupon.StartDate,
+            EndDate = coupon.EndDate,
         };
         return View(model);
     }
@@ -74,6 +78,8 @@ public class CouponController : Controller
             model.AmountOfDiscount = coupon.AmountOfDiscount;
             model.TypeOfDiscount = coupon.TypeOfDiscount;
             model.MaxNumberOfUses = coupon.MaxNumberOfUses;
+            model.StartDate = coupon.StartDate;
+            model.EndDate = coupon.EndDate;
         }
 
 
@@ -94,6 +100,8 @@ public class CouponController : Controller
                     AmountOfDiscount = model.AmountOfDiscount,
                     TypeOfDiscount = model.TypeOfDiscount,
                     MaxNumberOfUses = model.MaxNumberOfUses,
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate,
                 });
             }
             else
@@ -105,7 +113,9 @@ public class CouponController : Controller
                         Code = model.Code,
                         AmountOfDiscount = model.AmountOfDiscount,
                         TypeOfDiscount = model.TypeOfDiscount,
-                        MaxNumberOfUses = model.MaxNumberOfUses
+                        MaxNumberOfUses = model.MaxNumberOfUses,
+                        StartDate = model.StartDate,
+                        EndDate = model.EndDate,
                     }
                     );
             }

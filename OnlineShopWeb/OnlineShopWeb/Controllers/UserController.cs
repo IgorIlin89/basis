@@ -29,8 +29,8 @@ public class UserController : Controller
                 {
                     UserId = user.Id,
                     EMail = user.EMail,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
+                    GivenName = user.GivenName,
+                    Surname = user.Surname,
                     Age = user.Age,
                     Country = user.Country,
                     City = user.City,
@@ -39,7 +39,6 @@ public class UserController : Controller
                     PostalCode = user.PostalCode,
                 });
         }
-
 
         return View(model);
     }
@@ -60,8 +59,8 @@ public class UserController : Controller
         {
             UserId = user.Id,
             EMail = user.EMail.Trim(),
-            FirstName = user.FirstName.Trim(),
-            LastName = user.LastName.Trim(),
+            GivenName = user.GivenName.Trim(),
+            Surname = user.Surname.Trim(),
             Age = user.Age,
             Country = user.Country.Trim(),
             City = user.City.Trim(),
@@ -84,8 +83,8 @@ public class UserController : Controller
 
             model.UserId = user.Id;
             model.EMail = user.EMail.Trim();
-            model.FirstName = user.FirstName.Trim();
-            model.LastName = user.LastName.Trim();
+            model.GivenName = user.GivenName.Trim();
+            model.Surname = user.Surname.Trim();
             model.Age = user.Age;
             model.Country = user.Country.Trim();
             model.City = user.City.Trim();
@@ -103,42 +102,22 @@ public class UserController : Controller
     {
         if (ModelState.IsValid)
         {
-            if (model.UserId is not null)
-            {
-                _userRepository.EditUser(
-                    new User
-                    {
-                        Id = model.UserId.Value,
-                        EMail = model.EMail,
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Age = model.Age,
-                        Country = model.Country,
-                        City = model.City,
-                        Street = model.Street,
-                        HouseNumber = model.HouseNumber,
-                        PostalCode = model.PostalCode
-                    }
-                );
-            }
-            else
-            {
-                _userRepository.AddUser(
-                    new User
-                    {
-                        EMail = model.EMail,
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Age = model.Age,
-                        Country = model.Country,
-                        City = model.City,
-                        Street = model.Street,
-                        HouseNumber = model.HouseNumber,
-                        PostalCode = model.PostalCode
-                    }
-                );
+            _userRepository.EditUser(
+                new User
+                {
+                    Id = model.UserId.Value,
+                    EMail = model.EMail,
+                    GivenName = model.GivenName,
+                    Surname = model.Surname,
+                    Age = model.Age,
+                    Country = model.Country,
+                    City = model.City,
+                    Street = model.Street,
+                    HouseNumber = model.HouseNumber,
+                    PostalCode = model.PostalCode
+                }
+            );
 
-            }
             return RedirectToAction("Index", "User");
         }
         else
