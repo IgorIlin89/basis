@@ -19,38 +19,6 @@ internal class ShoppingCartRepository : IShoppingCartRepository
         _dbContext = onlineShopWebDbContext;
     }
 
-    //public void AddProductToCart(int productId, int userId, int couponId)
-    //{
-    //    _dbContext.ShoppingCart.Add(new ShoppingCart
-    //    {
-    //        ProductId = productId,
-    //        UserId = userId,
-    //        CouponId = couponId
-    //    });
-    //    _dbContext.SaveChanges();
-    //}
-
-    //public void DeleteProductFromCart(int shoppingCartId)
-    //{
-    //    var shoppingCartItem = GetShoppingCartItemById(shoppingCartId);
-    //    _dbContext.ShoppingCart.Remove(shoppingCartItem);
-    //    _dbContext.SaveChanges();
-    //}
-
-    //public void BuyShoppingCartItem(int shoppingCartId, string? couponIds)
-    //{
-    //    var shoppingCartItem = GetShoppingCartItemById(shoppingCartId);
-    //    _dbContext.ShoppingCart.Remove(shoppingCartItem);
-    //    _dbContext.TransactionHistory.Add(new TransactionHistory
-    //    {
-    //        UserId = shoppingCartItem.UserId,
-    //        ProductId = shoppingCartItem.ProductId,
-    //        CouponIds = couponIds,
-    //        PaymentDate = DateTime.Now
-    //    });
-    //    _dbContext.SaveChanges();
-    //}
-
     public void BuyShoppingCartItem(TransactionHistory transactionHistory)
     {
         _dbContext.TransactionHistory.Add(transactionHistory);
