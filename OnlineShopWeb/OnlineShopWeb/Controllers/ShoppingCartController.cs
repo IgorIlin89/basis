@@ -10,14 +10,12 @@ namespace OnlineShopWeb.Controllers;
 public class ShoppingCartController : Controller
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
-    private readonly IProductRepository _productRepository;
     private readonly ICouponRepository _couponRepository;
     public ShoppingCartController(IShoppingCartRepository shoppingCartRepository
         , IProductRepository productRepository
         , ICouponRepository couponRepository)
     {
         _shoppingCartRepository = shoppingCartRepository;
-        _productRepository = productRepository;
         _couponRepository = couponRepository;
     }
 
