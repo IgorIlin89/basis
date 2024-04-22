@@ -75,21 +75,15 @@ public class ShoppingCartController : Controller
         {
             ModelState.AddModelError("model", "The CouponCode does not exist");
             return View("Views/ShoppingCart/Index.cshtml", model);
-        }
-
-        if ((coupon.StartDate > DateTime.Now || coupon.EndDate < DateTime.Now))
+        }else if ((coupon.StartDate > DateTime.Now || coupon.EndDate < DateTime.Now))
         {
             ModelState.AddModelError("model", "The CouponCode is expired");
             return View("Views/ShoppingCart/Index.cshtml", model);
-        }
-
-        if (coupon.MaxNumberOfUses == 0)
+        }else if (coupon.MaxNumberOfUses == 0)
         {
             ModelState.AddModelError("model", "All coupons with this code are allready taken");
             return View("Views/ShoppingCart/Index.cshtml", model);
-        }
-
-        if (model.CouponModelDictionary.ContainsKey(coupon.Id))
+        }else if (model.CouponModelDictionary.ContainsKey(coupon.Id))
         {
             ModelState.AddModelError("model", "This coupon is allready in the cart");
             return View("Views/ShoppingCart/Index.cshtml", model);
