@@ -134,17 +134,22 @@ public class ShoppingCartController : Controller
     [HttpGet]
     public IActionResult BuyAllItemsInShoppingCart()
     {
-        var dictionary = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(HttpContext.Request.Cookies["ShoppingCartDictionaryModel"]);
+        var model = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(HttpContext.Request.Cookies["ShoppingCartDictionaryModel"]);
+
+        if (model.ShoppingCartModelDictionary.Count == 0)
+        {
+            ModelState.AddModelError("model", "You have selected no products to buy");
+            return View("Views/ShoppingCart/Index.cshtml", model);
+        }
 
         string couponIds = "";
-
-        foreach(var element in dictionary.CouponModelDictionary)
+        foreach(var element in model.CouponModelDictionary)
         {
             couponIds += element.Value.CouponId.ToString();
             couponIds += ",";
         }
 
-        foreach(var element in dictionary.ShoppingCartModelDictionary)
+        foreach(var element in model.ShoppingCartModelDictionary)
         {
             for (; element.Value.count != 0; element.Value.count--)
             {
@@ -158,7 +163,8 @@ public class ShoppingCartController : Controller
             }
         }
 
-        return RedirectToAction("Index", "Product");
+        HttpContext.Response.Cookies.Append("ShoppingCartDictionaryModel", JsonSerializer.Serialize(new ShoppingCartDictionaryModel()));
+        return RedirectToAction("Index", "TransactionHistory");
     }
 
 
