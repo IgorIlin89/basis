@@ -3,7 +3,7 @@ using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Models;
 using System.Text.Json;
 using OnlineShopWeb.Domain;
-using ExtensionMethods;
+using OnlineShopWeb.ExtensionMethods;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -21,34 +21,33 @@ public class ShoppingCartController : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        var model = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(HttpContext.Request.Cookies["ShoppingCartDictionaryModel"]);
+        var model = GetShoppingCart();
         return View(model);
     }
 
-    // [FromBody] not working, why?
     [HttpGet]
-    public IActionResult AddToShoppingCart(string product)
+    public IActionResult AddToShoppingCart(string productJson)
     {
-        var productToShoppingCart = JsonSerializer.Deserialize<ProductModel>(product);
-        var model = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(HttpContext.Request.Cookies["ShoppingCartDictionaryModel"]);
+        var productToShoppingCart = JsonSerializer.Deserialize<ProductModel>(productJson);
 
         if (ModelState.IsValid)
         {
+            var model = GetShoppingCart();
 
-            if (model.ShoppingCartModelDictionary.ContainsKey(productToShoppingCart.ProductId.Value))
+            if (model.ShoppingCartModelList.FirstOrDefault(o => o.ProductModelInCart.ProductId == productToShoppingCart.ProductId) is not null)
             {
-                model.ShoppingCartModelDictionary[productToShoppingCart.ProductId.Value].count++;
+                model.ShoppingCartModelList.FirstOrDefault(o => o.ProductModelInCart.ProductId == productToShoppingCart.ProductId).count++;
             }
             else
             {
-                model.ShoppingCartModelDictionary.Add(productToShoppingCart.ProductId.Value, new ShoppingCartModel
+                model.ShoppingCartModelList.Add(new ProductInCart
                 {
-                    ProductInCart = productToShoppingCart,
+                    ProductModelInCart = productToShoppingCart,
                     count = 1
                 });
             }
 
-            HttpContext.Response.Cookies.Append("ShoppingCartDictionaryModel", JsonSerializer.Serialize(model));
+            HttpContext.AppendShoppingCart(model);
             return RedirectToAction("Index", "Product");
         }else{
             return RedirectToAction("Index", "Product");
@@ -56,20 +55,23 @@ public class ShoppingCartController : Controller
     }
 
     [HttpGet]
-    public IActionResult DeleteFromShoppingCart(int key)
+    public IActionResult DeleteFromShoppingCart(int productId)
     {
-        var model = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(HttpContext.Request.Cookies["ShoppingCartDictionaryModel"]);
+        var model = GetShoppingCart();
+        //var productToDelete = JsonSerializer.Deserialize<ProductModel>(productId);
+
 
         if (ModelState.IsValid)
         {
-            model.ShoppingCartModelDictionary[key].count--;
+            var productInShoppingCart = model.ShoppingCartModelList.FirstOrDefault(o => o.ProductModelInCart.ProductId == productId);
+            productInShoppingCart.count--;
 
-            if (model.ShoppingCartModelDictionary[key].count == 0)
+            if (productInShoppingCart.count == 0)
             {
-                model.ShoppingCartModelDictionary.Remove(key);
+                model.ShoppingCartModelList.Remove(productInShoppingCart);
             }
 
-            HttpContext.Response.Cookies.Append("ShoppingCartDictionaryModel", JsonSerializer.Serialize(model));
+            HttpContext.AppendShoppingCart(model);
             return RedirectToAction("Index", "ShoppingCart");
         }else{
             return RedirectToAction("Index", "ShoppingCart");
@@ -77,10 +79,16 @@ public class ShoppingCartController : Controller
     }
 
     [HttpPost]
+    public string JsAddCoupon(string couponCode)
+    {
+        var coupon = _couponRepository.GetCouponByCode("TestInRange");
+        return JsonSerializer.Serialize(coupon);
+    }
+
+    [HttpPost]
     public IActionResult AddCoupon(string couponCode)
     {
-        var model = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(HttpContext.Request.Cookies["ShoppingCartDictionaryModel"]);
-
+        var model = GetShoppingCart();
 
         if (ModelState.IsValid)
         {
@@ -101,14 +109,14 @@ public class ShoppingCartController : Controller
                 ModelState.AddModelError("model", "All coupons with this code are allready taken");
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
-            else if (model.CouponModelDictionary.ContainsKey(coupon.Id))
+            else if (model.CouponModelList.Where(o => o.CouponId == coupon.Id) is not null)
             {
                 ModelState.AddModelError("model", "This coupon is allready in the cart");
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
             else
             {
-                model.CouponModelDictionary.Add(coupon.Id, new CouponModel
+                model.CouponModelList.Add(new CouponModel
                 {
                     CouponId = coupon.Id,
                     Code = coupon.Code,
@@ -119,7 +127,7 @@ public class ShoppingCartController : Controller
                 coupon.MaxNumberOfUses--;
                 _couponRepository.EditCoupon(coupon);
 
-                HttpContext.Response.Cookies.Append("ShoppingCartDictionaryModel", JsonSerializer.Serialize(model));
+                HttpContext.AppendShoppingCart(model);
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
         }else
@@ -131,18 +139,18 @@ public class ShoppingCartController : Controller
     [HttpGet]
     public IActionResult DeleteCoupon(int couponId)
     {
-        var model = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(HttpContext.Request.Cookies["ShoppingCartDictionaryModel"]);
+        var model = GetShoppingCart();
 
         if (ModelState.IsValid)
         {
             var coupon = _couponRepository.GetCouponById(couponId);
 
-            model.CouponModelDictionary.Remove(couponId);
+            //model.CouponModelList.Remove(couponId);
 
             coupon.MaxNumberOfUses++;
             _couponRepository.EditCoupon(coupon);
 
-            HttpContext.Response.Cookies.Append("ShoppingCartDictionaryModel", JsonSerializer.Serialize(model));
+            HttpContext.AppendShoppingCart(model);
             return View("Views/ShoppingCart/Index.cshtml", model);
         }else
         {
@@ -154,39 +162,38 @@ public class ShoppingCartController : Controller
     [HttpGet]
     public IActionResult BuyAllItemsInShoppingCart()
     {
-        var model = JsonSerializer.Deserialize<ShoppingCartDictionaryModel>(HttpContext.Request.Cookies["ShoppingCartDictionaryModel"]);
+        var model = GetShoppingCart();
 
         if (ModelState.IsValid)
         {
-
-            if (model.ShoppingCartModelDictionary.Count == 0)
+            if (model.ShoppingCartModelList.Count == 0)
             {
                 ModelState.AddModelError("model", "You have selected no products to buy");
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
             string couponIds = "";
-            foreach (var element in model.CouponModelDictionary)
+            foreach (var element in model.CouponModelList)
             {
-                couponIds += element.Value.CouponId.ToString();
-                couponIds += ",";
+                couponIds += element.CouponId.ToString();
+                couponIds += ";";
             }
 
-            foreach (var element in model.ShoppingCartModelDictionary)
+            foreach (var element in model.ShoppingCartModelList)
             {
-                for (; element.Value.count != 0; element.Value.count--)
+                for (; element.count != 0; element.count--)
                 {
                     _shoppingCartRepository.BuyShoppingCartItem(new TransactionHistory
                     {
                         UserId = HttpContext.Name(),
-                        ProductId = element.Value.ProductInCart.ProductId.Value,
+                        ProductId = element.ProductModelInCart.ProductId.Value,
                         CouponIds = couponIds,
                         PaymentDate = DateTime.Now,
                     });
                 }
             }
 
-            HttpContext.Response.Cookies.Append("ShoppingCartDictionaryModel", JsonSerializer.Serialize(new ShoppingCartDictionaryModel()));
+            HttpContext.AppendShoppingCart(new ShoppingCartListModel());
             return RedirectToAction("Index", "TransactionHistory");
         }else
         {
@@ -194,5 +201,10 @@ public class ShoppingCartController : Controller
         }
     }
 
-
+    private ShoppingCartListModel GetShoppingCart()
+    {
+        return HttpContext.GetShoppingCart() is null ?
+            new ShoppingCartListModel() :
+            JsonSerializer.Deserialize<ShoppingCartListModel>(HttpContext.GetShoppingCart());
+    }
 }

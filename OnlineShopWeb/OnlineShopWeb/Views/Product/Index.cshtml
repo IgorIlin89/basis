@@ -39,7 +39,7 @@
                     <td> @(Html.ActionLink("Details", "Details", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
                     <td> @(Html.ActionLink("Edit", "Update", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
                     <td> @(Html.ActionLink("Delete", "Delete", "Product", new { id = product.ProductId }, new { @class = "btn btn-secondary" }))</td>
-                    <td> @(Html.ActionLink("Add to Shopping Cart", "AddToShoppingCart", "ShoppingCart", new { product = JsonSerializer.Serialize(product) }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(Html.ActionLink("Add to Shopping Cart", "AddToShoppingCart", "ShoppingCart", new { productJson = JsonSerializer.Serialize(product) }, new { @class = "btn btn-secondary" }))</td>
                 </tr>
             }
         }

@@ -69,8 +69,6 @@ public class LoginController : Controller
             ExpiresUtc = DateTimeOffset.Now.AddDays(1),
         };
 
-        HttpContext.Response.Cookies.Append("ShoppingCartDictionaryModel", JsonSerializer.Serialize(new ShoppingCartDictionaryModel()));
-
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties);
     }
 

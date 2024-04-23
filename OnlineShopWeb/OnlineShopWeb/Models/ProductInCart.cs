@@ -2,8 +2,8 @@
 
 namespace OnlineShopWeb.Models;
 
-public class ShoppingCartModel
+public class ProductInCart
 {
-    public ProductModel ProductInCart { get; set; }
+    public ProductModel ProductModelInCart { get; set; }
     public int count { get; set; }
 }

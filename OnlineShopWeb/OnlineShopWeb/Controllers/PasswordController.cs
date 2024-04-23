@@ -1,4 +1,4 @@
-﻿using ExtensionMethods;
+﻿using OnlineShopWeb.ExtensionMethods;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Models;

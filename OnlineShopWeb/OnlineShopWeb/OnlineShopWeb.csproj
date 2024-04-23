@@ -15,4 +15,8 @@
     <Folder Include="Models\ListModels\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\js\ShoppingCartIndex.js" />
+  </ItemGroup>
+
 </Project>

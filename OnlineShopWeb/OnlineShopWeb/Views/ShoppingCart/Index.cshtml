@@ -1,8 +1,29 @@
 ﻿@using System.Text.Json;
-@model ShoppingCartDictionaryModel
+@model ShoppingCartListModel
 @{
     ViewData["Title"] = "Igors Home Page";
 }
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/ShoppingCartIndex.js"></script>
+
+@* @section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#jsbuy2").on("click", function () {
+                alert("Handler for `click` called.");
+            });
+        });
+
+        $.ajax({
+            url: '/ShoppingCartController/BuyAllItemsInShoppingCart',
+            type: 'POST',
+            data: { jsonData: '@(serializedList)' },
+            success: function (result) {
+            }
+        });
+    </script>
+} *@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
@@ -24,14 +45,14 @@
         </tr>
 
         @{
-            foreach (var element in Model.ShoppingCartModelDictionary)
+            foreach (var element in Model.ShoppingCartModelList)
             {
                 <tr>
                     @{
-                        <td> @(element.Value.ProductInCart.ProductId)</td>
-                        <td> @(element.Value.ProductInCart.Name)</td>
-                        <td> @(element.Value.count)</td>
-                        <td> @(Html.ActionLink("Delete", "DeleteFromShoppingCart", "ShoppingCart", new { key = element.Key }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(element.ProductModelInCart.ProductId)</td>
+                        <td> @(element.ProductModelInCart.Name)</td>
+                        <td> @(element.count)</td>
+                        <td> @(Html.ActionLink("Delete", "DeleteFromShoppingCart", "ShoppingCart", new { productId = element.ProductModelInCart.ProductId }, new { @class = "btn btn-secondary" }))</td>
                     }
 
                 </tr>
@@ -43,7 +64,10 @@
     <br />
     <br />
 
-    Your Coupons!
+    </div>
+
+
+<div id="couponTable" class="text-center">
 
     <table>
         <tr>
@@ -54,14 +78,14 @@
         </tr>
 
         @{
-            foreach (var element in Model.CouponModelDictionary)
+            foreach (var element in Model.CouponModelList)
             {
                 <tr>
                     @{
-                        <td> @(element.Value.Code)</td>
-                        <td> @(element.Value.AmountOfDiscount)</td>
-                        <td> @(element.Value.TypeOfDiscount)</td>
-                        <td> @(Html.ActionLink("Delete", "DeleteCoupon", "ShoppingCart", new { CouponId = element.Value.CouponId }, new { @class = "btn btn-secondary" }))</td>
+                        <td> @(element.Code)</td>
+                        <td> @(element.AmountOfDiscount)</td>
+                        <td> @(element.TypeOfDiscount)</td>
+                        <td> @(Html.ActionLink("Delete", "DeleteCoupon", "ShoppingCart", new { CouponId = element.CouponId }, new { @class = "btn btn-secondary" }))</td>
                     }
 
                 </tr>
@@ -70,32 +94,33 @@
 
     </table>
 
+    </div>
     <br />
     <br />
     <br />
 
     @Html.ValidationSummary("", new { @class = "text-danger" })
 
-    <form asp-action="AddCoupon" asp-controller="ShoppingCart" method="post">
+
+
+<input type="text" />
+<br />
+<button id="couponButton">JS Add Coupon!</button>
+   
+<br />
+<br />
+<br />
+
+<form  asp-action="AddCoupon" asp-controller="ShoppingCart" method="post">
         <input type="text" name="couponCode"/>
         <span asp-route-couponCode="couponCode" class="text"> Add Coupon Code</span>
         <br />
-        <input type="submit" value="Add Coupon" />
+    <input id="couponButton23" type="submit" value="Add Coupon" />
     </form>
 
     <br />
     @(Html.ActionLink("Buy everything", "BuyAllItemsInShoppingCart", "ShoppingCart", new { }, new { @class = "btn btn-secondary" }))
 
 
-@*     <form method="post">
-
-        <input type="text" asp-for="CouponCode" />
-        <span asp-route-couponCode="CouponCode" class="text">Coupon Code</span>
-
-        <br />
-        <input id="jsbuy" type="submit" value="Javascript Buy Everything" />
-    </form> *@
-
-
-
+    
 
