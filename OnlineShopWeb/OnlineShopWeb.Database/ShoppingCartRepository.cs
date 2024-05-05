@@ -19,9 +19,12 @@ internal class ShoppingCartRepository : IShoppingCartRepository
         _dbContext = onlineShopWebDbContext;
     }
 
-    public void BuyShoppingCartItem(TransactionHistory transactionHistory)
+    public void BuyShoppingCartItems(List<TransactionHistory> transactionHistoryList)
     {
-        _dbContext.TransactionHistory.Add(transactionHistory);
+        foreach (var element in transactionHistoryList)
+        {
+            _dbContext.TransactionHistory.Add(element);
+        }
         _dbContext.SaveChanges();
     }
 

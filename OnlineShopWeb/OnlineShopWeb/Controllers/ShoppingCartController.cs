@@ -49,7 +49,9 @@ public class ShoppingCartController : Controller
 
             HttpContext.AppendShoppingCart(model);
             return RedirectToAction("Index", "Product");
-        }else{
+        }
+        else
+        {
             return RedirectToAction("Index", "Product");
         }
     }
@@ -73,15 +75,17 @@ public class ShoppingCartController : Controller
 
             HttpContext.AppendShoppingCart(model);
             return RedirectToAction("Index", "ShoppingCart");
-        }else{
+        }
+        else
+        {
             return RedirectToAction("Index", "ShoppingCart");
         }
     }
 
     [HttpPost]
-    public string JsAddCoupon(string couponCode)
+    public string JsAddCoupon([FromBody] string couponCode)
     {
-        var coupon = _couponRepository.GetCouponByCode("TestInRange");
+        var coupon = _couponRepository.GetCouponByCode(couponCode);
         return JsonSerializer.Serialize(coupon);
     }
 
@@ -130,7 +134,8 @@ public class ShoppingCartController : Controller
                 HttpContext.AppendShoppingCart(model);
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
-        }else
+        }
+        else
         {
             return View("Views/ShoppingCart/Index.cshtml", model);
         }
@@ -152,7 +157,8 @@ public class ShoppingCartController : Controller
 
             HttpContext.AppendShoppingCart(model);
             return View("Views/ShoppingCart/Index.cshtml", model);
-        }else
+        }
+        else
         {
             return View("Views/ShoppingCart/Index.cshtml", model);
         }
@@ -163,6 +169,7 @@ public class ShoppingCartController : Controller
     public IActionResult BuyAllItemsInShoppingCart()
     {
         var model = GetShoppingCart();
+        var listOfItemsToBuy = new List<TransactionHistory>();
 
         if (ModelState.IsValid)
         {
@@ -183,7 +190,7 @@ public class ShoppingCartController : Controller
             {
                 for (; element.count != 0; element.count--)
                 {
-                    _shoppingCartRepository.BuyShoppingCartItem(new TransactionHistory
+                    listOfItemsToBuy.Add(new TransactionHistory
                     {
                         UserId = HttpContext.Name(),
                         ProductId = element.ProductModelInCart.ProductId.Value,
@@ -193,9 +200,12 @@ public class ShoppingCartController : Controller
                 }
             }
 
+            _shoppingCartRepository.BuyShoppingCartItems(listOfItemsToBuy);
+
             HttpContext.AppendShoppingCart(new ShoppingCartListModel());
             return RedirectToAction("Index", "TransactionHistory");
-        }else
+        }
+        else
         {
             return RedirectToAction("Index", "TransactionHistory");
         }

@@ -1,22 +1,18 @@
-$(document).ready(function () {
-    $('#couponButton').click(function () {
-        fetch('/ShoppingCart/JsAddCoupon', {
-            method: 'POST',
-            body: "test123"
-        })
-            .then(response => response.json())
-            .then(() => {
-                getItems();
-                addNameTextbox.value = '';
-            })
-            .catch(error => console.error('Unable to add item.', error));
-    }
+let couponList;
+let Cookie;
 
+async function getCouponCode() {
+    let couponCodeField = document.getElementById("couponCode");
+    let couponCode = couponCodeField.value;
 
-    //$.get("/ControllerName/Index", { year: @DateTime.Now.Year, month: @DateTime.Now.Month, groupId: $('#groupSelect').val(), forback: "for" }).done(function (data) {
-    //    if (data.result == 'Redirect') {
-    //        //redirecting to page
-    //        window.location = data.url;
-    //    }
-    //});
-});
+    const response = await fetch('/ShoppingCart/JsAddCoupon', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/ json'
+        },
+        body: JSON.stringify(couponCode)
+    })
+
+    let couponData = await response.json();
+
+}
