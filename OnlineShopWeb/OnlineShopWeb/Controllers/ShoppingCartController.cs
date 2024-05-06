@@ -22,6 +22,7 @@ public class ShoppingCartController : Controller
     public IActionResult Index()
     {
         var model = GetShoppingCart();
+
         return View(model);
     }
 
@@ -89,82 +90,6 @@ public class ShoppingCartController : Controller
         return JsonSerializer.Serialize(coupon);
     }
 
-    [HttpPost]
-    public IActionResult AddCoupon(string couponCode)
-    {
-        var model = GetShoppingCart();
-
-        if (ModelState.IsValid)
-        {
-            var coupon = _couponRepository.GetCouponByCode(couponCode);
-
-            if (coupon == null)
-            {
-                ModelState.AddModelError("model", "The CouponCode does not exist");
-                return View("Views/ShoppingCart/Index.cshtml", model);
-            }
-            else if ((coupon.StartDate > DateTime.Now || coupon.EndDate < DateTime.Now))
-            {
-                ModelState.AddModelError("model", "The CouponCode is expired");
-                return View("Views/ShoppingCart/Index.cshtml", model);
-            }
-            else if (coupon.MaxNumberOfUses == 0)
-            {
-                ModelState.AddModelError("model", "All coupons with this code are allready taken");
-                return View("Views/ShoppingCart/Index.cshtml", model);
-            }
-            else if (model.CouponModelList.Where(o => o.CouponId == coupon.Id) is not null)
-            {
-                ModelState.AddModelError("model", "This coupon is allready in the cart");
-                return View("Views/ShoppingCart/Index.cshtml", model);
-            }
-            else
-            {
-                model.CouponModelList.Add(new CouponModel
-                {
-                    CouponId = coupon.Id,
-                    Code = coupon.Code,
-                    AmountOfDiscount = coupon.AmountOfDiscount,
-                    TypeOfDiscount = coupon.TypeOfDiscount,
-                });
-
-                coupon.MaxNumberOfUses--;
-                _couponRepository.EditCoupon(coupon);
-
-                HttpContext.AppendShoppingCart(model);
-                return View("Views/ShoppingCart/Index.cshtml", model);
-            }
-        }
-        else
-        {
-            return View("Views/ShoppingCart/Index.cshtml", model);
-        }
-    }
-
-    [HttpGet]
-    public IActionResult DeleteCoupon(int couponId)
-    {
-        var model = GetShoppingCart();
-
-        if (ModelState.IsValid)
-        {
-            var coupon = _couponRepository.GetCouponById(couponId);
-
-            //model.CouponModelList.Remove(couponId);
-
-            coupon.MaxNumberOfUses++;
-            _couponRepository.EditCoupon(coupon);
-
-            HttpContext.AppendShoppingCart(model);
-            return View("Views/ShoppingCart/Index.cshtml", model);
-        }
-        else
-        {
-            return View("Views/ShoppingCart/Index.cshtml", model);
-        }
-
-    }
-
     [HttpGet]
     public IActionResult BuyAllItemsInShoppingCart()
     {
@@ -213,8 +138,15 @@ public class ShoppingCartController : Controller
 
     private ShoppingCartListModel GetShoppingCart()
     {
-        return HttpContext.GetShoppingCart() is null ?
-            new ShoppingCartListModel() :
-            JsonSerializer.Deserialize<ShoppingCartListModel>(HttpContext.GetShoppingCart());
+        if (HttpContext.GetShoppingCart() is null)
+        {
+            var model = new ShoppingCartListModel();
+            HttpContext.AppendShoppingCart(model);
+            return model;
+        }
+        else
+        {
+            return JsonSerializer.Deserialize<ShoppingCartListModel>(HttpContext.GetShoppingCart());
+        }
     }
 }

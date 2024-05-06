@@ -85,7 +85,8 @@
                         <td> @(element.Code)</td>
                         <td> @(element.AmountOfDiscount)</td>
                         <td> @(element.TypeOfDiscount)</td>
-                        <td> @(Html.ActionLink("Delete", "DeleteCoupon", "ShoppingCart", new { CouponId = element.CouponId }, new { @class = "btn btn-secondary" }))</td>
+                        <td><button onclick="deleteCouponCode('@element.Code')">JS Delete Coupon!</button></td>
+                        // <td> @(Html.ActionLink("Delete", "DeleteCoupon", "ShoppingCart", new { CouponId = element.CouponId }, new { @class = "btn btn-secondary" }))</td>
                     }
 
                 </tr>
