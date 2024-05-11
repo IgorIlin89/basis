@@ -1,10 +1,15 @@
-var couponList;
-
 async function getCouponCode() {
     let couponCodeField = document.getElementById("couponCode");
     let couponCode = couponCodeField.value;
 
-    const response = await fetch('/ShoppingCart/JsAddCoupon', {
+    let shoppingCart = JSON.parse($.cookie('ShoppingCartListModel'));
+
+    if (shoppingCart.CouponModelList.find((element) => element.Code == couponCode) !== undefined) {
+        alert('The Coupon is allready in the Cart');
+        return;
+    }
+
+    const response = await fetch('/ShoppingCart/AddCoupon', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/ json'
@@ -14,27 +19,19 @@ async function getCouponCode() {
 
 
     let couponCodeData = await response.json();
-    let timeNow = new Date().toJSON();
 
-    if (couponCodeData == null) {
-        alert('Coupon does not Exist');
-        return;
-    } else if ((couponCodeData.StartDate > timeNow) || (couponCodeData.EndDate < timeNow)) {
-        alert('Coupon is expired');
-        return;
-    } else if (couponCodeData.MaxNumberOfUses <= 0) {
-        alert('All coupons with this code are allready taken');
-        return;
+    if (!couponCodeData.isValid) {
+        alert(couponCodeData.validationError);
+        return
     }
 
-    let shoppingCart = JSON.parse($.cookie('ShoppingCartListModel'));
-
-    if (shoppingCart.CouponModelList.find((element) => element.Code == couponCode) !== undefined) {
-        alert('The Coupon is allready in the Cart');
-        return;
+    let coupon = {
+        Code: couponCode,
+        AmountOfDiscount: couponCodeData.amountOfDiscount,
+        TypeOfDiscount: couponCodeData.typeOfDiscount
     }
 
-    shoppingCart.CouponModelList.push(couponCodeData);
+    shoppingCart.CouponModelList.push(coupon);
 
     let newShoppingCart = JSON.stringify(shoppingCart);
     $.cookie('ShoppingCartListModel', newShoppingCart);

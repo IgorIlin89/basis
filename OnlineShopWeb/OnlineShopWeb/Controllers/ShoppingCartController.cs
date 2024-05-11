@@ -84,10 +84,42 @@ public class ShoppingCartController : Controller
     }
 
     [HttpPost]
-    public string JsAddCoupon([FromBody] string couponCode)
+    public IActionResult AddCoupon([FromBody] string couponCode)
     {
         var coupon = _couponRepository.GetCouponByCode(couponCode);
-        return JsonSerializer.Serialize(coupon);
+
+        if (coupon == null)
+        {
+            return Ok(new
+            {
+                isValid = false,
+                validationError = "The CouponCode does not exist"
+            });
+        }
+        else if ((coupon.StartDate > DateTime.Now || coupon.EndDate < DateTime.Now))
+        {
+            return Ok(new
+            {
+                isValid = false,
+                validationError = "The CouponCode is expired"
+            });
+        }
+        else if (coupon.MaxNumberOfUses == 0)
+        {
+            return Ok(new
+            {
+                isValid = false,
+                validationError = "All coupons with this code are allready taken"
+            });
+        }
+
+        return Ok(new
+        {
+            //Cant start with uppercase, why?
+            isValid = true,
+            amountOfDiscount = coupon.AmountOfDiscount,
+            typeOfDiscount = coupon.TypeOfDiscount
+        });
     }
 
     [HttpGet]

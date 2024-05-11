@@ -4,26 +4,10 @@
     ViewData["Title"] = "Igors Home Page";
 }
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/ShoppingCartIndex.js"></script>
 
-@* @section Scripts {
-    <script>
-        $(document).ready(function () {
-            $("#jsbuy2").on("click", function () {
-                alert("Handler for `click` called.");
-            });
-        });
-
-        $.ajax({
-            url: '/ShoppingCartController/BuyAllItemsInShoppingCart',
-            type: 'POST',
-            data: { jsonData: '@(serializedList)' },
-            success: function (result) {
-            }
-        });
-    </script>
-} *@
+@section Scripts {
+    <script src="~/js/ShoppingCartIndex.js"></script>
+}
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
@@ -64,7 +48,7 @@
     <br />
     <br />
 
-    </div>
+</div>
 
 
 <div id="couponTable" class="text-center">
@@ -95,33 +79,33 @@
 
     </table>
 
-    </div>
-    <br />
-    <br />
-    <br />
+</div>
+<br />
+<br />
+<br />
 
-    @Html.ValidationSummary("", new { @class = "text-danger" })
+@Html.ValidationSummary("", new { @class = "text-danger" })
 
 
 
 <input id="couponCode" enctype='application/json' type="text" />
 <br />
 <button onclick="getCouponCode()">JS Add Coupon!</button>
-   
+
 <br />
 <br />
 <br />
 
-<form  asp-action="AddCoupon" asp-controller="ShoppingCart" method="post">
-        <input type="text" name="couponCode"/>
-        <span asp-route-couponCode="couponCode" class="text"> Add Coupon Code</span>
-        <br />
-    <input id="couponButton23" type="submit" value="Add Coupon" />
-    </form>
-
+<form asp-action="AddCoupon" asp-controller="ShoppingCart" method="post">
+    <input type="text" name="couponCode" />
+    <span asp-route-couponCode="couponCode" class="text"> Add Coupon Code</span>
     <br />
-    @(Html.ActionLink("Buy everything", "BuyAllItemsInShoppingCart", "ShoppingCart", new { }, new { @class = "btn btn-secondary" }))
+    <input id="couponButton23" type="submit" value="Add Coupon" />
+</form>
+
+<br />
+@(Html.ActionLink("Buy everything", "BuyAllItemsInShoppingCart", "ShoppingCart", new { }, new { @class = "btn btn-secondary" }))
 
 
-    
+
 
