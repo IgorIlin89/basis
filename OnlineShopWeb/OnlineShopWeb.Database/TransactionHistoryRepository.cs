@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Domain;
+//using System.Data.Entity;
 
 namespace OnlineShopWeb.Database;
 
@@ -26,7 +23,7 @@ internal class TransactionHistoryRepository : ITransactionHistoryRepository
 
     public List<TransactionHistory> GetTransactionHistoryList(int userId)
     {
-        return _dbContext.TransactionHistory.Where(o => o.UserId == userId).ToList();
+        return _dbContext.TransactionHistory.Include("Coupons").Where(o => o.UserId == userId).ToList();
     }
 
     public TransactionHistory? GetTransactionHistoryItemById(int id)

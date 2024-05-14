@@ -30,15 +30,21 @@ public class TransactionHistoryController : Controller
 
         foreach (var element in list)
         {
+            var couponIds = "";
+            foreach (var coupon in element.Coupons)
+            {
+                couponIds += coupon.Id;
+                couponIds += ";";
+            }
             model.TransactionHistoryModelList.Add(new TransactionHistoryModel
             {
                 Id = element.Id,
                 UserId = element.UserId,
                 ProductId = element.ProductId,
-                CouponIds = element.CouponIds,
+                CouponIds = couponIds,
                 ProductName = _productRepository.GetProduct(element.ProductId).Name,
                 PaymentDate = element.PaymentDate,
-                
+
             });
         }
 

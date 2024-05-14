@@ -9,4 +9,5 @@ public class Coupon
     public long? MaxNumberOfUses { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
+    public ICollection<TransactionHistory>? TransactionHistories { get; set; }
 }

@@ -12,8 +12,8 @@ public class TransactionHistory
     public int Id { get; set; }
     public int UserId { get; set; }
     public int ProductId { get; set; }
-    public ICollection<Coupon>? CouponIds { get; set; }
 
     public int Count { get; set; }
     public DateTimeOffset PaymentDate { get; set; }
+    public ICollection<Coupon>? Coupons { get; set; }
 }

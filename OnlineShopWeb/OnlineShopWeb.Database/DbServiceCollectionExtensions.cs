@@ -12,7 +12,7 @@ public static class DbServiceCollectionExtensions
     {
         services.AddDbContext<OnlineShopWebDbContext>(configure =>
         {
-            configure.UseSqlServer(configuration.GetConnectionString("OnlineShopWebDb"));
+            configure.UseSqlServer(configuration.GetConnectionString("OnlineShopWebDb"), b => b.MigrationsAssembly("OnlineShopWeb"));
         });
 
         services.AddScoped<IProductRepository, ProductRepository>()

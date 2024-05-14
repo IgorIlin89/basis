@@ -156,7 +156,7 @@ public class ShoppingCartController : Controller
                 {
                     UserId = HttpContext.Name(),
                     ProductId = element.ProductModelInCart.ProductId.Value,
-                    CouponIds = couponList,
+                    Coupons = couponList,
                     Count = element.count,
                     PaymentDate = DateTime.Now,
                 });

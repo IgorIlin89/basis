@@ -18,7 +18,10 @@ public class OnlineShopWebDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //modelBuilder.Entity<TransactionHistory>()
+        modelBuilder.Entity<TransactionHistory>()
+            .HasMany(o => o.Coupons)
+            .WithMany(o => o.TransactionHistories)
+            .UsingEntity(o => o.ToTable("TransactionHistoryToCouponsJoinTable"));
     }
 }
 
