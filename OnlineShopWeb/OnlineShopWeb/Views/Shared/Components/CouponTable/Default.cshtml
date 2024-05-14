@@ -1,0 +1,32 @@
+﻿@using System.Text.Json;
+@model ShoppingCartListModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<table>
+    <tr>
+        <th>Coupon Code</th>
+        <th>Amount of Discount</th>
+        <th>Type of Discount</th>
+        <th></th>
+    </tr>
+
+    @{
+        foreach (var element in Model.CouponModelList)
+        {
+            <tr>
+                @{
+                    <td> @(element.Code)</td>
+                    <td> @(element.AmountOfDiscount)</td>
+                    <td> @(element.TypeOfDiscount)</td>
+                    <td><button onclick="deleteCouponCode('@element.Code')">JS Delete Coupon!</button></td>
+                    // <td> @(Html.ActionLink("Delete", "DeleteCoupon", "ShoppingCart", new { CouponId = element.CouponId }, new { @class = "btn btn-secondary" }))</td>
+                }
+
+            </tr>
+        }
+    }
+
+</table>

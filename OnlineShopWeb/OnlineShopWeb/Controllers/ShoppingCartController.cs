@@ -115,11 +115,17 @@ public class ShoppingCartController : Controller
 
         return Ok(new
         {
-            //Cant start with uppercase, why?
             isValid = true,
             amountOfDiscount = coupon.AmountOfDiscount,
             typeOfDiscount = coupon.TypeOfDiscount
         });
+    }
+
+    [HttpPost]
+    public IActionResult CouponTableVC([FromBody] ShoppingCartListModel shoppingCart)
+    {
+        //var model = JsonSerializer.Deserialize<ShoppingCartListModel>(shoppingCart);
+        return ViewComponent("CouponTable", shoppingCart);
     }
 
     [HttpGet]
@@ -136,25 +142,24 @@ public class ShoppingCartController : Controller
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            string couponIds = "";
+            List<Coupon> couponList = new List<Coupon>();
+
             foreach (var element in model.CouponModelList)
             {
-                couponIds += element.CouponId.ToString();
-                couponIds += ";";
+                var coupon = _couponRepository.GetCouponByCode(element.Code);
+                couponList.Add(coupon);
             }
 
             foreach (var element in model.ShoppingCartModelList)
             {
-                for (; element.count != 0; element.count--)
+                listOfItemsToBuy.Add(new TransactionHistory
                 {
-                    listOfItemsToBuy.Add(new TransactionHistory
-                    {
-                        UserId = HttpContext.Name(),
-                        ProductId = element.ProductModelInCart.ProductId.Value,
-                        CouponIds = couponIds,
-                        PaymentDate = DateTime.Now,
-                    });
-                }
+                    UserId = HttpContext.Name(),
+                    ProductId = element.ProductModelInCart.ProductId.Value,
+                    CouponIds = couponList,
+                    Count = element.count,
+                    PaymentDate = DateTime.Now,
+                });
             }
 
             _shoppingCartRepository.BuyShoppingCartItems(listOfItemsToBuy);

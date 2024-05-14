@@ -18,6 +18,7 @@ public class OnlineShopWebDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //modelBuilder.Entity<TransactionHistory>()
     }
 }
 

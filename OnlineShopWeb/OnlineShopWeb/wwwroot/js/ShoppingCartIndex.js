@@ -36,7 +36,17 @@ async function getCouponCode() {
     let newShoppingCart = JSON.stringify(shoppingCart);
     $.cookie('ShoppingCartListModel', newShoppingCart);
 
-    location.reload();
+    const responseVC = await fetch('/ShoppingCart/CouponTableVC', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/ json'
+        },
+        body: newShoppingCart
+    })
+
+    let viewComponentData = await responseVC.text();
+
+    document.getElementById("couponTable").innerHTML = viewComponentData;
 }
 
 async function deleteCouponCode(couponCode) {
@@ -44,5 +54,16 @@ async function deleteCouponCode(couponCode) {
     shoppingCart.CouponModelList = shoppingCart.CouponModelList.filter((element) => element.Code != couponCode);
     let newShoppingCart = JSON.stringify(shoppingCart);
     $.cookie('ShoppingCartListModel', newShoppingCart)
-    location.reload();
+
+    const responseVC = await fetch('/ShoppingCart/CouponTableVC', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/ json'
+        },
+        body: newShoppingCart
+    })
+
+    let viewComponentData = await responseVC.text();
+
+    document.getElementById("couponTable").innerHTML = viewComponentData;
 }

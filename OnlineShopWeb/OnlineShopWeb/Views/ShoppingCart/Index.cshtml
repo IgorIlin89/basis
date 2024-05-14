@@ -53,31 +53,7 @@
 
 <div id="couponTable" class="text-center">
 
-    <table>
-        <tr>
-            <th>Coupon Code</th>
-            <th>Amount of Discount</th>
-            <th>Type of Discount</th>
-            <th></th>
-        </tr>
-
-        @{
-            foreach (var element in Model.CouponModelList)
-            {
-                <tr>
-                    @{
-                        <td> @(element.Code)</td>
-                        <td> @(element.AmountOfDiscount)</td>
-                        <td> @(element.TypeOfDiscount)</td>
-                        <td><button onclick="deleteCouponCode('@element.Code')">JS Delete Coupon!</button></td>
-                        // <td> @(Html.ActionLink("Delete", "DeleteCoupon", "ShoppingCart", new { CouponId = element.CouponId }, new { @class = "btn btn-secondary" }))</td>
-                    }
-
-                </tr>
-            }
-        }
-
-    </table>
+    @await Component.InvokeAsync("CouponTable", Model)
 
 </div>
 <br />
@@ -86,23 +62,12 @@
 
 @Html.ValidationSummary("", new { @class = "text-danger" })
 
-
-
 <input id="couponCode" enctype='application/json' type="text" />
 <br />
-<button onclick="getCouponCode()">JS Add Coupon!</button>
+<button onclick="getCouponCode()">Add Coupon!</button>
 
 <br />
 <br />
-<br />
-
-<form asp-action="AddCoupon" asp-controller="ShoppingCart" method="post">
-    <input type="text" name="couponCode" />
-    <span asp-route-couponCode="couponCode" class="text"> Add Coupon Code</span>
-    <br />
-    <input id="couponButton23" type="submit" value="Add Coupon" />
-</form>
-
 <br />
 @(Html.ActionLink("Buy everything", "BuyAllItemsInShoppingCart", "ShoppingCart", new { }, new { @class = "btn btn-secondary" }))
 
