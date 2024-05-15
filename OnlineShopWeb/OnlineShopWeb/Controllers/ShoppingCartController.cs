@@ -57,8 +57,8 @@ public class ShoppingCartController : Controller
         }
     }
 
-    [HttpGet]
-    public IActionResult DeleteFromShoppingCart(int productId)
+    [HttpPost]
+    public IActionResult DeleteFromShoppingCart([FromBody] int productId)
     {
         var model = GetShoppingCart();
         //var productToDelete = JsonSerializer.Deserialize<ProductModel>(productId);
