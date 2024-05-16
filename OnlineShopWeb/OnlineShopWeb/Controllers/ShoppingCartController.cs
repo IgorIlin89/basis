@@ -63,7 +63,6 @@ public class ShoppingCartController : Controller
         var model = GetShoppingCart();
         //var productToDelete = JsonSerializer.Deserialize<ProductModel>(productId);
 
-
         if (ModelState.IsValid)
         {
             var productInShoppingCart = model.ShoppingCartModelList.FirstOrDefault(o => o.ProductModelInCart.ProductId == productId);
