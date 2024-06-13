@@ -7,16 +7,13 @@ namespace OnlineShopWeb.Controllers;
 
 public class TransactionHistoryController : Controller
 {
-    private readonly IShoppingCartRepository _shoppingCartRepository;
     private readonly IProductRepository _productRepository;
     private readonly ICouponRepository _couponRepository;
     private readonly ITransactionHistoryRepository _transactionHistoryRepository;
-    public TransactionHistoryController(IShoppingCartRepository shoppingCartRepository
-        , IProductRepository productRepository
+    public TransactionHistoryController(IProductRepository productRepository
         , ICouponRepository couponRepository
         , ITransactionHistoryRepository transactionHistory)
     {
-        _shoppingCartRepository = shoppingCartRepository;
         _productRepository = productRepository;
         _couponRepository = couponRepository;
         _transactionHistoryRepository = transactionHistory;
@@ -36,15 +33,22 @@ public class TransactionHistoryController : Controller
                 couponIds += coupon.Id;
                 couponIds += ";";
             }
+
+            var productNames = "";
+            foreach (var product in element.ProductsInCart)
+            {
+                productNames += product.Product.Name;
+            }
+
             model.TransactionHistoryModelList.Add(new TransactionHistoryModel
             {
                 Id = element.Id,
                 UserId = element.UserId,
-                ProductId = element.ProductId,
+                UserName = element.User.GivenName + element.User.Surname,
+                ProductNames = productNames,
                 CouponIds = couponIds,
-                ProductName = _productRepository.GetProduct(element.ProductId).Name,
                 PaymentDate = element.PaymentDate,
-
+                FinalPrice = element.FinalPrice
             });
         }
 

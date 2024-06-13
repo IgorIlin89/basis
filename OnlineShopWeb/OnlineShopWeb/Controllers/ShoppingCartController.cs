@@ -9,13 +9,16 @@ namespace OnlineShopWeb.Controllers;
 
 public class ShoppingCartController : Controller
 {
-    private readonly IShoppingCartRepository _shoppingCartRepository;
+    private readonly ITransactionHistoryRepository _transactionHistoryRepository;
     private readonly ICouponRepository _couponRepository;
-    public ShoppingCartController(IShoppingCartRepository shoppingCartRepository
-        , ICouponRepository couponRepository)
+    private readonly IUserRepository _userRepository;
+    public ShoppingCartController(ICouponRepository couponRepository
+        , IUserRepository userRepository
+        , ITransactionHistoryRepository transactionHistoryRepository)
     {
-        _shoppingCartRepository = shoppingCartRepository;
+        _transactionHistoryRepository = transactionHistoryRepository;
         _couponRepository = couponRepository;
+        _userRepository = userRepository;
     }
 
     [HttpGet]
@@ -37,14 +40,14 @@ public class ShoppingCartController : Controller
 
             if (model.ShoppingCartModelList.FirstOrDefault(o => o.ProductModelInCart.ProductId == productToShoppingCart.ProductId) is not null)
             {
-                model.ShoppingCartModelList.FirstOrDefault(o => o.ProductModelInCart.ProductId == productToShoppingCart.ProductId).count++;
+                model.ShoppingCartModelList.FirstOrDefault(o => o.ProductModelInCart.ProductId == productToShoppingCart.ProductId).Count++;
             }
             else
             {
-                model.ShoppingCartModelList.Add(new ProductInCart
+                model.ShoppingCartModelList.Add(new ProductInCartModel
                 {
                     ProductModelInCart = productToShoppingCart,
-                    count = 1
+                    Count = 1
                 });
             }
 
@@ -66,9 +69,9 @@ public class ShoppingCartController : Controller
         if (ModelState.IsValid)
         {
             var productInShoppingCart = model.ShoppingCartModelList.FirstOrDefault(o => o.ProductModelInCart.ProductId == productId);
-            productInShoppingCart.count--;
+            productInShoppingCart.Count--;
 
-            if (productInShoppingCart.count == 0)
+            if (productInShoppingCart.Count == 0)
             {
                 model.ShoppingCartModelList.Remove(productInShoppingCart);
             }
@@ -131,7 +134,9 @@ public class ShoppingCartController : Controller
     public IActionResult BuyAllItemsInShoppingCart()
     {
         var model = GetShoppingCart();
-        var listOfItemsToBuy = new List<TransactionHistory>();
+        var user = _userRepository.GetUserById(HttpContext.Name());
+        decimal finalPrice = 0;
+        //decimal priceBeforeCoupons = 0;
 
         if (ModelState.IsValid)
         {
@@ -141,27 +146,55 @@ public class ShoppingCartController : Controller
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
+            List<ProductInCart> productsInCartList = new List<ProductInCart>();
+
+            foreach (var element in model.ShoppingCartModelList)
+            {
+                productsInCartList.Add(new ProductInCart
+                {
+                    Product = new Product
+                    {
+                        Name = element.ProductModelInCart.Name,
+                        Producer = element.ProductModelInCart.Producer,
+                        Category = element.ProductModelInCart.Category,
+                        Picture = element.ProductModelInCart.Picture,
+                        Price = element.ProductModelInCart.Price
+                    },
+                    Count = element.Count
+
+                });
+
+                finalPrice += element.Count * element.ProductModelInCart.Price;
+            }
+
             List<Coupon> couponList = new List<Coupon>();
 
             foreach (var element in model.CouponModelList)
             {
                 var coupon = _couponRepository.GetCouponByCode(element.Code);
                 couponList.Add(coupon);
-            }
 
-            foreach (var element in model.ShoppingCartModelList)
-            {
-                listOfItemsToBuy.Add(new TransactionHistory
+                if (coupon.TypeOfDiscount == TypeOfDiscount.Percentage)
                 {
-                    UserId = HttpContext.Name(),
-                    ProductId = element.ProductModelInCart.ProductId.Value,
-                    Coupons = couponList,
-                    Count = element.count,
-                    PaymentDate = DateTime.Now,
-                });
+                    finalPrice *= ((100m - (decimal)coupon.AmountOfDiscount) / 100);
+                }
+                else if (coupon.TypeOfDiscount == TypeOfDiscount.Total)
+                {
+                    finalPrice -= (decimal)coupon.AmountOfDiscount;
+                }
             }
 
-            _shoppingCartRepository.BuyShoppingCartItems(listOfItemsToBuy);
+            var transactionHistory = new TransactionHistory
+            {
+                User = user,
+                //UserId = user.Id,
+                PaymentDate = DateTime.Now,
+                FinalPrice = finalPrice,
+                ProductsInCart = productsInCartList,
+                Coupons = couponList,
+            };
+
+            _transactionHistoryRepository.BuyShoppingCartItems(transactionHistory);
 
             HttpContext.AppendShoppingCart(new ShoppingCartListModel());
             return RedirectToAction("Index", "TransactionHistory");

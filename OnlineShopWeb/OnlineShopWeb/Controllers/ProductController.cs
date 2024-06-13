@@ -30,6 +30,7 @@ public class ProductController : Controller
                     Producer = product.Producer,
                     Category = product.Category,
                     Picture = product.Picture,
+                    Price = product.Price
                 });
         }
 
@@ -55,6 +56,7 @@ public class ProductController : Controller
             Producer = product.Producer.Trim(),
             Category = product.Category,
             Picture = product.Picture.Trim(),
+            Price = product.Price
         };
 
         return View(model);
@@ -74,6 +76,7 @@ public class ProductController : Controller
             model.Producer = product.Producer.Trim();
             model.Category = product.Category;
             model.Picture = product.Picture.Trim();
+            model.Price = product.Price;
         }
 
 
@@ -96,6 +99,7 @@ public class ProductController : Controller
                         Producer = model.Producer,
                         Category = model.Category,
                         Picture = model.Picture,
+                        Price = model.Price
                     });
             }
             else
@@ -106,7 +110,8 @@ public class ProductController : Controller
                         Name = model.Name,
                         Producer = model.Producer,
                         Category = model.Category,
-                        Picture = model.Picture
+                        Picture = model.Picture,
+                        Price = model.Price
                     }
                     );
             }

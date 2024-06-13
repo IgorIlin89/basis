@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShopWeb.Database;
 
@@ -11,9 +12,11 @@ using OnlineShopWeb.Database;
 namespace OnlineShopWeb.Migrations
 {
     [DbContext(typeof(OnlineShopWebDbContext))]
-    partial class OnlineShopWebDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240612194433_UpdatedOneToManyTransactionToUser")]
+    partial class UpdatedOneToManyTransactionToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,6 +135,9 @@ namespace OnlineShopWeb.Migrations
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -156,6 +162,7 @@ namespace OnlineShopWeb.Migrations
                         {
                             Id = -1,
                             Category = 1,
+                            Count = 0,
                             Name = "Persil",
                             Picture = "persil.jpg",
                             Price = 5.99m,
@@ -165,6 +172,7 @@ namespace OnlineShopWeb.Migrations
                         {
                             Id = -2,
                             Category = 4,
+                            Count = 0,
                             Name = "Inkpad 4",
                             Picture = "inkpad4.jpg",
                             Price = 239.99m,
@@ -174,6 +182,7 @@ namespace OnlineShopWeb.Migrations
                         {
                             Id = -3,
                             Category = 2,
+                            Count = 0,
                             Name = "Giotto",
                             Picture = "giotto.jpg",
                             Price = 2.99m,
@@ -183,6 +192,7 @@ namespace OnlineShopWeb.Migrations
                         {
                             Id = -4,
                             Category = 3,
+                            Count = 0,
                             Name = "Reis",
                             Picture = "reis.jpg",
                             Price = 0.99m,

@@ -13,4 +13,7 @@ public class Product
     public string Producer { get; set; }
     public ProductCategory Category { get; set; }
     public string Picture { get; set; }
+    public decimal Price { get; set; }
+    public ICollection<TransactionHistory>? TransactionHistories { get; set; }
+
 }

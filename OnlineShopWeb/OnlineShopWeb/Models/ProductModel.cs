@@ -9,4 +9,5 @@ public class ProductModel
     public string Producer { get; set; }
     public ProductCategory Category { get; set; }
     public string Picture { get; set; }
+    public decimal Price { get; set; }
 }

@@ -4,6 +4,6 @@ namespace OnlineShopWeb.Models;
 
 public class ShoppingCartListModel
 {
-    public List<ProductInCart> ShoppingCartModelList { get; set; } = new List<ProductInCart>();
+    public List<ProductInCartModel> ShoppingCartModelList { get; set; } = new List<ProductInCartModel>();
     public List<CouponModel> CouponModelList { get; set; } = new List<CouponModel>();
 }

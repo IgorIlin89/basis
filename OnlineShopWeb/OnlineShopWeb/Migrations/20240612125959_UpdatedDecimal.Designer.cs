@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShopWeb.Database;
 
@@ -11,9 +12,11 @@ using OnlineShopWeb.Database;
 namespace OnlineShopWeb.Migrations
 {
     [DbContext(typeof(OnlineShopWebDbContext))]
-    partial class OnlineShopWebDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240612125959_UpdatedDecimal")]
+    partial class UpdatedDecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,6 +135,9 @@ namespace OnlineShopWeb.Migrations
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -156,6 +162,7 @@ namespace OnlineShopWeb.Migrations
                         {
                             Id = -1,
                             Category = 1,
+                            Count = 0,
                             Name = "Persil",
                             Picture = "persil.jpg",
                             Price = 5.99m,
@@ -165,6 +172,7 @@ namespace OnlineShopWeb.Migrations
                         {
                             Id = -2,
                             Category = 4,
+                            Count = 0,
                             Name = "Inkpad 4",
                             Picture = "inkpad4.jpg",
                             Price = 239.99m,
@@ -174,6 +182,7 @@ namespace OnlineShopWeb.Migrations
                         {
                             Id = -3,
                             Category = 2,
+                            Count = 0,
                             Name = "Giotto",
                             Picture = "giotto.jpg",
                             Price = 2.99m,
@@ -182,15 +191,16 @@ namespace OnlineShopWeb.Migrations
                         new
                         {
                             Id = -4,
-                            Category = 3,
-                            Name = "Reis",
-                            Picture = "reis.jpg",
-                            Price = 0.99m,
-                            Producer = "Bioland"
+                            Category = 2,
+                            Count = 0,
+                            Name = "Giotto",
+                            Picture = "giotto.jpg",
+                            Price = 2.99m,
+                            Producer = "Ferrero"
                         });
                 });
 
-            modelBuilder.Entity("OnlineShopWeb.Domain.ProductInCart", b =>
+            modelBuilder.Entity("OnlineShopWeb.Domain.ShoppingCart", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -198,22 +208,18 @@ namespace OnlineShopWeb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Count")
+                    b.Property<int>("CouponId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TransactionHistoryId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("TransactionHistoryId");
-
-                    b.ToTable("ProductInCart");
+                    b.ToTable("ShoppingCart");
                 });
 
             modelBuilder.Entity("OnlineShopWeb.Domain.TransactionHistory", b =>
@@ -224,23 +230,10 @@ namespace OnlineShopWeb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("FinalPrice")
-                        .HasColumnType("decimal(10,2)");
-
                     b.Property<DateTimeOffset>("PaymentDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("TransactionHistory");
                 });
@@ -338,6 +331,36 @@ namespace OnlineShopWeb.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProductTransactionHistory", b =>
+                {
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TransactionHistoriesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductsId", "TransactionHistoriesId");
+
+                    b.HasIndex("TransactionHistoriesId");
+
+                    b.ToTable("TransactionHistoryToProducts", (string)null);
+                });
+
+            modelBuilder.Entity("TransactionHistoryUser", b =>
+                {
+                    b.Property<int>("TransactionHistoriesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TransactionHistoriesId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("TransactionHistoryToUsers", (string)null);
+                });
+
             modelBuilder.Entity("CouponTransactionHistory", b =>
                 {
                     b.HasOne("OnlineShopWeb.Domain.Coupon", null)
@@ -353,53 +376,34 @@ namespace OnlineShopWeb.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OnlineShopWeb.Domain.ProductInCart", b =>
-                {
-                    b.HasOne("OnlineShopWeb.Domain.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlineShopWeb.Domain.TransactionHistory", "TransactionHistory")
-                        .WithMany("ProductsInCart")
-                        .HasForeignKey("TransactionHistoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("TransactionHistory");
-                });
-
-            modelBuilder.Entity("OnlineShopWeb.Domain.TransactionHistory", b =>
+            modelBuilder.Entity("ProductTransactionHistory", b =>
                 {
                     b.HasOne("OnlineShopWeb.Domain.Product", null)
-                        .WithMany("TransactionHistories")
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("OnlineShopWeb.Domain.User", "User")
-                        .WithMany("TransactionHistories")
-                        .HasForeignKey("UserId")
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.HasOne("OnlineShopWeb.Domain.TransactionHistory", null)
+                        .WithMany()
+                        .HasForeignKey("TransactionHistoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("OnlineShopWeb.Domain.Product", b =>
+            modelBuilder.Entity("TransactionHistoryUser", b =>
                 {
-                    b.Navigation("TransactionHistories");
-                });
+                    b.HasOne("OnlineShopWeb.Domain.TransactionHistory", null)
+                        .WithMany()
+                        .HasForeignKey("TransactionHistoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("OnlineShopWeb.Domain.TransactionHistory", b =>
-                {
-                    b.Navigation("ProductsInCart");
-                });
-
-            modelBuilder.Entity("OnlineShopWeb.Domain.User", b =>
-                {
-                    b.Navigation("TransactionHistories");
+                    b.HasOne("OnlineShopWeb.Domain.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -10,6 +10,7 @@
 
     <table>
         <tr>
+            <th>Final Price</th>
             <th>Product Name</th>
             <th>Coupon Id</th>
             <th>Payment Date</th>
@@ -20,7 +21,8 @@
             foreach (var element in Model.TransactionHistoryModelList)
             {
                 <tr>
-                    <td> @(element.ProductName)</td>
+                    <td> @(element.FinalPrice)</td>
+                    <td> @(element.ProductNames)</td>
                     <td> @(element.CouponIds)</td>
                     <td> @(element.PaymentDate)</td>
                     <td> @(Html.ActionLink("Delete", "Delete", "TransactionHistory", new { id = element.Id }, new { @class = "btn btn-secondary" }))</td>

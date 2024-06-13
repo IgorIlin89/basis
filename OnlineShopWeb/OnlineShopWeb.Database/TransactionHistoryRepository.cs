@@ -23,10 +23,19 @@ internal class TransactionHistoryRepository : ITransactionHistoryRepository
 
     public List<TransactionHistory> GetTransactionHistoryList(int userId)
     {
-        return _dbContext.TransactionHistory
+        var test = _dbContext.TransactionHistory
             .Include(o => o.Coupons)
-            .Where(o => o.UserId == userId)
+            .Include(o => o.ProductsInCart)
+            .Where(o => o.Id == userId)
             .ToList();
+
+        return test;
+    }
+
+    public void BuyShoppingCartItems(TransactionHistory transactionHistory)
+    {
+        _dbContext.TransactionHistory.Add(transactionHistory);
+        _dbContext.SaveChanges();
     }
 
     public TransactionHistory? GetTransactionHistoryItemById(int id)
