@@ -154,16 +154,17 @@ public class ShoppingCartController : Controller
                 {
                     Product = new Product
                     {
+
                         Name = element.ProductModelInCart.Name,
                         Producer = element.ProductModelInCart.Producer,
                         Category = element.ProductModelInCart.Category,
                         Picture = element.ProductModelInCart.Picture,
                         Price = element.ProductModelInCart.Price
                     },
-                    Count = element.Count
+                    Count = element.Count,
+                    ProductId = element.ProductModelInCart.ProductId.Value
 
                 });
-
                 finalPrice += element.Count * element.ProductModelInCart.Price;
             }
 

@@ -14,6 +14,7 @@ public class Product
     public ProductCategory Category { get; set; }
     public string Picture { get; set; }
     public decimal Price { get; set; }
+    public ICollection<ProductInCart>? ProductsInCart { get; set; }
     public ICollection<TransactionHistory>? TransactionHistories { get; set; }
 
 }
