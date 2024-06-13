@@ -24,6 +24,7 @@
         <tr>
             <th>Product Id</th>
             <th>Product Name</th>
+            <th>Product Price</th>
             <th>How many you buy</th>
             <th></th>
         </tr>
@@ -35,6 +36,7 @@
                     @{
                         <td> @(element.ProductModelInCart.ProductId)</td>
                         <td> @(element.ProductModelInCart.Name)</td>
+                        <td> @(element.ProductModelInCart.Price)</td>
                         <td> @(element.Count)</td>
                         <td>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#a_@element.ProductModelInCart.ProductId">

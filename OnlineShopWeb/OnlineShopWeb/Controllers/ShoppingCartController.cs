@@ -154,7 +154,6 @@ public class ShoppingCartController : Controller
                 {
                     Product = new Product
                     {
-
                         Name = element.ProductModelInCart.Name,
                         Producer = element.ProductModelInCart.Producer,
                         Category = element.ProductModelInCart.Category,
@@ -162,7 +161,7 @@ public class ShoppingCartController : Controller
                         Price = element.ProductModelInCart.Price
                     },
                     Count = element.Count,
-                    ProductId = element.ProductModelInCart.ProductId.Value
+                    //ProductId = element.ProductModelInCart.ProductId.Value
 
                 });
                 finalPrice += element.Count * element.ProductModelInCart.Price;
@@ -188,7 +187,6 @@ public class ShoppingCartController : Controller
             var transactionHistory = new TransactionHistory
             {
                 User = user,
-                //UserId = user.Id,
                 PaymentDate = DateTime.Now,
                 FinalPrice = finalPrice,
                 ProductsInCart = productsInCartList,
