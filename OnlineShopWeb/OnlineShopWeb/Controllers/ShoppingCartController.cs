@@ -153,10 +153,8 @@ public class ShoppingCartController : Controller
 
             foreach (var element in model.ShoppingCartModelList)
             {
-                //var product = _productRepository.GetProduct(element.ProductModelInCart.ProductId.Value);
                 productsInCartList.Add(new ProductInCart
                 {
-                    //Product = product,
                     Count = element.Count,
                     ProductId = element.ProductModelInCart.ProductId.Value
 
