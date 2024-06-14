@@ -12,7 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Pr
 		tasks.txt = tasks.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShopWeb.Database", "OnlineShopWeb.Database\OnlineShopWeb.Database.csproj", "{E02175E6-33BD-4138-B8EF-235005208A68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShopWeb.Database", "OnlineShopWeb.Database\OnlineShopWeb.Database.csproj", "{E02175E6-33BD-4138-B8EF-235005208A68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrater", "Migrater\Migrater.csproj", "{19EFCFE5-A84A-492D-AA62-DEFAD0EF771A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{E02175E6-33BD-4138-B8EF-235005208A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E02175E6-33BD-4138-B8EF-235005208A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E02175E6-33BD-4138-B8EF-235005208A68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19EFCFE5-A84A-492D-AA62-DEFAD0EF771A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19EFCFE5-A84A-492D-AA62-DEFAD0EF771A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19EFCFE5-A84A-492D-AA62-DEFAD0EF771A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19EFCFE5-A84A-492D-AA62-DEFAD0EF771A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

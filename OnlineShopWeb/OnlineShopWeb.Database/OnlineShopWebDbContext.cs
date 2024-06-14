@@ -29,12 +29,6 @@ public class OnlineShopWebDbContext : DbContext
             .HasForeignKey(o => o.UserId)
             .IsRequired();
 
-        //modelBuilder.Entity<TransactionHistory>()
-        //    .HasMany(o => o.ProductsInCart)
-        //    .WithOne(o => o.TransactionHistory)
-        //    .HasForeignKey(o => o.TransactionHistoryId)
-        //    .IsRequired();
-
         modelBuilder.Entity<ProductInCart>()
             .HasOne(o => o.Product)
             .WithMany(o => o.CartProduct)
