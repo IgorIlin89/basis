@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShopWeb.Database;
 
@@ -11,9 +12,11 @@ using OnlineShopWeb.Database;
 namespace OnlineShopWeb.Migrations
 {
     [DbContext(typeof(OnlineShopWebDbContext))]
-    partial class OnlineShopWebDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240614085838_UpdatedProductToCartOneToOne")]
+    partial class UpdatedProductToCartOneToOne
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,7 +212,8 @@ namespace OnlineShopWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId")
+                        .IsUnique();
 
                     b.HasIndex("TransactionHistoryId");
 
@@ -356,8 +360,8 @@ namespace OnlineShopWeb.Migrations
             modelBuilder.Entity("OnlineShopWeb.Domain.ProductInCart", b =>
                 {
                     b.HasOne("OnlineShopWeb.Domain.Product", "Product")
-                        .WithMany("CartProduct")
-                        .HasForeignKey("ProductId")
+                        .WithOne("CartProduct")
+                        .HasForeignKey("OnlineShopWeb.Domain.ProductInCart", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -26,7 +26,10 @@ internal class TransactionHistoryRepository : ITransactionHistoryRepository
         var test = _dbContext.TransactionHistory
             .Include(o => o.Coupons)
             .Include(o => o.ProductsInCart)
-            .Where(o => o.Id == userId)
+            .ThenInclude(o => o.Product)
+            .Include(o => o.User)
+            .Where(o => o.UserId == userId)
+            .AsNoTracking()
             .ToList();
 
         return test;

@@ -12,13 +12,16 @@ public class ShoppingCartController : Controller
     private readonly ITransactionHistoryRepository _transactionHistoryRepository;
     private readonly ICouponRepository _couponRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IProductRepository _productRepository;
     public ShoppingCartController(ICouponRepository couponRepository
         , IUserRepository userRepository
-        , ITransactionHistoryRepository transactionHistoryRepository)
+        , ITransactionHistoryRepository transactionHistoryRepository
+        , IProductRepository productRepository)
     {
         _transactionHistoryRepository = transactionHistoryRepository;
         _couponRepository = couponRepository;
         _userRepository = userRepository;
+        _productRepository = productRepository;
     }
 
     [HttpGet]
@@ -150,18 +153,12 @@ public class ShoppingCartController : Controller
 
             foreach (var element in model.ShoppingCartModelList)
             {
+                //var product = _productRepository.GetProduct(element.ProductModelInCart.ProductId.Value);
                 productsInCartList.Add(new ProductInCart
                 {
-                    Product = new Product
-                    {
-                        Name = element.ProductModelInCart.Name,
-                        Producer = element.ProductModelInCart.Producer,
-                        Category = element.ProductModelInCart.Category,
-                        Picture = element.ProductModelInCart.Picture,
-                        Price = element.ProductModelInCart.Price
-                    },
+                    //Product = product,
                     Count = element.Count,
-                    //ProductId = element.ProductModelInCart.ProductId.Value
+                    ProductId = element.ProductModelInCart.ProductId.Value
 
                 });
                 finalPrice += element.Count * element.ProductModelInCart.Price;
