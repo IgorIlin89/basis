@@ -30,7 +30,7 @@ migrator.Migrate();
 
 Console.WriteLine("The Migration was successfull");
 
-return 0; //remove to run option 2
+return 0; //remove and comment option 1 to run option 2
 
 ////////////////////////////////
 
