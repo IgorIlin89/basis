@@ -1,16 +1,9 @@
 ﻿using OnlineShopWeb.Database;
-using OnlineShopWeb.Migrations;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Builder;
-using OnlineShopWeb;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Diagnostics;
-using System;
-using System.Runtime.CompilerServices;
-using System.IO;
 using System.Runtime.InteropServices;
 
 ////////////////// OPTION 1 using Migrater;
@@ -42,7 +35,6 @@ var changeToWorkPath =
     $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}OnlineShopWeb";
 
 var executeMigration = "dotnet ef database update --context OnlineShopWebDbContext";
-
 
 using (Process myProcess = new Process())
 {
