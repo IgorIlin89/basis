@@ -8,50 +8,76 @@ using OnlineShopWeb;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Diagnostics;
-//using Migrater;
+using System;
+using System.Runtime.CompilerServices;
+using System.IO;
+using System.Runtime.InteropServices;
 
+////////////////// OPTION 1 using Migrater;
 var serviceCollection = new ServiceCollection();
 var config = new ConfigurationManager();
 
 config.AddJsonFile("appsettings.json");
-
-//serviceCollection.AddKeyedSingleton(serviceCollection.AddDatabase(config), "test");
-//var _dbContext = serviceProvider.GetKeyedService("test");
-
 serviceCollection.AddDatabase(config);
 
 var serviceProvider = serviceCollection.BuildServiceProvider();
-
-//var connectionString = "Server=IGOR\\SQLEXPRESS;Database=OnlineShopWebDb;User Id=OnlineShobWebDatabase;Password=123456;Integrated Security=false;MultipleActiveResultSets=true;TrustServerCertificate=True";
-
-//var optionsBuilder = new DbContextOptionsBuilder<OnlineShopWebDbContext>();
-//optionsBuilder.UseSqlServer(connectionString);
-
-//var _dbContext = new ApplicationDbContext(optionsBuilder.Options);
-
 var _dbContext = serviceProvider.GetService<OnlineShopWebDbContext>();
 
-Console.WriteLine(_dbContext.Model.AnnotationsToDebugString());
+//Console.WriteLine(_dbContext.Model.AnnotationsToDebugString());
 
 var migrator = _dbContext.GetInfrastructure().GetService<IMigrator>();
-
-var migrationsAssembly = _dbContext.GetInfrastructure().GetService<IMigrationsAssembly>();
-//migrationsAssembly.
-
 migrator.Migrate();
+
+Console.WriteLine("The Migration was successfull");
+
+return 0; //remove to run option 2
 
 ////////////////////////////////
 
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine("The Migration was successfull");
+// OPTION 2 using .net CLI // OPTION 2 using .net CLI // OPTION 2 using .net CLI
 
-//Process process = new Process();
-//process.StartInfo.FileName = "dotnet";
-//process.StartInfo.Arguments = "--version";
-//process.StartInfo.UseShellExecute = false;
-//process.StartInfo.RedirectStandardOutput = true;
-//process.Start();
+var changeToExePath = $"cd {AppContext.BaseDirectory}";
+var changeToWorkPath =
+    $"cd ..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}" +
+    $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}OnlineShopWeb";
 
-//string output = process.StandardOutput.ReadToEnd();
-//process.WaitForExit();
-//Console.WriteLine(output);
+var executeMigration = "dotnet ef database update --context OnlineShopWebDbContext";
+
+
+using (Process myProcess = new Process())
+{
+    myProcess.StartInfo.UseShellExecute = false;
+    //myProcess.StartInfo.WorkingDirectory = "";
+
+    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    {
+        myProcess.StartInfo.FileName = "cmd.exe";
+    }
+    else
+    {
+        myProcess.StartInfo.FileName = "/bin/bash";
+
+    }
+
+    myProcess.StartInfo.RedirectStandardInput = true;
+    //myProcess.StartInfo.Arguments = $"\"dotnet ef database update --context OnlineShopWebDbContext\"";
+    myProcess.StartInfo.CreateNoWindow = false;
+    myProcess.StartInfo.RedirectStandardOutput = true;
+    myProcess.Start();
+
+    var streamWriter = myProcess.StandardInput;
+
+    if (streamWriter.BaseStream.CanWrite)
+    {
+        streamWriter.WriteLine("dotnet tool install --global dotnet-ef");
+        streamWriter.WriteLine(changeToExePath);
+        streamWriter.WriteLine(changeToWorkPath);
+        streamWriter.WriteLine(executeMigration);
+        streamWriter.BaseStream.Close();
+    }
+
+    string output = myProcess.StandardOutput.ReadToEnd();
+    myProcess.WaitForExit();
+    Console.WriteLine(output);
+    Console.WriteLine("The Migration was successfull");
+}
