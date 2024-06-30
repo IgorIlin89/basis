@@ -1,7 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using OnlineShopWebAPI;
+using OnlineShopWebAPI.Database;
+using OnlineShopWebAPI.Database.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+builder.Services.AddDbContext<OnlineShopWebAPIContext>(
+    options => options.UseSqlServer("name=ConnectionStrings:OnlineShopWebDbAPI", b => b.MigrationsAssembly("OnlineShopWebAPI")));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
