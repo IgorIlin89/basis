@@ -1,6 +1,6 @@
 ﻿namespace OnlineShopWebAPI.Models;
 
-public class UserModel
+public class UserDto
 {
     public int Id { get; set; }
     public string EMail { get; set; }

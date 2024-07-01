@@ -5,11 +5,15 @@ using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text;
+using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OnlineShopWeb.Controllers;
 public class UserController : Controller
 {
     private readonly IUserRepository _userRepository;
+    private readonly HttpClient _httpClient = new HttpClient();
 
     public UserController(IUserRepository userRepository)
     {
@@ -17,9 +21,15 @@ public class UserController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var userList = _userRepository.GetUserList();
+        //var userList = _userRepository.GetUserList();
+
+        var request = await _httpClient.GetAsync("https://localhost:7216/api/userlist");
+        var response = await request.Content.ReadAsStringAsync();
+
+        List<User> userList = JsonSerializer.Deserialize<List<User>>(response);
+
         var model = new UserListModel();
 
         foreach (var user in userList)
@@ -98,25 +108,38 @@ public class UserController : Controller
     }
 
     [HttpPost]
-    public IActionResult Update(UserModel model)
+    public async Task<IActionResult> Update(UserModel model)
     {
         if (ModelState.IsValid)
         {
-            _userRepository.EditUser(
-                new User
-                {
-                    Id = model.UserId.Value,
-                    EMail = model.EMail,
-                    GivenName = model.GivenName,
-                    Surname = model.Surname,
-                    Age = model.Age,
-                    Country = model.Country,
-                    City = model.City,
-                    Street = model.Street,
-                    HouseNumber = model.HouseNumber,
-                    PostalCode = model.PostalCode
-                }
-            );
+            var userToUpdate = new User
+            {
+                Id = model.UserId.Value,
+                EMail = model.EMail,
+            };
+
+            var httpBody = new StringContent(
+                    JsonSerializer.Serialize(userToUpdate),
+                    Encoding.UTF8,
+                    Application.Json);
+
+            _httpClient.PostAsync("https://localhost:7216/api/userupdate", httpBody);
+
+            //_userRepository.EditUser(
+            //    new User
+            //    {
+            //        Id = model.UserId.Value,
+            //        EMail = model.EMail,
+            //        GivenName = model.GivenName,
+            //        Surname = model.Surname,
+            //        Age = model.Age,
+            //        Country = model.Country,
+            //        City = model.City,
+            //        Street = model.Street,
+            //        HouseNumber = model.HouseNumber,
+            //        PostalCode = model.PostalCode
+            //    }
+            //);
 
             return RedirectToAction("Index", "User");
         }

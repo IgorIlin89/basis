@@ -12,7 +12,7 @@ public class APIController(IUserRepository _userRepositry) : ControllerBase
 {
     [Route("api/userlist")]
     [HttpGet]
-    public async Task<ActionResult<List<User>>> GetUserList()
+    public async Task<ActionResult> GetUserList()
     {
         var userList = _userRepositry.GetUserList();
         var response = JsonSerializer.Serialize(userList);
@@ -24,21 +24,19 @@ public class APIController(IUserRepository _userRepositry) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<User>> GetUser(int id)
     {
-        //var user = _userRepositry.GetUserById(id);
-        var httpClient = new HttpClient();
+        var user = _userRepositry.GetUserById(id);
 
-        var request = await httpClient.GetAsync("https://localhost:7216/api/userlist");
-        var response = await request.Content.ReadAsStringAsync();
+        var response = JsonSerializer.Serialize(user);
 
-        List<User> userList = JsonSerializer.Deserialize<List<User>>(response);
-
-        var user = userList.FirstOrDefault(o => o.Id == id);
-
-        return Ok(new UserModel
-        {
-            EMail = user.EMail,
-            Password = user.Password,
-            Name = user.Name
-        });
+        return Ok(response);
     }
+
+    [Route("api/userupdate")]
+    [HttpPost]
+    public async Task<ActionResult> UpdateUser([FromBody]User user)
+    {
+        _userRepositry.Update(user);
+        return Ok();
+    }
+
 }
