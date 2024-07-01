@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
+using OnlineShopWeb.Dtos;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
@@ -28,25 +29,25 @@ public class UserController : Controller
         var request = await _httpClient.GetAsync("https://localhost:7216/api/userlist");
         var response = await request.Content.ReadAsStringAsync();
 
-        List<User> userList = JsonSerializer.Deserialize<List<User>>(response);
+        List<UserDto> userDtoList = JsonSerializer.Deserialize<List<UserDto>>(response);
 
         var model = new UserListModel();
 
-        foreach (var user in userList)
+        foreach (var user in userDtoList)
         {
             model.UserModelList.Add(
                 new UserModel
                 {
                     UserId = user.Id,
                     EMail = user.EMail,
-                    GivenName = user.GivenName,
-                    Surname = user.Surname,
-                    Age = user.Age,
-                    Country = user.Country,
-                    City = user.City,
-                    Street = user.Street,
-                    HouseNumber = user.HouseNumber,
-                    PostalCode = user.PostalCode,
+                    //GivenName = user.GivenName,
+                    //Surname = user.Surname,
+                    //Age = user.Age,
+                    //Country = user.Country,
+                    //City = user.City,
+                    //Street = user.Street,
+                    //HouseNumber = user.HouseNumber,
+                    //PostalCode = user.PostalCode,
                 });
         }
 
@@ -112,7 +113,7 @@ public class UserController : Controller
     {
         if (ModelState.IsValid)
         {
-            var userToUpdate = new User
+            var userToUpdate = new UserDto
             {
                 Id = model.UserId.Value,
                 EMail = model.EMail,

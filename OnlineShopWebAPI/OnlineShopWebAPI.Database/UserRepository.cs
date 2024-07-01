@@ -40,8 +40,8 @@ public class UserRepository : IUserRepository
         var userToUpdate = _context.User.FirstOrDefault(o => o.Id == user.Id);
 
         userToUpdate.EMail = user.EMail;
-        //userToUpdate.Password = user.Password;
         //userToUpdate.Name = user.Name;
+        //userToUpdate.Password = user.Password;
 
         _context.SaveChanges();
     }

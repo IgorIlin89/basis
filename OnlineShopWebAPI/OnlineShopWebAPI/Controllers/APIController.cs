@@ -15,26 +15,50 @@ public class APIController(IUserRepository _userRepositry) : ControllerBase
     public async Task<ActionResult> GetUserList()
     {
         var userList = _userRepositry.GetUserList();
-        var response = JsonSerializer.Serialize(userList);
+
+        List<UserDto> userListDto = new List<UserDto>();
+
+        foreach (var element in userList)
+        {
+            userListDto.Add(new UserDto
+            {
+                EMail = element.EMail,
+                Name = element.Name
+            });
+        }
+
+        var response = JsonSerializer.Serialize(userListDto);
 
         return Ok(response);
     }
 
     [Route("api/user{id}")]
     [HttpGet]
-    public async Task<ActionResult<User>> GetUser(int id)
+    public async Task<ActionResult> GetUser(int id)
     {
         var user = _userRepositry.GetUserById(id);
 
-        var response = JsonSerializer.Serialize(user);
+        var response = JsonSerializer.Serialize(new UserDto
+        {
+            Id = user.Id,
+            EMail = user.EMail,
+            Name = user.Name
+        });
 
         return Ok(response);
     }
 
     [Route("api/userupdate")]
     [HttpPost]
-    public async Task<ActionResult> UpdateUser([FromBody]User user)
+    public async Task<ActionResult> UpdateUser([FromBody] UserDto userDto)
     {
+        var user = new User
+        {
+            Id = userDto.Id,
+            EMail = userDto.EMail,
+            Name = userDto.Name
+        };
+
         _userRepositry.Update(user);
         return Ok();
     }
