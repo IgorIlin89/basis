@@ -15,8 +15,9 @@ public class APIController(IUserRepository _userRepositry) : ControllerBase
     public async Task<ActionResult<List<User>>> GetUserList()
     {
         var userList = _userRepositry.GetUserList();
+        var response = JsonSerializer.Serialize(userList);
 
-        return Ok(userList);
+        return Ok(response);
     }
 
     [Route("api/user{id}")]
