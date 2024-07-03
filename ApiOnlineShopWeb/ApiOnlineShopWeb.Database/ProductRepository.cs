@@ -32,6 +32,7 @@ internal class ProductRepository : IProductRepository
         entityEntry.Producer = product.Producer;
         entityEntry.Category = product.Category;
         entityEntry.Picture = product.Picture;
+        entityEntry.Price = product.Price;
         _dbContext.SaveChanges();
     }
 
