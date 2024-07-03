@@ -7,9 +7,9 @@ using ApiOnlineShopWeb.Dtos;
 
 namespace OnlineShopWebAPI.Controllers;
 
-public class APIController(IUserRepository _userRepositry) : ControllerBase
+public class UserApiController(IUserRepository _userRepositry) : ControllerBase
 {
-    [Route("api/userlist")]
+    [Route("userlist")]
     [HttpGet]
     public async Task<ActionResult> GetUserList()
     {
@@ -31,7 +31,7 @@ public class APIController(IUserRepository _userRepositry) : ControllerBase
         return Ok(response);
     }
 
-    [Route("api/user{id}")]
+    [Route("user{id}")]
     [HttpGet]
     public async Task<ActionResult> GetUser(int id)
     {
@@ -47,7 +47,7 @@ public class APIController(IUserRepository _userRepositry) : ControllerBase
         return Ok(response);
     }
 
-    [Route("api/userupdate")]
+    [Route("userupdate")]
     [HttpPost]
     public async Task<ActionResult> UpdateUser([FromBody] UserDto userDto)
     {

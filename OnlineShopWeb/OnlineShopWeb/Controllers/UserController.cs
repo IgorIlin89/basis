@@ -26,7 +26,7 @@ public class UserController : Controller
     {
         //var userList = _userRepository.GetUserList();
 
-        var request = await _httpClient.GetAsync("https://localhost:7216/api/userlist");
+        var request = await _httpClient.GetAsync("https://localhost:7216/userlist");
         var response = await request.Content.ReadAsStringAsync();
 
         List<UserDto> userDtoList = JsonSerializer.Deserialize<List<UserDto>>(response);
@@ -124,7 +124,7 @@ public class UserController : Controller
                     Encoding.UTF8,
                     Application.Json);
 
-            _httpClient.PostAsync("https://localhost:7216/api/userupdate", httpBody);
+            _httpClient.PostAsync("https://localhost:7216/userupdate", httpBody);
 
             //_userRepository.EditUser(
             //    new User
