@@ -1,9 +1,9 @@
-﻿using ApiOnlineShopWeb.Database;
+﻿using ApiOnlineShopWeb.Database.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace OnlineShopWeb.Database;
+namespace ApiOnlineShopWeb.Database;
 
 public static class DbServiceCollectionExtensions
 {
@@ -12,14 +12,10 @@ public static class DbServiceCollectionExtensions
     {
         services.AddDbContext<ApiOnlineShopWebContext>(configure =>
         {
-            configure.UseSqlServer(configuration.GetConnectionString("OnlineShopWebDb"), b => b.MigrationsAssembly("OnlineShopWeb"));
+            configure.UseSqlServer(configuration.GetConnectionString("ApiOnlineShopWebDb"), b => b.MigrationsAssembly("ApiOnlineShopWeb"));
         });
 
-        //services.AddScoped<IProductRepository, ProductRepository>()
-        //.AddScoped<ICouponRepository, CouponRepository>()
-        //.AddScoped<IUserRepository, UserRepository>()
-        //.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
-        //.AddScoped<IShoppingCartRepository, ShoppingCartRepository>()
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }
