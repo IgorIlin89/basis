@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ApiOnlineShopWeb.Database;
 
-public class UserRepository : IUserRepository
+internal class UserRepository : IUserRepository
 {
     private readonly ApiOnlineShopWebContext _context;
 

@@ -3,6 +3,7 @@ using ApiOnlineShopWeb.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiOnlineShopWeb.Migrations
 {
     [DbContext(typeof(ApiOnlineShopWebContext))]
-    partial class ApiOnlineShopWebContextModelSnapshot : ModelSnapshot
+    [Migration("20240703203245_AddedProduct")]
+    partial class AddedProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -15,7 +15,8 @@ public static class DbServiceCollectionExtensions
             configure.UseSqlServer(configuration.GetConnectionString("ApiOnlineShopWebDb"), b => b.MigrationsAssembly("ApiOnlineShopWeb"));
         });
 
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<IProductRepository, ProductRepository>();
 
         return services;
     }
