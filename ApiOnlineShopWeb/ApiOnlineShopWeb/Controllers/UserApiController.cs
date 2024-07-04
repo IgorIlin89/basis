@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using ApiOnlineShopWeb.Domain;
 using ApiOnlineShopWeb.Database.Interfaces;
 using System.Text.Json;
