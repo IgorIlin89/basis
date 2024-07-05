@@ -7,22 +7,32 @@ using OnlineShopWeb.Domain;
 using OnlineShopWeb.Database.Interfaces;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
+using OnlineShopWeb.Dtos;
+using static System.Net.Mime.MediaTypeNames;
+using System.Text;
 
 namespace OnlineShopWeb.Controllers;
 
 public class LoginController : Controller
 {
+    private readonly HttpClient _httpClient = new HttpClient();
     private readonly IUserRepository _userRepository;
+    private readonly string _connectionString;
+    private readonly string _connectToGetUserByEMail;
+    private readonly string _connectToAddUser;
 
-    public LoginController(IUserRepository userRepository)
+    public LoginController(IUserRepository userRepository,
+        IConfiguration configuration)
     {
         _userRepository = userRepository;
+        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectToGetUserByEMail = configuration.GetConnectionString("ApiUserControllerGetUserByEmail");
+        _connectToAddUser = configuration.GetConnectionString("ApiUserControllerAddUser");
     }
 
     [HttpGet]
     public IActionResult SignIn()
     {
-
         return View();
     }
 
@@ -31,7 +41,38 @@ public class LoginController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = _userRepository.GetUserByEMail(model.EMail);
+            var loginDto = new LoginDto
+            {
+                EMail = model.EMail,
+                Password = model.Password
+            };
+
+            var httpBody = new StringContent(
+                    JsonSerializer.Serialize(loginDto),
+                    Encoding.UTF8,
+                    Application.Json
+                    );
+
+            var request = await _httpClient.PostAsync(_connectionString + _connectToGetUserByEMail, httpBody);
+            var response = await request.Content.ReadAsStringAsync();
+
+            var userDto = JsonSerializer.Deserialize<UserDto>(response);
+
+            var user = new User
+            {
+                Id = userDto.UserId.Value,
+                EMail = userDto.EMail,
+                GivenName = userDto.GivenName,
+                Surname = userDto.Surname,
+                Age = userDto.Age,
+                Country = userDto.Country,
+                City = userDto.City,
+                Street = userDto.Street,
+                HouseNumber = userDto.HouseNumber,
+                PostalCode = userDto.PostalCode,
+                Password = userDto.Password
+            };
+
             if (user is null)
             {
                 ModelState.AddModelError("Model", "User does not exist");
@@ -93,24 +134,33 @@ public class LoginController : Controller
             {
                 if (_userRepository.GetUserByEMail(model.EMail) is null)
                 {
-                    _userRepository.AddUser(
-                        new User
-                        {
-                            EMail = model.EMail,
-                            Password = model.Password.Trim(),
-                            GivenName = model.FirstName,
-                            Surname = model.LastName,
-                            Age = model.Age,
-                            Country = model.Country,
-                            City = model.City,
-                            Street = model.Street,
-                            HouseNumber = model.HouseNumber,
-                            PostalCode = model.PostalCode
-                        });
+                    var userToAdd = new User
+                    {
+                        EMail = model.EMail,
+                        Password = model.Password.Trim(),
+                        GivenName = model.FirstName,
+                        Surname = model.LastName,
+                        Age = model.Age,
+                        Country = model.Country,
+                        City = model.City,
+                        Street = model.Street,
+                        HouseNumber = model.HouseNumber,
+                        PostalCode = model.PostalCode
+                    };
+
+                    var httpBody = new StringContent(
+                    JsonSerializer.Serialize(userToAdd),
+                    Encoding.UTF8,
+                    Application.Json
+                    );
+
+                    var request = await _httpClient.PostAsync(_connectionString + _connectToAddUser, httpBody);
+
                     await SignIn(_userRepository.GetUserByEMail(model.EMail));
                     return RedirectToAction("Index", "User");
                 }
-                else {
+                else
+                {
                     ModelState.AddModelError("Model", "The E-Mail adress is already taken");
                     return View(model);
                 }

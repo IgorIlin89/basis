@@ -7,7 +7,7 @@ namespace ApiOnlineShopWeb.Database.Interfaces
         Product AddProduct(Product product);
         void DeleteProduct(int id);
         void EditProduct(Product product);
-        Product? GetProduct(int id);
+        Product? GetProductById(int id);
         List<Product> GetProductList();
     }
 }

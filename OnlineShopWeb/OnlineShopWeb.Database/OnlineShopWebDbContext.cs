@@ -14,7 +14,6 @@ public class OnlineShopWebDbContext : DbContext
     public DbSet<User> User { get; set; }
     public DbSet<Coupon> Coupon { get; set; }
     public DbSet<TransactionHistory> TransactionHistory { get; set; }
-    public DbSet<ProductInCart> ProductInCart { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -2,30 +2,56 @@
 using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
+using OnlineShopWeb.Dtos;
+using System.Text.Json;
 
 namespace OnlineShopWeb.Controllers;
 
 public class TransactionHistoryController : Controller
 {
-    private readonly IProductRepository _productRepository;
-    private readonly ICouponRepository _couponRepository;
     private readonly ITransactionHistoryRepository _transactionHistoryRepository;
-    public TransactionHistoryController(IProductRepository productRepository
-        , ICouponRepository couponRepository
-        , ITransactionHistoryRepository transactionHistory)
+    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly string _connectionString;
+    private readonly string _connectToGetTransactionHistoryList;
+
+    public TransactionHistoryController(ITransactionHistoryRepository transactionHistory,
+        IConfiguration configuration)
     {
-        _productRepository = productRepository;
-        _couponRepository = couponRepository;
         _transactionHistoryRepository = transactionHistory;
+        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectToGetTransactionHistoryList = configuration.
+            GetConnectionString("ApiTransactionHistoryControllerGetTransactionHistoryList");
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public async Task<ActionResult> Index()
     {
         var model = new TransactionHistoryListModel();
-        var list = _transactionHistoryRepository.GetTransactionHistoryList(Int32.Parse(HttpContext.User.Identity.Name));
 
-        foreach (var element in list)
+        var request = await _httpClient.GetAsync(_connectionString + _connectToGetTransactionHistoryList
+            + Int32.Parse(HttpContext.User.Identity.Name));
+
+        var response = await request.Content.ReadAsStringAsync();
+
+        var transactionHistoryDtoList = JsonSerializer.Deserialize<List<TransactionHistoryDto>>(response);
+
+        var transactionHistoryList = new List<TransactionHistory>();
+
+        foreach (var element in transactionHistoryDtoList)
+        {
+            transactionHistoryList.Add(new TransactionHistory
+            {
+                Id = element.Id,
+                UserId = element.UserId,
+                User = element.User,
+                PaymentDate = element.PaymentDate,
+                FinalPrice = element.FinalPrice,
+                Coupons = element.Coupons,
+                ProductsInCart = element.ProductsInCart
+            });
+        }
+
+        foreach (var element in transactionHistoryList)
         {
             var couponIds = "";
             foreach (var coupon in element.Coupons)

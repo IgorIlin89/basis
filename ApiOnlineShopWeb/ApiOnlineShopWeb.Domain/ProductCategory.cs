@@ -7,4 +7,3 @@ public enum ProductCategory
     Food = 3,
     Electronics = 4,
 }
-

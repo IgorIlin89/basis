@@ -1,53 +1,60 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Database.Interfaces;
-using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
 using OnlineShopWeb.Dtos;
-using System.Diagnostics;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
+using OnlineShopWeb.Domain;
 
 namespace OnlineShopWeb.Controllers;
 public class UserController : Controller
 {
     private readonly IUserRepository _userRepository;
     private readonly HttpClient _httpClient = new HttpClient();
+    private readonly string _connectionString;
+    private readonly string _connectToGetUserList;
+    private readonly string _connectToDeleteUser;
+    private readonly string _connectToGetUserById;
+    private readonly string _connectToUpdateUser;
 
-    public UserController(IUserRepository userRepository)
+
+    public UserController(IUserRepository userRepository,
+        IConfiguration configuration)
     {
         _userRepository = userRepository;
+        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectToGetUserList = configuration.GetConnectionString("ApiUserControllerGetUserList");
+        _connectToDeleteUser = configuration.GetConnectionString("ApiUserControllerDeleteUser");
+        _connectToGetUserById = configuration.GetConnectionString("ApiUserControllerGetUserById");
+        _connectToUpdateUser = configuration.GetConnectionString("ApiUserControllerUpdateUser");
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        //var userList = _userRepository.GetUserList();
-
-        var request = await _httpClient.GetAsync("https://localhost:7216/userlist");
+        var request = await _httpClient.GetAsync(_connectionString + _connectToGetUserList);
         var response = await request.Content.ReadAsStringAsync();
 
-        List<UserDto> userDtoList = JsonSerializer.Deserialize<List<UserDto>>(response);
+        var userDtoList = JsonSerializer.Deserialize<List<UserDto>>(response);
 
         var model = new UserListModel();
 
-        foreach (var user in userDtoList)
+        foreach (var userDto in userDtoList)
         {
             model.UserModelList.Add(
                 new UserModel
                 {
-                    UserId = user.Id,
-                    EMail = user.EMail,
-                    //GivenName = user.GivenName,
-                    //Surname = user.Surname,
-                    //Age = user.Age,
-                    //Country = user.Country,
-                    //City = user.City,
-                    //Street = user.Street,
-                    //HouseNumber = user.HouseNumber,
-                    //PostalCode = user.PostalCode,
+                    UserId = userDto.UserId,
+                    EMail = userDto.EMail,
+                    GivenName = userDto.GivenName,
+                    Surname = userDto.Surname,
+                    Age = userDto.Age,
+                    Country = userDto.Country,
+                    City = userDto.City,
+                    Street = userDto.Street,
+                    HouseNumber = userDto.HouseNumber,
+                    PostalCode = userDto.PostalCode,
                 });
         }
 
@@ -55,53 +62,60 @@ public class UserController : Controller
     }
 
     [HttpGet]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        _userRepository.DeleteUser(id);
+        var request = await _httpClient.GetAsync(_connectionString + _connectToDeleteUser + id);
         return RedirectToAction("Index", "User");
     }
 
     [HttpGet]
-    public IActionResult Details(int id)
+    public async Task<IActionResult> Details(int id)
     {
-        var user = _userRepository.GetUserById(id);
+
+        var request = await _httpClient.GetAsync(_connectionString + _connectToGetUserById + id);
+        var response = await request.Content.ReadAsStringAsync();
+
+        var userDto = JsonSerializer.Deserialize<UserDto>(response);
 
         var model = new UserModel
         {
-            UserId = user.Id,
-            EMail = user.EMail.Trim(),
-            GivenName = user.GivenName.Trim(),
-            Surname = user.Surname.Trim(),
-            Age = user.Age,
-            Country = user.Country.Trim(),
-            City = user.City.Trim(),
-            Street = user.Street.Trim(),
-            HouseNumber = user.HouseNumber,
-            PostalCode = user.PostalCode
+            UserId = userDto.UserId,
+            EMail = userDto.EMail.Trim(),
+            GivenName = userDto.GivenName.Trim(),
+            Surname = userDto.Surname.Trim(),
+            Age = userDto.Age,
+            Country = userDto.Country.Trim(),
+            City = userDto.City.Trim(),
+            Street = userDto.Street.Trim(),
+            HouseNumber = userDto.HouseNumber,
+            PostalCode = userDto.PostalCode
         };
 
         return View(model);
     }
 
     [HttpGet]
-    public IActionResult Update(int? id)
+    public async Task<IActionResult> Update(int? id)
     {
         var model = new UserModel();
 
         if (HttpContext.User.Identity.Name is not null)
         {
-            var user = _userRepository.GetUserById(Int32.Parse(HttpContext.User.Identity.Name));
+            var request = await _httpClient.GetAsync(_connectionString + _connectToGetUserById + id);
+            var response = await request.Content.ReadAsStringAsync();
 
-            model.UserId = user.Id;
-            model.EMail = user.EMail.Trim();
-            model.GivenName = user.GivenName.Trim();
-            model.Surname = user.Surname.Trim();
-            model.Age = user.Age;
-            model.Country = user.Country.Trim();
-            model.City = user.City.Trim();
-            model.Street = user.Street.Trim();
-            model.HouseNumber = user.HouseNumber;
-            model.PostalCode = user.PostalCode;
+            var userDto = JsonSerializer.Deserialize<UserDto>(response);
+
+            model.UserId = userDto.UserId;
+            model.EMail = userDto.EMail.Trim();
+            model.GivenName = userDto.GivenName.Trim();
+            model.Surname = userDto.Surname.Trim();
+            model.Age = userDto.Age;
+            model.Country = userDto.Country.Trim();
+            model.City = userDto.City.Trim();
+            model.Street = userDto.Street.Trim();
+            model.HouseNumber = userDto.HouseNumber;
+            model.PostalCode = userDto.PostalCode;
 
         }
 
@@ -115,8 +129,16 @@ public class UserController : Controller
         {
             var userToUpdate = new UserDto
             {
-                Id = model.UserId.Value,
-                EMail = model.EMail,
+                UserId = model.UserId,
+                EMail = model.EMail.Trim(),
+                GivenName = model.GivenName.Trim(),
+                Surname = model.Surname.Trim(),
+                Age = model.Age,
+                Country = model.Country.Trim(),
+                City = model.City.Trim(),
+                Street = model.Street.Trim(),
+                HouseNumber = model.HouseNumber,
+                PostalCode = model.PostalCode
             };
 
             var httpBody = new StringContent(
@@ -124,23 +146,7 @@ public class UserController : Controller
                     Encoding.UTF8,
                     Application.Json);
 
-            _httpClient.PostAsync("https://localhost:7216/userupdate", httpBody);
-
-            //_userRepository.EditUser(
-            //    new User
-            //    {
-            //        Id = model.UserId.Value,
-            //        EMail = model.EMail,
-            //        GivenName = model.GivenName,
-            //        Surname = model.Surname,
-            //        Age = model.Age,
-            //        Country = model.Country,
-            //        City = model.City,
-            //        Street = model.Street,
-            //        HouseNumber = model.HouseNumber,
-            //        PostalCode = model.PostalCode
-            //    }
-            //);
+            _httpClient.PostAsync(_connectionString + _connectToUpdateUser, httpBody);
 
             return RedirectToAction("Index", "User");
         }

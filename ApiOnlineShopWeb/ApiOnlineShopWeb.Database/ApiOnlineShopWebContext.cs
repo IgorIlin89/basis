@@ -11,19 +11,60 @@ public class ApiOnlineShopWebContext : DbContext
 
     }
 
-    public DbSet<User> User { get; set; } = null;
     public DbSet<Product> Product { get; set; } = null;
-
+    public DbSet<User> User { get; set; } = null;
+    public DbSet<Coupon> Coupon { get; set; } = null;
+    public DbSet<TransactionHistory> TransactionHistory { get; set; } = null;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TransactionHistory>()
+            .HasMany(o => o.Coupons)
+            .WithMany(o => o.TransactionHistories)
+            .UsingEntity(o => o.ToTable("TransactionHistoryToCoupons"));
+
+        modelBuilder.Entity<TransactionHistory>()
+            .HasOne(o => o.User)
+            .WithMany(o => o.TransactionHistories)
+            .HasForeignKey(o => o.UserId)
+            .IsRequired();
+
+        modelBuilder.Entity<ProductInCart>()
+            .HasOne(o => o.Product)
+            .WithMany(o => o.CartProduct)
+            .HasForeignKey(o => o.ProductId)
+            .IsRequired();
+
+        modelBuilder.Entity<ProductInCart>()
+            .HasOne(o => o.TransactionHistory)
+            .WithMany(o => o.ProductsInCart)
+            .HasForeignKey(o => o.TransactionHistoryId)
+            .IsRequired();
+
+        modelBuilder.Entity<Product>()
+            .Property(o => o.Price)
+            .HasColumnType("decimal(10,2)");
+
+        modelBuilder.Entity<TransactionHistory>()
+            .Property(o => o.FinalPrice)
+            .HasColumnType("decimal(10,2)");
+
+
+
         modelBuilder.Entity<User>()
             .HasData(new Domain.User
             {
                 Id = 1,
                 EMail = "igor@gmail.com",
-                Password = "123456",
-                Name = "Igor Il"
+                GivenName = "Igor",
+                Surname = "Il",
+                Age = 34,
+                Country = "Germany",
+                City = "Hamburg",
+                Street = "Berner Chaussee",
+                HouseNumber = 154,
+                PostalCode = 22526,
+                Password = "123456"
             });
 
         modelBuilder.Entity<User>()
@@ -31,13 +72,32 @@ public class ApiOnlineShopWebContext : DbContext
             {
                 Id = 2,
                 EMail = "yury@gmail.com",
-                Password = "123456",
-                Name = "Yury Spi"
+                GivenName = "Yury",
+                Surname = "Spi",
+                Age = 38,
+                Country = "Germany",
+                City = "Harburg",
+                Street = "Harburger Chaussee",
+                HouseNumber = 22,
+                PostalCode = 22041,
+                Password = "123456"
             });
 
-        modelBuilder.Entity<Product>()
-            .Property(o => o.Price)
-            .HasColumnType("decimal(10,2)");
+        modelBuilder.Entity<User>()
+            .HasData(new Domain.User
+            {
+                Id = 3,
+                EMail = "dirk@gmail.com",
+                GivenName = "Dirk",
+                Surname = "Es",
+                Age = 33,
+                Country = "Germany",
+                City = "Berlin",
+                Street = "Berliner Straße",
+                HouseNumber = 232,
+                PostalCode = 25014,
+                Password = "123456"
+            });
 
         modelBuilder.Entity<Product>()
             .HasData(new Domain.Product
@@ -81,6 +141,66 @@ public class ApiOnlineShopWebContext : DbContext
                 Category = ProductCategory.Food,
                 Picture = "reis.jpg",
                 Price = 0.99m
+            });
+
+        modelBuilder.Entity<Coupon>()
+            .HasData(new Domain.Coupon
+            {
+                Id = 1,
+                Code = "TestInRange",
+                AmountOfDiscount = 111,
+                TypeOfDiscount = TypeOfDiscount.Total,
+                MaxNumberOfUses = 323,
+                StartDate = new DateTimeOffset(2022, 01, 01, 12, 12, 12, TimeSpan.FromHours(7)),
+                EndDate = new DateTimeOffset(2026, 01, 01, 12, 12, 12, TimeSpan.FromHours(7)),
+            });
+
+        modelBuilder.Entity<Coupon>()
+            .HasData(new Domain.Coupon
+            {
+                Id = 2,
+                Code = "TestOutOfRange",
+                AmountOfDiscount = 22,
+                TypeOfDiscount = TypeOfDiscount.Total,
+                MaxNumberOfUses = 32,
+                StartDate = new DateTimeOffset(2022, 01, 01, 12, 12, 12, TimeSpan.FromHours(7)),
+                EndDate = new DateTimeOffset(2020, 01, 01, 12, 12, 12, TimeSpan.FromHours(7)),
+            });
+
+        modelBuilder.Entity<Coupon>()
+            .HasData(new Domain.Coupon
+            {
+                Id = 3,
+                Code = "Test",
+                AmountOfDiscount = 25,
+                TypeOfDiscount = TypeOfDiscount.Percentage,
+                MaxNumberOfUses = 670,
+                StartDate = new DateTimeOffset(2022, 01, 01, 12, 12, 12, TimeSpan.FromHours(7)),
+                EndDate = new DateTimeOffset(2026, 01, 01, 12, 12, 12, TimeSpan.FromHours(7)),
+            });
+
+        modelBuilder.Entity<Coupon>()
+            .HasData(new Domain.Coupon
+            {
+                Id = 4,
+                Code = "Testing",
+                AmountOfDiscount = 50,
+                TypeOfDiscount = TypeOfDiscount.Percentage,
+                MaxNumberOfUses = 554,
+                StartDate = new DateTimeOffset(2022, 01, 01, 12, 12, 12, TimeSpan.FromHours(7)),
+                EndDate = new DateTimeOffset(2026, 01, 01, 12, 12, 12, TimeSpan.FromHours(7)),
+            });
+
+        modelBuilder.Entity<Coupon>()
+            .HasData(new Domain.Coupon
+            {
+                Id = 5,
+                Code = "TestMaxNumberOfUses",
+                AmountOfDiscount = 75,
+                TypeOfDiscount = TypeOfDiscount.Percentage,
+                MaxNumberOfUses = 0,
+                StartDate = new DateTimeOffset(2022, 01, 01, 12, 12, 12, TimeSpan.FromHours(7)),
+                EndDate = new DateTimeOffset(2026, 01, 01, 12, 12, 12, TimeSpan.FromHours(7)),
             });
     }
 }

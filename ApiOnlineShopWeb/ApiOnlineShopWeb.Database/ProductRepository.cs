@@ -22,7 +22,7 @@ internal class ProductRepository : IProductRepository
 
     public void EditProduct(Product product)
     {
-        var entityEntry = GetProduct(product.Id);
+        var entityEntry = GetProductById(product.Id);
         entityEntry.Name = product.Name;
         entityEntry.Producer = product.Producer;
         entityEntry.Category = product.Category;
@@ -33,12 +33,12 @@ internal class ProductRepository : IProductRepository
 
     public void DeleteProduct(int id)
     {
-        var entityEntry = GetProduct(id);
+        var entityEntry = GetProductById(id);
         _dbContext.Remove(entityEntry);
         _dbContext.SaveChanges();
     }
 
-    public Product? GetProduct(int id)
+    public Product? GetProductById(int id)
     {
         return _dbContext.Product.FirstOrDefault(o => o.Id == id);
     }
