@@ -14,13 +14,6 @@ internal class TransactionHistoryRepository : ITransactionHistoryRepository
         _dbContext = onlineShopWebDbContext;
     }
 
-    public void DeleteTransactionFromHistory(int transactionHistoryId)
-    {
-        var transactionHistory = GetTransactionHistoryItemById(transactionHistoryId);
-        _dbContext.TransactionHistory.Remove(transactionHistory);
-        _dbContext.SaveChanges();
-    }
-
     public List<TransactionHistory> GetTransactionHistoryList(int userId)
     {
         var test = _dbContext.TransactionHistory
@@ -39,10 +32,5 @@ internal class TransactionHistoryRepository : ITransactionHistoryRepository
     {
         _dbContext.TransactionHistory.Add(transactionHistory);
         _dbContext.SaveChanges();
-    }
-
-    public TransactionHistory? GetTransactionHistoryItemById(int id)
-    {
-        return _dbContext.TransactionHistory.FirstOrDefault(o => o.Id == id);
     }
 }

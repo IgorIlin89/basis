@@ -4,20 +4,18 @@ using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
 using OnlineShopWeb.Dtos;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace OnlineShopWeb.Controllers;
 
 public class TransactionHistoryController : Controller
 {
-    private readonly ITransactionHistoryRepository _transactionHistoryRepository;
     private readonly HttpClient _httpClient = new HttpClient();
     private readonly string _connectionString;
     private readonly string _connectToGetTransactionHistoryList;
 
-    public TransactionHistoryController(ITransactionHistoryRepository transactionHistory,
-        IConfiguration configuration)
+    public TransactionHistoryController(IConfiguration configuration)
     {
-        _transactionHistoryRepository = transactionHistory;
         _connectionString = configuration.GetConnectionString("ApiURL");
         _connectToGetTransactionHistoryList = configuration.
             GetConnectionString("ApiTransactionHistoryControllerGetTransactionHistoryList");
@@ -33,7 +31,12 @@ public class TransactionHistoryController : Controller
 
         var response = await request.Content.ReadAsStringAsync();
 
-        var transactionHistoryDtoList = JsonSerializer.Deserialize<List<TransactionHistoryDto>>(response);
+        var options = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
+
+        var transactionHistoryDtoList = JsonSerializer.Deserialize<List<TransactionHistoryDto>>(response, options);
 
         var transactionHistoryList = new List<TransactionHistory>();
 
@@ -79,12 +82,5 @@ public class TransactionHistoryController : Controller
         }
 
         return View(model);
-    }
-
-    [HttpGet]
-    public IActionResult Delete(int id)
-    {
-        _transactionHistoryRepository.DeleteTransactionFromHistory(id);
-        return RedirectToAction("Index", "TransactionHistory");
     }
 }

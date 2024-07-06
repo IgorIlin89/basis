@@ -49,6 +49,7 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
         {
             UserId = user.Id,
             EMail = user.EMail,
+            Password = user.Password,
             GivenName = user.GivenName,
             Surname = user.Surname,
             Age = user.Age,

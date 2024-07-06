@@ -4,24 +4,27 @@ using OnlineShopWeb.Models;
 using System.Text.Json;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.ExtensionMethods;
+using Microsoft.Extensions.Configuration;
+using OnlineShopWeb.Dtos;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OnlineShopWeb.Controllers;
 
 public class ShoppingCartController : Controller
 {
-    private readonly ITransactionHistoryRepository _transactionHistoryRepository;
-    private readonly ICouponRepository _couponRepository;
-    private readonly IUserRepository _userRepository;
-    private readonly IProductRepository _productRepository;
-    public ShoppingCartController(ICouponRepository couponRepository
-        , IUserRepository userRepository
-        , ITransactionHistoryRepository transactionHistoryRepository
-        , IProductRepository productRepository)
+    private readonly HttpClient _httpClient = new HttpClient();
+    private readonly string _connectionString;
+    public readonly string _connectToGetCouponByCode;
+    private readonly string _connectToGetUserById;
+    private readonly string _connectToBuyShoppingCartItems;
+
+    public ShoppingCartController(IConfiguration configuration)
     {
-        _transactionHistoryRepository = transactionHistoryRepository;
-        _couponRepository = couponRepository;
-        _userRepository = userRepository;
-        _productRepository = productRepository;
+        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectToGetCouponByCode = configuration.GetConnectionString("ApiCouponControllerGetCouponByCode");
+        _connectToGetUserById = configuration.GetConnectionString("ApiUserControllerGetUserById");
+        _connectToBuyShoppingCartItems = configuration.GetConnectionString("ApiTransactionHistoryControllerBuyShoppingCartItems");
     }
 
     [HttpGet]
@@ -89,11 +92,16 @@ public class ShoppingCartController : Controller
     }
 
     [HttpPost]
-    public IActionResult AddCoupon([FromBody] string couponCode)
+    public async Task<ActionResult> AddCoupon([FromBody] string couponCode)
     {
-        var coupon = _couponRepository.GetCouponByCode(couponCode);
+        var request = await _httpClient.GetAsync(_connectionString + _connectToGetCouponByCode + couponCode);
+        var response = await request.Content.ReadAsStringAsync();
 
-        if (coupon == null)
+        var couponDto = JsonSerializer.Deserialize<CouponDto>(response);
+
+        //var coupon = _couponRepository.GetCouponByCode(couponCode);
+
+        if (couponDto == null)
         {
             return Ok(new
             {
@@ -101,7 +109,7 @@ public class ShoppingCartController : Controller
                 validationError = "The CouponCode does not exist"
             });
         }
-        else if ((coupon.StartDate > DateTime.Now || coupon.EndDate < DateTime.Now))
+        else if ((couponDto.StartDate > DateTime.Now || couponDto.EndDate < DateTime.Now))
         {
             return Ok(new
             {
@@ -109,7 +117,7 @@ public class ShoppingCartController : Controller
                 validationError = "The CouponCode is expired"
             });
         }
-        else if (coupon.MaxNumberOfUses == 0)
+        else if (couponDto.MaxNumberOfUses == 0)
         {
             return Ok(new
             {
@@ -121,25 +129,44 @@ public class ShoppingCartController : Controller
         return Ok(new
         {
             isValid = true,
-            amountOfDiscount = coupon.AmountOfDiscount,
-            typeOfDiscount = coupon.TypeOfDiscount
+            amountOfDiscount = couponDto.AmountOfDiscount,
+            typeOfDiscount = couponDto.TypeOfDiscount
         });
     }
 
     [HttpPost]
     public IActionResult CouponTableVC([FromBody] ShoppingCartListModel shoppingCart)
     {
-        //var model = JsonSerializer.Deserialize<ShoppingCartListModel>(shoppingCart);
         return ViewComponent("CouponTable", shoppingCart);
     }
 
     [HttpGet]
-    public IActionResult BuyAllItemsInShoppingCart()
+    public async Task<ActionResult> BuyAllItemsInShoppingCart()
     {
         var model = GetShoppingCart();
-        var user = _userRepository.GetUserById(HttpContext.Name());
+
+        var requestUserById = await _httpClient.GetAsync(_connectionString + _connectToGetUserById + HttpContext.Name());
+        var responseUserById = await requestUserById.Content.ReadAsStringAsync();
+
+        var userDto = JsonSerializer.Deserialize<UserDto>(responseUserById);
+
+        var user = new User
+        {
+            Id = userDto.UserId.Value,
+            EMail = userDto.EMail,
+            Password = userDto.Password,
+            GivenName = userDto.GivenName,
+            Surname = userDto.Surname,
+            Age = userDto.Age,
+            Country = userDto.Country,
+            City = userDto.City,
+            Street = userDto.Street,
+            HouseNumber = userDto.HouseNumber,
+            PostalCode = userDto.PostalCode,
+        };
+
+        //var user = _userRepository.GetUserById(HttpContext.Name());
         decimal finalPrice = 0;
-        //decimal priceBeforeCoupons = 0;
 
         if (ModelState.IsValid)
         {
@@ -166,7 +193,23 @@ public class ShoppingCartController : Controller
 
             foreach (var element in model.CouponModelList)
             {
-                var coupon = _couponRepository.GetCouponByCode(element.Code);
+                var requestCouponByCode = await _httpClient.GetAsync(_connectionString + _connectToGetCouponByCode + element.Code);
+                var responseCouponByCode = await requestCouponByCode.Content.ReadAsStringAsync();
+
+                var couponDto = JsonSerializer.Deserialize<CouponDto>(responseCouponByCode);
+
+                var coupon = new Coupon
+                {
+                    Id = couponDto.CouponId.Value,
+                    Code = couponDto.Code,
+                    AmountOfDiscount = couponDto.AmountOfDiscount,
+                    TypeOfDiscount = couponDto.TypeOfDiscount,
+                    MaxNumberOfUses = couponDto.MaxNumberOfUses,
+                    StartDate = couponDto.StartDate,
+                    EndDate = couponDto.EndDate
+                };
+
+                //var coupon = _couponRepository.GetCouponByCode(element.Code);
                 couponList.Add(coupon);
 
                 if (coupon.TypeOfDiscount == TypeOfDiscount.Percentage)
@@ -179,16 +222,24 @@ public class ShoppingCartController : Controller
                 }
             }
 
-            var transactionHistory = new TransactionHistory
+            var transactionHistoryDto = new TransactionHistoryDto
             {
                 User = user,
+                UserId = user.Id,
                 PaymentDate = DateTime.Now,
                 FinalPrice = finalPrice,
                 ProductsInCart = productsInCartList,
                 Coupons = couponList,
             };
 
-            _transactionHistoryRepository.BuyShoppingCartItems(transactionHistory);
+            var httpBody = new StringContent(
+                    JsonSerializer.Serialize(transactionHistoryDto),
+                    Encoding.UTF8,
+                    Application.Json);
+
+            var requestToBuyItems = _httpClient.PostAsync(_connectionString + _connectToBuyShoppingCartItems, httpBody);
+
+            //_transactionHistoryRepository.BuyShoppingCartItems(transactionHistoryDto);
 
             HttpContext.AppendShoppingCart(new ShoppingCartListModel());
             return RedirectToAction("Index", "TransactionHistory");

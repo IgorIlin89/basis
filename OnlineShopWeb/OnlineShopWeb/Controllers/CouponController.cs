@@ -23,10 +23,10 @@ public class CouponController : Controller
     {
         _connectionString = configuration.GetConnectionString("ApiURL");
         _connectToGetCouponList = configuration.GetConnectionString("ApiCouponControllerGetCouponList");
-        _connectToGetCouponById = configuration.GetConnectionString("ApiProductControllerGetCouponById");
-        _connectToDeleteCoupon = configuration.GetConnectionString("ApiProductControllerDeleteCoupon");
-        _connectToEditCoupon = configuration.GetConnectionString("ApiProductControllerEditCoupon");
-        _connectToAddCoupon = configuration.GetConnectionString("ApiProductControllerAddCoupon");
+        _connectToGetCouponById = configuration.GetConnectionString("ApiCouponControllerGetCouponById");
+        _connectToDeleteCoupon = configuration.GetConnectionString("ApiCouponControllerDeleteCoupon");
+        _connectToEditCoupon = configuration.GetConnectionString("ApiCouponControllerEditCoupon");
+        _connectToAddCoupon = configuration.GetConnectionString("ApiCouponControllerAddCoupon");
     }
 
     [HttpGet]

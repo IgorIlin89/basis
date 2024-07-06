@@ -103,4 +103,24 @@ public class CouponApiController(ICouponRepository _couponRepository) : Controll
 
         return Ok();
     }
+
+    [Route("coupongetbycode{code}")]
+    [HttpGet]
+    public async Task<ActionResult> GetCouponByCode(string code)
+    {
+        var coupon = _couponRepository.GetCouponByCode(code);
+
+        var response = JsonSerializer.Serialize(new CouponDto
+        {
+            CouponId = coupon.Id,
+            Code = coupon.Code,
+            AmountOfDiscount = coupon.AmountOfDiscount,
+            TypeOfDiscount = coupon.TypeOfDiscount,
+            MaxNumberOfUses = coupon.MaxNumberOfUses,
+            StartDate = coupon.StartDate,
+            EndDate = coupon.EndDate
+        });
+
+        return Ok(response);
+    }
 }

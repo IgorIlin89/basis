@@ -11,17 +11,16 @@ namespace OnlineShopWeb.Controllers;
 
 public class PasswordController : Controller
 {
-    private readonly IUserRepository _userRepository;
     private readonly HttpClient _httpClient = new HttpClient();
     private readonly string _connectionString;
     private readonly string _connectToChangePassword;
+    private readonly string _connectToGetUserById;
 
-    public PasswordController(IUserRepository userRepository,
-        IConfiguration configuration)
+    public PasswordController(IConfiguration configuration)
     {
-        _userRepository = userRepository;
         _connectionString = configuration.GetConnectionString("ApiURL");
         _connectToChangePassword = configuration.GetConnectionString("ApiUserControllerChangePassword");
+        _connectToGetUserById = configuration.GetConnectionString("ApiUserControllerGetUserById");
     }
 
     [HttpGet]
@@ -32,15 +31,20 @@ public class PasswordController : Controller
             UserId = HttpContext.Name(),
         };
 
-        return View("Views/User/ChangePassword.cshtml",model);
+        return View("Views/User/ChangePassword.cshtml", model);
     }
 
     [HttpPost]
-    public IActionResult ChangePassword(PasswordChangeModel model)
+    public async Task<ActionResult> ChangePassword(PasswordChangeModel model)
     {
         if (ModelState.IsValid)
         {
-            if (model.OldPassword == _userRepository.GetUserById(model.UserId).Password && model.Password == model.RepeatPassword)
+            var requestUser = await _httpClient.GetAsync(_connectionString + _connectToGetUserById + model.UserId);
+            var responseUser = await requestUser.Content.ReadAsStringAsync();
+
+            var userDto = JsonSerializer.Deserialize<UserDto>(responseUser);
+
+            if (model.OldPassword == userDto.Password && model.Password == model.RepeatPassword)
             {
                 var changePasswordDto = new ChangePasswordDto
                 {
@@ -60,12 +64,12 @@ public class PasswordController : Controller
             else
             {
                 ModelState.AddModelError("Model", "The old Password or the repeated Password was not correct");
-                return View(model);
+                return View("Views/User/ChangePassword.cshtml", model);
             }
         }
         else
         {
-            return View(model);
+            return View("Views/User/ChangePassword.cshtml", model);
         }
     }
 }

@@ -11,7 +11,6 @@ namespace OnlineShopWeb.Controllers;
 
 public class ProductController : Controller
 {
-    private readonly IProductRepository _productRepository;
     private readonly HttpClient _httpClient = new HttpClient();
     private readonly string _connectionString;
     private readonly string _connectToGetProductList;
@@ -20,10 +19,8 @@ public class ProductController : Controller
     public readonly string _connectToEditProduct;
     public readonly string _connectToAddProduct;
 
-    public ProductController(IProductRepository productRepository,
-        IConfiguration configuration)
+    public ProductController(IConfiguration configuration)
     {
-        _productRepository = productRepository;
         _connectionString = configuration.GetConnectionString("ApiURL");
         _connectToGetProductList = configuration.GetConnectionString("ApiProductControllerGetProductList");
         _connectToGetProductById = configuration.GetConnectionString("ApiProductControllerGetProductById");

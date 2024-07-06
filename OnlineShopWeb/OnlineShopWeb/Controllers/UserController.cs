@@ -18,7 +18,6 @@ public class UserController : Controller
     private readonly string _connectToGetUserById;
     private readonly string _connectToUpdateUser;
 
-
     public UserController(IUserRepository userRepository,
         IConfiguration configuration)
     {

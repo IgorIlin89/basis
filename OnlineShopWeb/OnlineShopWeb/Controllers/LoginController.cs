@@ -16,15 +16,12 @@ namespace OnlineShopWeb.Controllers;
 public class LoginController : Controller
 {
     private readonly HttpClient _httpClient = new HttpClient();
-    private readonly IUserRepository _userRepository;
     private readonly string _connectionString;
     private readonly string _connectToGetUserByEMail;
     private readonly string _connectToAddUser;
 
-    public LoginController(IUserRepository userRepository,
-        IConfiguration configuration)
+    public LoginController(IConfiguration configuration)
     {
-        _userRepository = userRepository;
         _connectionString = configuration.GetConnectionString("ApiURL");
         _connectToGetUserByEMail = configuration.GetConnectionString("ApiUserControllerGetUserByEmail");
         _connectToAddUser = configuration.GetConnectionString("ApiUserControllerAddUser");
@@ -132,7 +129,23 @@ public class LoginController : Controller
         {
             if (model.Password == model.RepeatPassword)
             {
-                if (_userRepository.GetUserByEMail(model.EMail) is null)
+                var loginDto = new LoginDto
+                {
+                    EMail = model.EMail,
+                    Password = model.Password
+                };
+
+                var httpBody = new StringContent(
+                    JsonSerializer.Serialize(loginDto),
+                    Encoding.UTF8,
+                    Application.Json);
+
+                var request = await _httpClient.PostAsync(_connectionString + _connectToGetUserByEMail, httpBody);
+                var response = await request.Content.ReadAsStringAsync();
+
+                var userDto = JsonSerializer.Deserialize<UserDto>(response);
+
+                if (userDto is null)
                 {
                     var userToAdd = new User
                     {
@@ -148,15 +161,35 @@ public class LoginController : Controller
                         PostalCode = model.PostalCode
                     };
 
-                    var httpBody = new StringContent(
+                    var httpBodyAddUser = new StringContent(
                     JsonSerializer.Serialize(userToAdd),
                     Encoding.UTF8,
                     Application.Json
                     );
 
-                    var request = await _httpClient.PostAsync(_connectionString + _connectToAddUser, httpBody);
+                    var requestUserToAdd = await _httpClient.PostAsync(_connectionString + _connectToAddUser, httpBodyAddUser);
 
-                    await SignIn(_userRepository.GetUserByEMail(model.EMail));
+                    var requestUserToLogin = await _httpClient.PostAsync(_connectionString + _connectToGetUserByEMail, httpBody);
+                    var responseUserToLogin = await request.Content.ReadAsStringAsync();
+
+                    var userToLoginDto = JsonSerializer.Deserialize<UserDto>(response);
+
+                    var userToLogin = new User
+                    {
+                        Id = userToLoginDto.UserId.Value,
+                        EMail = model.EMail,
+                        Password = model.Password.Trim(),
+                        GivenName = model.FirstName,
+                        Surname = model.LastName,
+                        Age = model.Age,
+                        Country = model.Country,
+                        City = model.City,
+                        Street = model.Street,
+                        HouseNumber = model.HouseNumber,
+                        PostalCode = model.PostalCode
+                    };
+
+                    await SignIn(userToLogin);
                     return RedirectToAction("Index", "User");
                 }
                 else
