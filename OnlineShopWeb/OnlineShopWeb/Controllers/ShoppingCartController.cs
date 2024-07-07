@@ -143,29 +143,6 @@ public class ShoppingCartController : Controller
     {
         var model = GetShoppingCart();
 
-        var requestUserById = await _httpClient.GetAsync(_connectionString + _connectToGetUserById + HttpContext.Name());
-        var responseUserById = await requestUserById.Content.ReadAsStringAsync();
-
-        var userDto = JsonSerializer.Deserialize<UserDto>(responseUserById);
-
-        var user = new User
-        {
-            Id = userDto.UserId.Value,
-            EMail = userDto.EMail,
-            Password = userDto.Password,
-            GivenName = userDto.GivenName,
-            Surname = userDto.Surname,
-            Age = userDto.Age,
-            Country = userDto.Country,
-            City = userDto.City,
-            Street = userDto.Street,
-            HouseNumber = userDto.HouseNumber,
-            PostalCode = userDto.PostalCode,
-        };
-
-        //var user = _userRepository.GetUserById(HttpContext.Name());
-        decimal finalPrice = 0;
-
         if (ModelState.IsValid)
         {
             if (model.ShoppingCartModelList.Count == 0)
@@ -174,60 +151,29 @@ public class ShoppingCartController : Controller
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            List<ProductInCart> productsInCartList = new List<ProductInCart>();
+            List<ProductInCartDto> productsInCartList = new List<ProductInCartDto>();
 
             foreach (var element in model.ShoppingCartModelList)
             {
-                productsInCartList.Add(new ProductInCart
+                productsInCartList.Add(new ProductInCartDto
                 {
-                    Count = element.Count,
+                    ProductCount = element.Count,
                     ProductId = element.ProductModelInCart.ProductId.Value
-
                 });
-                finalPrice += element.Count * element.ProductModelInCart.Price;
             }
 
-            List<Coupon> couponList = new List<Coupon>();
+            List<string> couponCodeList = new List<string>();
 
             foreach (var element in model.CouponModelList)
             {
-                var requestCouponByCode = await _httpClient.GetAsync(_connectionString + _connectToGetCouponByCode + element.Code);
-                var responseCouponByCode = await requestCouponByCode.Content.ReadAsStringAsync();
-
-                var couponDto = JsonSerializer.Deserialize<CouponDto>(responseCouponByCode);
-
-                var coupon = new Coupon
-                {
-                    Id = couponDto.CouponId.Value,
-                    Code = couponDto.Code,
-                    AmountOfDiscount = couponDto.AmountOfDiscount,
-                    TypeOfDiscount = couponDto.TypeOfDiscount,
-                    MaxNumberOfUses = couponDto.MaxNumberOfUses,
-                    StartDate = couponDto.StartDate,
-                    EndDate = couponDto.EndDate
-                };
-
-                //var coupon = _couponRepository.GetCouponByCode(element.Code);
-                couponList.Add(coupon);
-
-                if (coupon.TypeOfDiscount == TypeOfDiscount.Percentage)
-                {
-                    finalPrice *= ((100m - (decimal)coupon.AmountOfDiscount) / 100);
-                }
-                else if (coupon.TypeOfDiscount == TypeOfDiscount.Total)
-                {
-                    finalPrice -= (decimal)coupon.AmountOfDiscount;
-                }
+                couponCodeList.Add(element.Code);
             }
 
             var transactionHistoryDto = new TransactionHistoryDto
             {
-                User = user,
-                UserId = user.Id,
-                PaymentDate = DateTime.Now,
-                FinalPrice = finalPrice,
-                ProductsInCart = productsInCartList,
-                Coupons = couponList,
+                UserId = HttpContext.Name(),
+                ProductsInCartDto = productsInCartList,
+                CouponCodes = couponCodeList,
             };
 
             var httpBody = new StringContent(
@@ -236,8 +182,6 @@ public class ShoppingCartController : Controller
                     Application.Json);
 
             var requestToBuyItems = _httpClient.PostAsync(_connectionString + _connectToBuyShoppingCartItems, httpBody);
-
-            //_transactionHistoryRepository.BuyShoppingCartItems(transactionHistoryDto);
 
             HttpContext.AppendShoppingCart(new ShoppingCartListModel());
             return RedirectToAction("Index", "TransactionHistory");

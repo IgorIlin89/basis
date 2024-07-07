@@ -19,11 +19,11 @@ public class TransactionHistoryApiController(ITransactionHistoryRepository _tran
     {
         var transactionHistoryList = _transactionHistoryRepositry.GetTransactionHistoryList(id);
 
-        var transactionHistoryDtoList = new List<TransactionHistoryDto>();
+        var transactionHistoryDtoList = new List<TransactionHistoryObjectsDto>();
 
         foreach (var element in transactionHistoryList)
         {
-            transactionHistoryDtoList.Add(new TransactionHistoryDto
+            transactionHistoryDtoList.Add(new TransactionHistoryObjectsDto
             {
                 UserId = element.UserId,
                 User = element.User,
@@ -50,34 +50,46 @@ public class TransactionHistoryApiController(ITransactionHistoryRepository _tran
     {
 
         var user = _userRepository.GetUserById(transactionHistoryDto.UserId);
-        List<Coupon> couponList = new List<Coupon>();
-
-        foreach (var element in transactionHistoryDto.Coupons)
-        {
-            var coupon = _couponRepository.GetCouponByCode(element.Code);
-            couponList.Add(coupon);
-        }
+        decimal finalPrice = 0;
 
         List<ProductInCart> productsInCartList = new List<ProductInCart>();
 
-        foreach (var element in transactionHistoryDto.ProductsInCart)
+        foreach (var element in transactionHistoryDto.ProductsInCartDto)
         {
             var product = _productRepository.GetProductById(element.ProductId);
 
             productsInCartList.Add(new ProductInCart
             {
-                Count = element.Count,
+                Count = element.ProductCount,
                 Product = product,
                 ProductId = product.Id
             });
+            finalPrice += element.ProductCount * product.Price;
+        }
+
+        List<Coupon> couponList = new List<Coupon>();
+
+        foreach (var element in transactionHistoryDto.CouponCodes)
+        {
+            var coupon = _couponRepository.GetCouponByCode(element);
+            couponList.Add(coupon);
+
+            if (coupon.TypeOfDiscount == TypeOfDiscount.Percentage)
+            {
+                finalPrice *= ((100m - (decimal)coupon.AmountOfDiscount) / 100);
+            }
+            else if (coupon.TypeOfDiscount == TypeOfDiscount.Total)
+            {
+                finalPrice -= (decimal)coupon.AmountOfDiscount;
+            }
         }
 
         var transactionHistory = new TransactionHistory
         {
             User = user,
             UserId = user.Id,
-            PaymentDate = transactionHistoryDto.PaymentDate,
-            FinalPrice = transactionHistoryDto.FinalPrice,
+            PaymentDate = DateTime.Now,
+            FinalPrice = finalPrice,
             Coupons = couponList,
             ProductsInCart = productsInCartList
         };

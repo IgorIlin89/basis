@@ -35,7 +35,7 @@ public class TransactionHistoryController : Controller
             ReferenceHandler = ReferenceHandler.Preserve
         };
 
-        var transactionHistoryDtoList = JsonSerializer.Deserialize<List<TransactionHistoryDto>>(response, options);
+        var transactionHistoryDtoList = JsonSerializer.Deserialize<List<TransactionHistoryObjectsDto>>(response, options);
 
         var transactionHistoryList = new List<TransactionHistory>();
 
