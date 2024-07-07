@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OnlineShopWeb.Database\OnlineShopWeb.Database.csproj" />
     <ProjectReference Include="..\OnlineShopWeb.Domain\OnlineShopWeb.Domain.csproj" />
   </ItemGroup>
 

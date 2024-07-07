@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Models;
 using OnlineShopWeb.Dtos;
 using System.Text;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
-using OnlineShopWeb.Domain;
 
 namespace OnlineShopWeb.Controllers;
 public class UserController : Controller
 {
-    private readonly IUserRepository _userRepository;
     private readonly HttpClient _httpClient = new HttpClient();
     private readonly string _connectionString;
     private readonly string _connectToGetUserList;
@@ -18,10 +15,8 @@ public class UserController : Controller
     private readonly string _connectToGetUserById;
     private readonly string _connectToUpdateUser;
 
-    public UserController(IUserRepository userRepository,
-        IConfiguration configuration)
+    public UserController(IConfiguration configuration)
     {
-        _userRepository = userRepository;
         _connectionString = configuration.GetConnectionString("ApiURL");
         _connectToGetUserList = configuration.GetConnectionString("ApiUserControllerGetUserList");
         _connectToDeleteUser = configuration.GetConnectionString("ApiUserControllerDeleteUser");

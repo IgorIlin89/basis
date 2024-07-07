@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.Models;
 using System.Text.Json;

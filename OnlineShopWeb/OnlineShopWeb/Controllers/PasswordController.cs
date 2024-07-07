@@ -1,6 +1,5 @@
 ﻿using OnlineShopWeb.ExtensionMethods;
 using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Models;
 using OnlineShopWeb.Dtos;
 using static System.Net.Mime.MediaTypeNames;

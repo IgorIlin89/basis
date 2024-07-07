@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Database.Interfaces;
 using OnlineShopWeb.Models;
 using System.Text.Json;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.ExtensionMethods;
-using Microsoft.Extensions.Configuration;
 using OnlineShopWeb.Dtos;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;

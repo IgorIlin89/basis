@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using OnlineShopWeb.Domain;
-using OnlineShopWeb.Database.Interfaces;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using OnlineShopWeb.Dtos;
 using static System.Net.Mime.MediaTypeNames;
