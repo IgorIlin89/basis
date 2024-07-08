@@ -69,7 +69,7 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
     {
         var user = _userRepositry.GetUserByEMail(loginDto.EMail);
 
-        var response = JsonSerializer.Serialize(new UserDto
+        var response = new UserDto
         {
             UserId = user.Id,
             EMail = user.EMail,
@@ -82,7 +82,9 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
             Street = user.Street,
             HouseNumber = user.HouseNumber,
             PostalCode = user.PostalCode,
-        });
+        };
+
+        //return NotFound();
 
         return Ok(response);
     }

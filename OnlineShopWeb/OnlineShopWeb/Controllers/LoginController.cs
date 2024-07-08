@@ -141,9 +141,8 @@ public class LoginController : Controller
                 var request = await _httpClient.PostAsync(_connectionString + _connectToGetUserByEMail, httpBody);
                 var response = await request.Content.ReadAsStringAsync();
 
-                var userDto = JsonSerializer.Deserialize<UserDto>(response);
 
-                if (userDto is null)
+                if (response is "No entry in database")
                 {
                     var userToAdd = new User
                     {
@@ -167,14 +166,26 @@ public class LoginController : Controller
 
                     var requestUserToAdd = await _httpClient.PostAsync(_connectionString + _connectToAddUser, httpBodyAddUser);
 
-                    var requestUserToLogin = await _httpClient.PostAsync(_connectionString + _connectToGetUserByEMail, httpBody);
+                    var loginUser = new LoginDto
+                    {
+                        EMail = userToAdd.EMail,
+                        Password = userToAdd.Password
+                    };
+
+                    var httpBodyLoginUser = new StringContent(
+                    JsonSerializer.Serialize(loginUser),
+                    Encoding.UTF8,
+                    Application.Json
+                    );
+
+                    var requestUserToLogin = await _httpClient.PostAsync(_connectionString + _connectToGetUserByEMail, httpBodyLoginUser);
                     var responseUserToLogin = await request.Content.ReadAsStringAsync();
 
-                    var userToLoginDto = JsonSerializer.Deserialize<UserDto>(response);
+                    var responseUserLogin = JsonSerializer.Deserialize<UserDto>(response);
 
                     var userToLogin = new User
                     {
-                        Id = userToLoginDto.UserId.Value,
+                        Id = responseUserLogin.UserId.Value,
                         EMail = model.EMail,
                         Password = model.Password.Trim(),
                         GivenName = model.FirstName,
