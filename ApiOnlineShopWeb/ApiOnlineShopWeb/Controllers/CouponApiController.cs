@@ -15,11 +15,11 @@ public class CouponApiController(ICouponRepository _couponRepository) : Controll
     {
         var couponList = _couponRepository.GetCouponList();
 
-        var couponDtoList = new List<CouponDto>();
+        var response = new List<CouponDto>();
 
         foreach (var element in couponList)
         {
-            couponDtoList.Add(new CouponDto
+            response.Add(new CouponDto
             {
                 CouponId = element.Id,
                 Code = element.Code,
@@ -31,8 +31,6 @@ public class CouponApiController(ICouponRepository _couponRepository) : Controll
             });
         }
 
-        var response = JsonSerializer.Serialize(couponDtoList);
-
         return Ok(response);
     }
 
@@ -42,7 +40,7 @@ public class CouponApiController(ICouponRepository _couponRepository) : Controll
     {
         var coupon = _couponRepository.GetCouponById(id);
 
-        var response = JsonSerializer.Serialize(new CouponDto
+        var response = new CouponDto
         {
             CouponId = coupon.Id,
             Code = coupon.Code,
@@ -51,7 +49,7 @@ public class CouponApiController(ICouponRepository _couponRepository) : Controll
             MaxNumberOfUses = coupon.MaxNumberOfUses,
             StartDate = coupon.StartDate,
             EndDate = coupon.EndDate
-        });
+        };
 
         return Ok(response);
     }
@@ -110,7 +108,7 @@ public class CouponApiController(ICouponRepository _couponRepository) : Controll
     {
         var coupon = _couponRepository.GetCouponByCode(code);
 
-        var response = JsonSerializer.Serialize(new CouponDto
+        var response = new CouponDto
         {
             CouponId = coupon.Id,
             Code = coupon.Code,
@@ -119,7 +117,7 @@ public class CouponApiController(ICouponRepository _couponRepository) : Controll
             MaxNumberOfUses = coupon.MaxNumberOfUses,
             StartDate = coupon.StartDate,
             EndDate = coupon.EndDate
-        });
+        };
 
         return Ok(response);
     }

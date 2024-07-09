@@ -19,11 +19,11 @@ public class TransactionHistoryApiController(ITransactionHistoryRepository _tran
     {
         var transactionHistoryList = _transactionHistoryRepositry.GetTransactionHistoryList(id);
 
-        var transactionHistoryDtoList = new List<TransactionHistoryObjectsDto>();
+        var response = new List<TransactionHistoryObjectsDto>();
 
         foreach (var element in transactionHistoryList)
         {
-            transactionHistoryDtoList.Add(new TransactionHistoryObjectsDto
+            response.Add(new TransactionHistoryObjectsDto
             {
                 UserId = element.UserId,
                 User = element.User,
@@ -33,13 +33,6 @@ public class TransactionHistoryApiController(ITransactionHistoryRepository _tran
                 ProductsInCart = element.ProductsInCart
             });
         }
-
-        var options = new JsonSerializerOptions
-        {
-            ReferenceHandler = ReferenceHandler.Preserve
-        };
-
-        var response = JsonSerializer.Serialize(transactionHistoryDtoList, options);
 
         return Ok(response);
     }

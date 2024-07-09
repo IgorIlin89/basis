@@ -14,11 +14,11 @@ public class ProductApiController(IProductRepository _productRepository) : Contr
     {
         var productList = _productRepository.GetProductList();
 
-        List<ProductDto> productListDto = new List<ProductDto>();
+        List<ProductDto> response = new List<ProductDto>();
 
         foreach (var element in productList)
         {
-            productListDto.Add(new ProductDto
+            response.Add(new ProductDto
             {
                 ProductId = element.Id,
                 Name = element.Name,
@@ -29,8 +29,6 @@ public class ProductApiController(IProductRepository _productRepository) : Contr
             });
         }
 
-        var response = JsonSerializer.Serialize(productListDto);
-
         return Ok(response);
     }
 
@@ -40,7 +38,7 @@ public class ProductApiController(IProductRepository _productRepository) : Contr
     {
         var product = _productRepository.GetProductById(id);
 
-        var response = JsonSerializer.Serialize(new ProductDto
+        var response = new ProductDto
         {
             ProductId = product.Id,
             Name = product.Name,
@@ -48,7 +46,7 @@ public class ProductApiController(IProductRepository _productRepository) : Contr
             Category = product.Category,
             Picture = product.Picture,
             Price = product.Price
-        });
+        };
 
         return Ok(response);
     }

@@ -15,11 +15,11 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
     {
         var userList = _userRepositry.GetUserList();
 
-        List<UserDto> userListDto = new List<UserDto>();
+        List<UserDto> response = new List<UserDto>();
 
         foreach (var element in userList)
         {
-            userListDto.Add(new UserDto
+            response.Add(new UserDto
             {
                 UserId = element.Id,
                 EMail = element.EMail,
@@ -34,8 +34,6 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
             });
         }
 
-        var response = JsonSerializer.Serialize(userListDto);
-
         return Ok(response);
     }
 
@@ -45,7 +43,7 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
     {
         var user = _userRepositry.GetUserById(id);
 
-        var response = JsonSerializer.Serialize(new UserDto
+        var response = new UserDto
         {
             UserId = user.Id,
             EMail = user.EMail,
@@ -58,14 +56,14 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
             Street = user.Street,
             HouseNumber = user.HouseNumber,
             PostalCode = user.PostalCode,
-        });
+        };
 
         return Ok(response);
     }
 
     [Route("userbyemail")]
     [HttpPost]
-    public async Task<ActionResult> GetUserByEmail([FromBody]LoginDto loginDto)
+    public async Task<ActionResult> GetUserByEmail([FromBody] LoginDto loginDto)
     {
         var user = _userRepositry.GetUserByEMail(loginDto.EMail);
 
