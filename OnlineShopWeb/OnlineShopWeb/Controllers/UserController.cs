@@ -17,7 +17,7 @@ public class UserController : Controller
 
     public UserController(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectionString = configuration.GetConnectionString("ApiClientOptions");
         _connectToGetUserList = configuration.GetConnectionString("ApiUserControllerGetUserList");
         _connectToDeleteUser = configuration.GetConnectionString("ApiUserControllerDeleteUser");
         _connectToGetUserById = configuration.GetConnectionString("ApiUserControllerGetUserById");

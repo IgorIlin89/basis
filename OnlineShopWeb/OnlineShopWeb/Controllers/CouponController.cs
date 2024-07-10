@@ -5,6 +5,7 @@ using System.Text.Json;
 using OnlineShopWeb.Dtos;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
+using OnlineShopWeb.Misc;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -17,15 +18,18 @@ public class CouponController : Controller
     public readonly string _connectToDeleteCoupon;
     public readonly string _connectToEditCoupon;
     public readonly string _connectToAddCoupon;
+    public string test;
 
-    public CouponController(IConfiguration configuration)
+    public CouponController(IConfiguration configuration
+        , IHttpClientWrapper clientwrapper)
     {
-        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectionString = configuration.GetConnectionString("ApiClientOptions");
         _connectToGetCouponList = configuration.GetConnectionString("ApiCouponControllerGetCouponList");
         _connectToGetCouponById = configuration.GetConnectionString("ApiCouponControllerGetCouponById");
         _connectToDeleteCoupon = configuration.GetConnectionString("ApiCouponControllerDeleteCoupon");
         _connectToEditCoupon = configuration.GetConnectionString("ApiCouponControllerEditCoupon");
         _connectToAddCoupon = configuration.GetConnectionString("ApiCouponControllerAddCoupon");
+        test = clientwrapper.ReturnTest();
     }
 
     [HttpGet]

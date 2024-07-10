@@ -20,7 +20,7 @@ public class LoginController : Controller
 
     public LoginController(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectionString = configuration.GetConnectionString("ApiClientOptions");
         _connectToGetUserByEMail = configuration.GetConnectionString("ApiUserControllerGetUserByEmail");
         _connectToAddUser = configuration.GetConnectionString("ApiUserControllerAddUser");
     }
@@ -179,9 +179,10 @@ public class LoginController : Controller
                     );
 
                     var requestUserToLogin = await _httpClient.PostAsync(_connectionString + _connectToGetUserByEMail, httpBodyLoginUser);
-                    var responseUserToLogin = await request.Content.ReadAsStringAsync();
 
-                    var responseUserLogin = JsonSerializer.Deserialize<UserDto>(response);
+                    var responseUserToLogin = await requestUserToLogin.Content.ReadAsStringAsync();
+
+                    var responseUserLogin = JsonSerializer.Deserialize<UserDto>(responseUserToLogin);
 
                     var userToLogin = new User
                     {

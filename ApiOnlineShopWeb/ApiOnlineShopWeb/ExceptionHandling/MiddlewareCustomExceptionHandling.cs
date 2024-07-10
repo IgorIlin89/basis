@@ -20,6 +20,7 @@ public class MiddlewareCustomExceptionHandling
             if (exception.GetType() == typeof(NullReferenceException))
             {
                 await context.Response.WriteAsync("No entry in database");
+                Results.BadRequest();
             }
             // TODO LOGGING later
 

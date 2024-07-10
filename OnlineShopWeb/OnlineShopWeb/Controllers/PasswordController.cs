@@ -17,7 +17,7 @@ public class PasswordController : Controller
 
     public PasswordController(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectionString = configuration.GetConnectionString("ApiClientOptions");
         _connectToChangePassword = configuration.GetConnectionString("ApiUserControllerChangePassword");
         _connectToGetUserById = configuration.GetConnectionString("ApiUserControllerGetUserById");
     }

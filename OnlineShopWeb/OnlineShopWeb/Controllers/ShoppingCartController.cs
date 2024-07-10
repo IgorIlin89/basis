@@ -19,7 +19,7 @@ public class ShoppingCartController : Controller
 
     public ShoppingCartController(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectionString = configuration.GetConnectionString("ApiClientOptions");
         _connectToGetCouponByCode = configuration.GetConnectionString("ApiCouponControllerGetCouponByCode");
         _connectToGetUserById = configuration.GetConnectionString("ApiUserControllerGetUserById");
         _connectToBuyShoppingCartItems = configuration.GetConnectionString("ApiTransactionHistoryControllerBuyShoppingCartItems");

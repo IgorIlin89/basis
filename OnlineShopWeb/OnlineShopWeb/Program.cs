@@ -1,10 +1,17 @@
 using OnlineShopWeb.Domain;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using OnlineShopWeb.Misc;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<HttpClientWrapperOptions>(
+    builder.Configuration.GetSection(HttpClientWrapperOptions.SectionName));
+
+builder.Services.AddSingleton<IHttpClientWrapper,HttpClientWrapper>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

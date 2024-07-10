@@ -15,7 +15,7 @@ public class TransactionHistoryController : Controller
 
     public TransactionHistoryController(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectionString = configuration.GetConnectionString("ApiClientOptions");
         _connectToGetTransactionHistoryList = configuration.
             GetConnectionString("ApiTransactionHistoryControllerGetTransactionHistoryList");
     }

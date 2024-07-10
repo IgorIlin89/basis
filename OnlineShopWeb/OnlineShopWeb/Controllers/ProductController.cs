@@ -20,7 +20,7 @@ public class ProductController : Controller
 
     public ProductController(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("ApiURL");
+        _connectionString = configuration.GetConnectionString("ApiClientOptions");
         _connectToGetProductList = configuration.GetConnectionString("ApiProductControllerGetProductList");
         _connectToGetProductById = configuration.GetConnectionString("ApiProductControllerGetProductById");
         _connectToDeleteProduct = configuration.GetConnectionString("ApiProductControllerDeleteProduct");
