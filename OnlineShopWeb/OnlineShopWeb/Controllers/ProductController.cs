@@ -5,37 +5,26 @@ using System.Text.Json;
 using System.Text;
 using OnlineShopWeb.Dtos;
 using static System.Net.Mime.MediaTypeNames;
+using OnlineShopWeb.Misc;
 
 namespace OnlineShopWeb.Controllers;
 
 public class ProductController : Controller
 {
-    private readonly HttpClient _httpClient = new HttpClient();
-    private readonly string _connectionString;
-    private readonly string _connectToGetProductList;
-    public readonly string _connectToGetProductById;
-    public readonly string _connectToDeleteProduct;
-    public readonly string _connectToEditProduct;
-    public readonly string _connectToAddProduct;
+    public HttpClientWrapper _httpClientWrapper;
 
-    public ProductController(IConfiguration configuration)
+    public ProductController(IConfiguration configuration
+        , IHttpClientWrapper clientWrapper)
     {
-        _connectionString = configuration.GetConnectionString("ApiClientOptions");
-        _connectToGetProductList = configuration.GetConnectionString("ApiProductControllerGetProductList");
-        _connectToGetProductById = configuration.GetConnectionString("ApiProductControllerGetProductById");
-        _connectToDeleteProduct = configuration.GetConnectionString("ApiProductControllerDeleteProduct");
-        _connectToEditProduct = configuration.GetConnectionString("ApiProductControllerEditProduct");
-        _connectToAddProduct = configuration.GetConnectionString("ApiProductControllerAddProduct");
+        _httpClientWrapper = (HttpClientWrapper?)clientWrapper;
     }
 
     [HttpGet]
     public async Task<ActionResult> Index()
     {
-        var request = await _httpClient.GetAsync(_connectionString + _connectToGetProductList);
-        var response = await request.Content.ReadAsStringAsync();
-
-        var productDtoList = JsonSerializer.Deserialize<List<ProductDto>>(response);
+        var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("productlist");
         var model = new ProductListModel();
+
 
         foreach (var productDto in productDtoList)
         {
@@ -57,8 +46,7 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<ActionResult> Delete(int id)
     {
-        var request = await _httpClient.GetAsync(_connectionString + _connectToDeleteProduct + id);
-        //var response = await request.Content.ReadAsStringAsync();
+        _httpClientWrapper.Delete<int>("productdelete", id);
 
         return RedirectToAction("Index", "Product");
     }
@@ -66,10 +54,7 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<ActionResult> Details(int id)
     {
-        var request = await _httpClient.GetAsync(_connectionString + _connectToGetProductById + id.ToString());
-        var response = await request.Content.ReadAsStringAsync();
-
-        var productDto = JsonSerializer.Deserialize<ProductDto>(response);
+        var productDto = await _httpClientWrapper.Get<ProductDto>("getproductbyid", id);
 
         var model = new ProductModel
         {
@@ -91,19 +76,15 @@ public class ProductController : Controller
 
         if (id is not null)
         {
-            var request = await _httpClient.GetAsync(_connectionString + _connectToGetProductById + id.ToString());
-            var response = await request.Content.ReadAsStringAsync();
+            var productDto = await _httpClientWrapper.Get<ProductDto>("getproductbyid", id.Value);
 
-            var product = JsonSerializer.Deserialize<ProductDto>(response);
-
-            model.ProductId = product.ProductId;
-            model.Name = product.Name.Trim();
-            model.Producer = product.Producer.Trim();
-            model.Category = product.Category;
-            model.Picture = product.Picture.Trim();
-            model.Price = product.Price;
+            model.ProductId = productDto.ProductId;
+            model.Name = productDto.Name.Trim();
+            model.Producer = productDto.Producer.Trim();
+            model.Category = productDto.Category;
+            model.Picture = productDto.Picture.Trim();
+            model.Price = productDto.Price;
         }
-
 
         return View(model);
     }
@@ -126,14 +107,7 @@ public class ProductController : Controller
                     Price = model.Price
                 };
 
-                var httpBody = new StringContent(
-                    JsonSerializer.Serialize(productToEdit),
-                    Encoding.UTF8,
-                    Application.Json
-                    );
-
-                var request = _httpClient.PostAsync(_connectionString + _connectToEditProduct, 
-                    httpBody);
+                _httpClientWrapper.Put("productedit", productToEdit);
             }
             else
             {
@@ -146,14 +120,7 @@ public class ProductController : Controller
                     Price = model.Price
                 };
 
-                var httpBody = new StringContent(
-                    JsonSerializer.Serialize(productToAdd),
-                    Encoding.UTF8,
-                    Application.Json);
-
-                var request = _httpClient.PostAsync(_connectionString + _connectToAddProduct,
-                    httpBody);
-
+                var request = _httpClientWrapper.Post<ProductDto>("productadd", productToAdd);
             }
 
             return RedirectToAction("Index", "Product");

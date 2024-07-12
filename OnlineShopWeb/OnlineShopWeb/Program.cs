@@ -6,7 +6,10 @@ using Microsoft.Extensions.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddSessionStateTempDataProvider();
+
+builder.Services.AddSession();
 
 builder.Services.Configure<HttpClientWrapperOptions>(
     builder.Configuration.GetSection(HttpClientWrapperOptions.SectionName));
@@ -40,6 +43,8 @@ builder.Services.AddMvc(options =>
 
 var app = builder.Build();
 
+app.UseMiddleware<MiddlewareCustomExceptionHandling>();
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -56,6 +61,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

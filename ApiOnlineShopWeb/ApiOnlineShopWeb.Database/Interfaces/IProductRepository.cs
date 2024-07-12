@@ -8,6 +8,7 @@ namespace ApiOnlineShopWeb.Database.Interfaces
         void DeleteProduct(int id);
         void EditProduct(Product product);
         Product? GetProductById(int id);
+        Product? GetProductByName(string name);
         List<Product> GetProductList();
     }
 }

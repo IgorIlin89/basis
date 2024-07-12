@@ -67,6 +67,11 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
     {
         var user = _userRepositry.GetUserByEMail(loginDto.EMail);
 
+        if(user == null)
+        {
+            return NotFound();
+        }
+
         var response = new UserDto
         {
             UserId = user.Id,
@@ -81,8 +86,6 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
             HouseNumber = user.HouseNumber,
             PostalCode = user.PostalCode,
         };
-
-        //return NotFound();
 
         return Ok(response);
     }
@@ -110,8 +113,8 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
         return Ok();
     }
 
-    [Route("userdelete{id}")]
-    [HttpPost]
+    [Route("deleteuser{id}")]
+    [HttpGet]
     public async Task<ActionResult> DeleteUser(int id)
     {
         _userRepositry.Delete(id);

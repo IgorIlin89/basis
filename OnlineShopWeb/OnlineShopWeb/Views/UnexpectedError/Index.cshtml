@@ -1,0 +1,18 @@
+﻿@model ExceptionModel
+@{
+
+}
+
+<div> @{
+        Model.Exception.GetBaseException();
+    }</div>
+<div>
+    @{
+        Model.Exception.Message.ToString();
+    }
+</div>
+<div>
+    @{
+        Model.Exception.StackTrace.ToString();
+    }
+</div>

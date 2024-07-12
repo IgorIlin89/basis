@@ -29,7 +29,6 @@ public class CouponController : Controller
         _connectToDeleteCoupon = configuration.GetConnectionString("ApiCouponControllerDeleteCoupon");
         _connectToEditCoupon = configuration.GetConnectionString("ApiCouponControllerEditCoupon");
         _connectToAddCoupon = configuration.GetConnectionString("ApiCouponControllerAddCoupon");
-        test = clientwrapper.ReturnTest();
     }
 
     [HttpGet]

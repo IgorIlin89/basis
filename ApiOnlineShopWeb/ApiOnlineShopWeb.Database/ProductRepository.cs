@@ -43,6 +43,11 @@ internal class ProductRepository : IProductRepository
         return _dbContext.Product.FirstOrDefault(o => o.Id == id);
     }
 
+    public Product? GetProductByName(string name)
+    {
+        return _dbContext.Product.FirstOrDefault(o => o.Name == name);
+    }
+
     public List<Product> GetProductList()
     {
         return _dbContext.Product.ToList();

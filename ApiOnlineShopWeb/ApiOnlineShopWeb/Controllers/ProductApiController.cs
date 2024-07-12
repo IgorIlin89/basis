@@ -93,6 +93,8 @@ public class ProductApiController(IProductRepository _productRepository) : Contr
 
         _productRepository.AddProduct(productToAdd);
 
-        return Ok();
+        var response = _productRepository.GetProductByName(productDto.Name);
+
+        return Ok(response);
     }
 }

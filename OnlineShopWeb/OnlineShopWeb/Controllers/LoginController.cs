@@ -8,6 +8,7 @@ using System.Text.Json;
 using OnlineShopWeb.Dtos;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text;
+using System.Net;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -142,7 +143,7 @@ public class LoginController : Controller
                 var response = await request.Content.ReadAsStringAsync();
 
 
-                if (response is "No entry in database")
+                if (request.StatusCode == HttpStatusCode.NotFound)
                 {
                     var userToAdd = new User
                     {

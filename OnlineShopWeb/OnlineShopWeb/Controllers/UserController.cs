@@ -58,7 +58,12 @@ public class UserController : Controller
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
-        var request = await _httpClient.GetAsync(_connectionString + _connectToDeleteUser + id);
+        //var httpBody = new StringContent(
+        //            JsonSerializer.Serialize(id),
+        //            Encoding.UTF8,
+        //            Application.Json);
+
+        var request = await _httpClient.GetAsync(_connectionString + _connectToDeleteUser + id); 
         return RedirectToAction("Index", "User");
     }
 
