@@ -43,7 +43,7 @@ builder.Services.AddMvc(options =>
 
 var app = builder.Build();
 
-app.UseMiddleware<MiddlewareCustomExceptionHandling>();
+//app.UseMiddleware<MiddlewareCustomExceptionHandling>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseMiddleware<MiddlewareCustomExceptionHandling>();
+//app.UseMiddleware<MiddlewareCustomExceptionHandling>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
