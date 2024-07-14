@@ -14,7 +14,7 @@ builder.Services.AddSession();
 builder.Services.Configure<HttpClientWrapperOptions>(
     builder.Configuration.GetSection(HttpClientWrapperOptions.SectionName));
 
-builder.Services.AddSingleton<IHttpClientWrapper,HttpClientWrapper>();
+builder.Services.AddSingleton<IHttpClientWrapper, HttpClientWrapper>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -48,9 +48,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-  app.UseExceptionHandler("/Home/Error");
-  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-  app.UseHsts();
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();

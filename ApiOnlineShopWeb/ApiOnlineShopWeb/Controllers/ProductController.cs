@@ -6,13 +6,18 @@ using ApiOnlineShopWeb.Domain;
 
 namespace ApiOnlineShopWeb.Controllers;
 
-public class ProductApiController(IProductRepository _productRepository) : ControllerBase
+public class ProductController(IProductRepository _productRepository) : ControllerBase
 {
-    [Route("productlist")]
+    [Route("product/list")]
     [HttpGet]
     public async Task<ActionResult> GetProductList()
     {
         var productList = _productRepository.GetProductList();
+
+        if (productList == null)
+        {
+            return NotFound();
+        }
 
         List<ProductDto> response = new List<ProductDto>();
 
@@ -32,11 +37,16 @@ public class ProductApiController(IProductRepository _productRepository) : Contr
         return Ok(response);
     }
 
-    [Route("getproductbyid{id}")]
+    [Route("product")]
     [HttpGet]
-    public async Task<IActionResult> GetProductById(int id)
+    public async Task<IActionResult> GetProductById([FromQuery]string id)
     {
-        var product = _productRepository.GetProductById(id);
+        var product = _productRepository.GetProductById(Int32.Parse(id));
+
+        if (product == null)
+        {
+            return NotFound();
+        }
 
         var response = new ProductDto
         {
@@ -51,16 +61,16 @@ public class ProductApiController(IProductRepository _productRepository) : Contr
         return Ok(response);
     }
 
-    [Route("productdelete{id}")]
-    [HttpGet]
+    [Route("product/{id}")]
+    [HttpDelete]
     public async Task<ActionResult> DeleteProduct(int id)
     {
         _productRepository.DeleteProduct(id);
         return Ok();
     }
 
-    [Route("productedit")]
-    [HttpPost]
+    [Route("product")]
+    [HttpPut]
     public async Task<ActionResult> EditProduct([FromBody] ProductDto productDto)
     {
         var productToEdit = new Product
@@ -75,10 +85,17 @@ public class ProductApiController(IProductRepository _productRepository) : Contr
 
         _productRepository.EditProduct(productToEdit);
 
-        return Ok();
+        var response = _productRepository.GetProductById(productDto.ProductId.Value);
+
+        if (response == null)
+        {
+            return StatusCode(500);
+        }
+
+        return Ok(response);
     }
 
-    [Route("productadd")]
+    [Route("product")]
     [HttpPost]
     public async Task<ActionResult> AddProduct([FromBody] ProductDto productDto)
     {
@@ -94,6 +111,11 @@ public class ProductApiController(IProductRepository _productRepository) : Contr
         _productRepository.AddProduct(productToAdd);
 
         var response = _productRepository.GetProductByName(productDto.Name);
+
+        if (response == null)
+        {
+            return StatusCode(500);
+        }
 
         return Ok(response);
     }

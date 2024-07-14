@@ -7,13 +7,18 @@ using System.Xml.Linq;
 
 namespace ApiOnlineShopWeb.Controllers;
 
-public class UserApiController(IUserRepository _userRepositry) : ControllerBase
+public class UserController(IUserRepository _userRepositry) : ControllerBase
 {
-    [Route("userlist")]
+    [Route("user/list")]
     [HttpGet]
     public async Task<ActionResult> GetUserList()
     {
         var userList = _userRepositry.GetUserList();
+
+        if (userList == null)
+        {
+            return NotFound();
+        }
 
         List<UserDto> response = new List<UserDto>();
 
@@ -42,6 +47,11 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
     public async Task<ActionResult> GetUserById(int id)
     {
         var user = _userRepositry.GetUserById(id);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
 
         var response = new UserDto
         {
@@ -110,6 +120,7 @@ public class UserApiController(IUserRepository _userRepositry) : ControllerBase
         };
 
         _userRepositry.Update(user);
+
         return Ok();
     }
 

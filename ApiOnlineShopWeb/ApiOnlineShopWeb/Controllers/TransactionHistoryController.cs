@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace ApiOnlineShopWeb.Controllers;
 
-public class TransactionHistoryApiController(ITransactionHistoryRepository _transactionHistoryRepositry
+public class TransactionHistoryController(ITransactionHistoryRepository _transactionHistoryRepositry
     , IUserRepository _userRepository
     , ICouponRepository _couponRepository
     , IProductRepository _productRepository) : ControllerBase
@@ -18,6 +18,11 @@ public class TransactionHistoryApiController(ITransactionHistoryRepository _tran
     public async Task<ActionResult> GetTransactionHistoryList(int id)
     {
         var transactionHistoryList = _transactionHistoryRepositry.GetTransactionHistoryList(id);
+
+        if (transactionHistoryList == null)
+        {
+            return NotFound();
+        }
 
         var response = new List<TransactionHistoryObjectsDto>();
 

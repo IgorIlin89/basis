@@ -7,13 +7,18 @@ using static Azure.Core.HttpHeader;
 
 namespace ApiOnlineShopWeb.Controllers;
 
-public class CouponApiController(ICouponRepository _couponRepository) : ControllerBase
+public class CouponController(ICouponRepository _couponRepository) : ControllerBase
 {
-    [Route("couponlist")]
+    [Route("coupon/list")]
     [HttpGet]
     public async Task<ActionResult> GetCouponList()
     {
         var couponList = _couponRepository.GetCouponList();
+
+        if(couponList == null)
+        {
+            return NotFound();
+        }
 
         var response = new List<CouponDto>();
 
@@ -39,6 +44,11 @@ public class CouponApiController(ICouponRepository _couponRepository) : Controll
     public async Task<ActionResult> GetCouponById(int id)
     {
         var coupon = _couponRepository.GetCouponById(id);
+
+        if (coupon == null)
+        {
+            return NotFound();
+        }
 
         var response = new CouponDto
         {
@@ -107,6 +117,11 @@ public class CouponApiController(ICouponRepository _couponRepository) : Controll
     public async Task<ActionResult> GetCouponByCode(string code)
     {
         var coupon = _couponRepository.GetCouponByCode(code);
+
+        if (coupon == null)
+        {
+            return NotFound();
+        }
 
         var response = new CouponDto
         {

@@ -11,18 +11,18 @@ namespace OnlineShopWeb.Controllers;
 
 public class ProductController : Controller
 {
-    public HttpClientWrapper _httpClientWrapper;
+    public IHttpClientWrapper _httpClientWrapper;
 
     public ProductController(IConfiguration configuration
         , IHttpClientWrapper clientWrapper)
     {
-        _httpClientWrapper = (HttpClientWrapper?)clientWrapper;
+        _httpClientWrapper = clientWrapper;
     }
 
     [HttpGet]
     public async Task<ActionResult> Index()
     {
-        var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("productlist");
+        var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product");
         var model = new ProductListModel();
 
 
@@ -46,7 +46,7 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<ActionResult> Delete(int id)
     {
-        _httpClientWrapper.Delete<int>("productdelete", id);
+        _httpClientWrapper.Delete("product", id.ToString());
 
         return RedirectToAction("Index", "Product");
     }
@@ -54,7 +54,7 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<ActionResult> Details(int id)
     {
-        var productDto = await _httpClientWrapper.Get<ProductDto>("getproductbyid", id);
+        var productDto = await _httpClientWrapper.Get<ProductDto>("product", id.ToString());
 
         var model = new ProductModel
         {
@@ -76,7 +76,7 @@ public class ProductController : Controller
 
         if (id is not null)
         {
-            var productDto = await _httpClientWrapper.Get<ProductDto>("getproductbyid", id.Value);
+            var productDto = await _httpClientWrapper.Get<ProductDto>("product", id.ToString());
 
             model.ProductId = productDto.ProductId;
             model.Name = productDto.Name.Trim();
@@ -107,7 +107,7 @@ public class ProductController : Controller
                     Price = model.Price
                 };
 
-                _httpClientWrapper.Put("productedit", productToEdit);
+                _httpClientWrapper.Put("product", productToEdit);
             }
             else
             {
@@ -120,7 +120,7 @@ public class ProductController : Controller
                     Price = model.Price
                 };
 
-                var request = _httpClientWrapper.Post<ProductDto>("productadd", productToAdd);
+                var request = _httpClientWrapper.Post<ProductDto>("product", productToAdd);
             }
 
             return RedirectToAction("Index", "Product");

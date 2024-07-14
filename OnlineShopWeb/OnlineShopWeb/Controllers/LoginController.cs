@@ -9,21 +9,25 @@ using OnlineShopWeb.Dtos;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text;
 using System.Net;
+using OnlineShopWeb.Misc;
 
 namespace OnlineShopWeb.Controllers;
 
 public class LoginController : Controller
 {
     private readonly HttpClient _httpClient = new HttpClient();
+    IHttpClientWrapper _httpClientWrapper;
     private readonly string _connectionString;
     private readonly string _connectToGetUserByEMail;
     private readonly string _connectToAddUser;
 
-    public LoginController(IConfiguration configuration)
+    public LoginController(IConfiguration configuration
+        , IHttpClientWrapper clientWrapper)
     {
         _connectionString = configuration.GetConnectionString("ApiClientOptions");
         _connectToGetUserByEMail = configuration.GetConnectionString("ApiUserControllerGetUserByEmail");
         _connectToAddUser = configuration.GetConnectionString("ApiUserControllerAddUser");
+        _httpClientWrapper = clientWrapper;
     }
 
     [HttpGet]
