@@ -3,6 +3,8 @@ using ApiOnlineShopWeb.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using ApiOnlineShopWeb.Domain;
+using System.Web;
+using System.Net;
 
 namespace ApiOnlineShopWeb.Controllers;
 
@@ -37,11 +39,17 @@ public class ProductController(IProductRepository _productRepository) : Controll
         return Ok(response);
     }
 
-    [Route("product")]
+    [Route("product/{id}")]
     [HttpGet]
-    public async Task<IActionResult> GetProductById([FromQuery]string id)
+    public async Task<IActionResult> GetProductById(string id)
     {
-        var product = _productRepository.GetProductById(Int32.Parse(id));
+        var uriData = HttpUtility.ParseQueryString(id);
+
+        //if (!(int.TryParse(uriData["id"], out int i))){
+        //    return ;
+        //}
+
+        var product = _productRepository.GetProductById(int.Parse(uriData["id"]));
 
         if (product == null)
         {
@@ -85,14 +93,7 @@ public class ProductController(IProductRepository _productRepository) : Controll
 
         _productRepository.EditProduct(productToEdit);
 
-        var response = _productRepository.GetProductById(productDto.ProductId.Value);
-
-        if (response == null)
-        {
-            return StatusCode(500);
-        }
-
-        return Ok(response);
+        return Ok(productDto);
     }
 
     [Route("product")]

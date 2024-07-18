@@ -6,7 +6,7 @@ namespace OnlineShopWeb.Misc
     {
         Task<HttpStatusCode> Delete(string methodName, string id);
         //Task<T> Get<T>(string methodName);
-        Task<T> Get<T>(params string[] args);
+        Task<T> Get<T>(string basePath, params string[] args);
         Task<T> Post<T>(string methodName, T body);
         Task<T> Put<T>(string methodName, T body);
     }

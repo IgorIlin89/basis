@@ -22,7 +22,7 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<ActionResult> Index()
     {
-        var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product");
+        var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "list");
         var model = new ProductListModel();
 
 
