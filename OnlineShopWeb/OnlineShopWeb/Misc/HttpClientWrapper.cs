@@ -44,7 +44,7 @@ public class HttpClientWrapper : IHttpClientWrapper
         {
             if (int.TryParse(args[i], out int element))
             {
-                pathToAdd += "/id=" + args[i] + "/";
+                pathToAdd += "/id=" + args[i];
             }
             else if ((args[i] == "list") && (i == 0))
             {
