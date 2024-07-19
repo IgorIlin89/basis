@@ -60,23 +60,20 @@ public class HttpClientWrapper : IHttpClientWrapper
         var y = uri.AbsoluteUri;
         var x = uri.IsWellFormedOriginalString();
 
-
-        //_uriBuilder.Path = basePath + pathToAdd;
-
         var response = await _httpClient.GetAsync(uri);
-
-
-        // beliebig viele varianten muessen unterstuetz werrden,
-
-        //wir schmeißen keine exceptions selbst
-        //ueberflussige "/" in den args werden entfernt
-        //Get<List<ProductDto>>("product", "////list"); muss abgefangen werden
-
-        // TODO CREATE A CUSTOM EXCEPTION
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
             // return // TODO Read content, write to log, throw custom exception
+
+
+            // beliebig viele varianten muessen unterstuetz werrden,
+
+            //wir schmeißen keine exceptions selbst
+            //ueberflussige "/" in den args werden entfernt
+            //Get<List<ProductDto>>("product", "////list"); muss abgefangen werden
+
+            // TODO CREATE A CUSTOM EXCEPTION
         }
 
         var content = await response.Content.ReadFromJsonAsync<T>();
