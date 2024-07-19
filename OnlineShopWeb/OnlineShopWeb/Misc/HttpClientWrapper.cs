@@ -23,7 +23,7 @@ public class HttpClientWrapper : IHttpClientWrapper
         ApiHost = options.Value.ApiHost;
         ApiPort = options.Value.ApiPort;
         _uriBuilder = new UriBuilder();
-        _baseUri = new Uri(options.Value.ApiScheme);
+        _baseUri = new Uri(options.Value.ApiScheme + ApiUrl);
         //_uriBuilder = new UriBuilder(options.Value.ApiUrl);
         //_uriBuilder.Scheme = "https";
         //_uriBuilder.Host = options.Value.ApiHost;
