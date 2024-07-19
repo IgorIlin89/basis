@@ -23,6 +23,17 @@ public class ProductController : Controller
     public async Task<ActionResult> Index()
     {
         var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "list");
+        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "213list");
+        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
+        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
+        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
+        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
+        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
+        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
+        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
+        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
+        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
+
         var model = new ProductListModel();
 
 

@@ -39,23 +39,12 @@ public class ProductController(IProductRepository _productRepository) : Controll
         return Ok(response);
     }
 
-    [Route("product/{id}")]
+    [Route("product")]
     [HttpGet]
-    public async Task<IActionResult> GetProductById(string id)
+    public async Task<IActionResult> GetProductById([FromQuery]int id)
     {
-        var uriData = HttpUtility.ParseQueryString(id);
-
-        //if (!(int.TryParse(uriData["id"], out int i))){
-        //    return ;
-        //}
-
-        var product = _productRepository.GetProductById(int.Parse(uriData["id"]));
-
-        if (product == null)
-        {
-            return NotFound();
-        }
-
+        var product = _productRepository.GetProductById(id);
+        //todo notfound
         var response = new ProductDto
         {
             ProductId = product.Id,

@@ -12,16 +12,22 @@ public class HttpClientWrapper : IHttpClientWrapper
     private readonly HttpClient _httpClient = new HttpClient();
     UriBuilder _uriBuilder;
     private readonly string ApiUrl;
-    private readonly string ApiKey;
+    private readonly string ApiHost;
+    private readonly string ApiPort;
+    private readonly Uri _baseUri;
+
 
     public HttpClientWrapper(IOptions<HttpClientWrapperOptions> options)
     {
         ApiUrl = options.Value.ApiUrl;
-        //_uriBuilder = new UriBuilder(options.Value.ApiUrl);
+        ApiHost = options.Value.ApiHost;
+        ApiPort = options.Value.ApiPort;
         _uriBuilder = new UriBuilder();
-        _uriBuilder.Scheme = "https";
-        _uriBuilder.Host = options.Value.ApiHost;
-        _uriBuilder.Port = Int32.Parse(options.Value.ApiPort);
+        _baseUri = new Uri(options.Value.ApiScheme);
+        //_uriBuilder = new UriBuilder(options.Value.ApiUrl);
+        //_uriBuilder.Scheme = "https";
+        //_uriBuilder.Host = options.Value.ApiHost;
+        //_uriBuilder.Port = Int32.Parse(options.Value.ApiPort);
 
     }
 
@@ -37,44 +43,52 @@ public class HttpClientWrapper : IHttpClientWrapper
 
     public async Task<T> Get<T>(string basePath, params string[] args)
     {
-
-        var pathToAdd = "";
+        var relativeUri = "/" + basePath + "/";
+        var uriBuilder = new UriBuilder();
 
         for (var i = 0; i < args.Length; i++)
         {
-            if (int.TryParse(args[i], out int element))
-            {
-                pathToAdd += "/id=" + args[i];
-            }
-            else if ((args[i] == "list") && (i == 0))
-            {
-                pathToAdd += "/list";
-                i = args.Length;
-            }
-            else if ((args[i] == "email") && (i == 0))
-            {
-                pathToAdd += "/email/" + args[i + 1];
-                i = args.Length;
-            }
-            else
-            {
-                throw new Exception("Parameters not allowed in query");
-            }
+            relativeUri += args[i] + "/";
         }
 
-        _uriBuilder.Path = basePath + pathToAdd;
+        var uri = new Uri(_baseUri, relativeUri);
+        var uri2 = new Uri("https://localhost:7149/product/1");
+        var z = uri.Query;
+        var xy = uri.UserInfo;
+        var xzt = uri.Segments;
+        var gdfg = uri.ToString();
+        var y = uri.AbsoluteUri;
+        var x = uri.IsWellFormedOriginalString();
 
-        var response = await _httpClient.GetAsync(_uriBuilder.Uri);
+
+        //_uriBuilder.Path = basePath + pathToAdd;
+
+        var response = await _httpClient.GetAsync(uri);
+
+
+        // beliebig viele varianten muessen unterstuetz werrden,
+
+        //wir schmeißen keine exceptions selbst
+        //ueberflussige "/" in den args werden entfernt
+        //Get<List<ProductDto>>("product", "////list"); muss abgefangen werden
+
+        // TODO CREATE A CUSTOM EXCEPTION
+
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            // return // TODO Read content, write to log, throw custom exception
+        }
+
         var content = await response.Content.ReadFromJsonAsync<T>();
 
         return content;
 
         //input: _httpClientWrapper.Get<ProductDto>("product") output: https://localhost:500/product
-        //input: _httpClientWrapper.Get<ProductDto>("product,  "list") output: https://localhost:500/product/list
-        //input: _httpClientWrapper.Get<ProductDto>("product",, 1) output: https://localhost:500/product/id=1
-        //input: _httpClientWrapper.Get<ProductDto>("product",1,2,3) output: https://localhost:500/product/id1/id2/id3
-        //optional //input: _httpClientWrapper.Get<ProductDto>("product",1,2,3) output: https://localhost:500/product?id=1&&id2=2&&id3=3
+        //input: _httpClientWrapper.Get<ProductDto>("product", "list") output: https://localhost:500/product/list
+        //input: _httpClientWrapper.Get<ProductDto>("product", 1) output: https://localhost:500/product/1
+        //input: _httpClientWrapper.Get<ProductDto>("product",1,2,3) output: https://localhost:500/product/1/2/3
         //input: _httpClientWrapper.Get<ProductDto>("product","email","igor@gmail") output: https://localhost:500/product/email/igor@gmail.com
+        //optional //input: _httpClientWrapper.Get<ProductDto>("product",1,2,3) output: https://localhost:500/product?id=1&&id2=2&&id3=3
 
         //_uriBuilder.Query = args[0];
         //var uri = c;
