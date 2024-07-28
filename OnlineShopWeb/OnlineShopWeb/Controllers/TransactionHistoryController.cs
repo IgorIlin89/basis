@@ -36,11 +36,11 @@ public class TransactionHistoryController : Controller
             {
                 Id = element.Id,
                 UserId = element.UserId,
-                User = element.User,
+                //TODOUser = element.User,
                 PaymentDate = element.PaymentDate,
                 FinalPrice = element.FinalPrice,
-                Coupons = element.Coupons,
-                ProductsInCart = element.ProductsInCart
+                //TODOCoupons = element.Coupons,
+                //TODOProductsInCart = element.ProductsInCart
             });
         }
 

@@ -2,9 +2,7 @@
 using ApiOnlineShopWeb.Dtos;
 using ApiOnlineShopWeb.Domain;
 using ApiOnlineShopWeb.Database.Interfaces;
-using System.Text.Json;
-using System.Net.Http;
-using System.Text.Json.Serialization;
+using ApiOnlineShopWeb.Dtos.Mapping;
 
 namespace ApiOnlineShopWeb.Controllers;
 
@@ -24,20 +22,17 @@ public class TransactionHistoryController(ITransactionHistoryRepository _transac
             return NotFound();
         }
 
-        var response = new List<TransactionHistoryObjectsDto>();
-
-        foreach (var element in transactionHistoryList)
-        {
-            response.Add(new TransactionHistoryObjectsDto
+        var response = transactionHistoryList.Select(element =>
+            new TransactionHistoryObjectsDto
             {
                 UserId = element.UserId,
-                User = element.User,
+                User = element.User.MapToDto(),
                 PaymentDate = element.PaymentDate,
                 FinalPrice = element.FinalPrice,
-                Coupons = element.Coupons,
-                ProductsInCart = element.ProductsInCart
-            });
-        }
+                Coupons = element.Coupons.Select(o => o.MapToDto()).ToList(),
+                //TODO ProductsInCart = element.ProductsInCart
+            }
+        );
 
         return Ok(response);
     }
@@ -46,23 +41,22 @@ public class TransactionHistoryController(ITransactionHistoryRepository _transac
     [HttpPost]
     public async Task<ActionResult> BuyShoppingCartItems([FromBody] TransactionHistoryDto transactionHistoryDto)
     {
-
         var user = _userRepository.GetUserById(transactionHistoryDto.UserId);
         decimal finalPrice = 0;
 
-        List<ProductInCart> productsInCartList = new List<ProductInCart>();
+        var productsInCartList = new List<ProductInCart>();
 
         foreach (var element in transactionHistoryDto.ProductsInCartDto)
         {
-            var product = _productRepository.GetProductById(element.ProductId);
+            //var product = _productRepository.GetProductById(element.ProductId);
 
             productsInCartList.Add(new ProductInCart
             {
                 Count = element.ProductCount,
-                Product = product,
-                ProductId = product.Id
+                //Product = product,
+                ProductId = element.ProductId//product.Id
             });
-            finalPrice += element.ProductCount * product.Price;
+            //finalPrice += element.ProductCount * product.Price;
         }
 
         List<Coupon> couponList = new List<Coupon>();
@@ -84,8 +78,8 @@ public class TransactionHistoryController(ITransactionHistoryRepository _transac
 
         var transactionHistory = new TransactionHistory
         {
-            User = user,
-            UserId = user.Id,
+            //User = user,
+            UserId = transactionHistoryDto.UserId,//user.Id,
             PaymentDate = DateTime.Now,
             FinalPrice = finalPrice,
             Coupons = couponList,

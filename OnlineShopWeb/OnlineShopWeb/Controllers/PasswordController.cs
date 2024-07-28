@@ -48,7 +48,7 @@ public class PasswordController : Controller
                     Password = model.Password
                 };
 
-                var request = await _httpClientWrapper.Post<ChangePasswordDto>("user", "changepassword", changePasswordDto);
+                var request = await _httpClientWrapper.Post<ChangePasswordDto, ChangePasswordDto>("user", changePasswordDto, "changepassword");
 
                 return RedirectToAction("Index", "Product");
             }

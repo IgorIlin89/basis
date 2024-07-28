@@ -8,7 +8,7 @@ using static System.Net.Mime.MediaTypeNames;
 using OnlineShopWeb.Misc;
 
 namespace OnlineShopWeb.Controllers;
-
+// mappint dto to model, and other way around
 public class CouponController : Controller
 {
     public IHttpClientWrapper _httpClientWrapper;
@@ -142,7 +142,7 @@ public class CouponController : Controller
                     EndDate = model.EndDate,
                 };
 
-                var request = _httpClientWrapper.Post<CouponDto>("coupon", couponToAdd);
+                var request = _httpClientWrapper.Post<CouponDto, CouponDto>("coupon", couponToAdd);
             }
 
             return RedirectToAction("Index", "Coupon");

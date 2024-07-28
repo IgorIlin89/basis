@@ -1,12 +1,11 @@
 ﻿using ApiOnlineShopWeb.Database.Interfaces;
 using ApiOnlineShopWeb.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 using ApiOnlineShopWeb.Domain;
-using static Azure.Core.HttpHeader;
+using ApiOnlineShopWeb.Dtos.Mapping;
 
 namespace ApiOnlineShopWeb.Controllers;
-
+//mappin dto to domain, domain to dto
 public class CouponController(ICouponRepository _couponRepository) : ControllerBase
 {
     [Route("coupon/list")]
@@ -123,17 +122,6 @@ public class CouponController(ICouponRepository _couponRepository) : ControllerB
             return NotFound();
         }
 
-        var response = new CouponDto
-        {
-            CouponId = coupon.Id,
-            Code = coupon.Code,
-            AmountOfDiscount = coupon.AmountOfDiscount,
-            TypeOfDiscount = coupon.TypeOfDiscount,
-            MaxNumberOfUses = coupon.MaxNumberOfUses,
-            StartDate = coupon.StartDate,
-            EndDate = coupon.EndDate
-        };
-
-        return Ok(response);
+        return Ok(coupon.MapToDto());
     }
 }

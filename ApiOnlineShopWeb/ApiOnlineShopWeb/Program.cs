@@ -1,38 +1,65 @@
 using ApiOnlineShopWeb.Database;
 using ApiOnlineShopWeb.ExceptionHandling;
+using Serilog;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+try
 {
-    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-});
+    var bootstrapLoggingConfiguration = new LoggerConfiguration()
+        .WriteTo.File("ApiOnlineShopWeb_Fatal.log");
+    Log.Logger = bootstrapLoggingConfiguration.CreateBootstrapLogger();
 
-builder.Services.AddDatabase(builder.Configuration);
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    // Add services to the container.
+    builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        //options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
 
-var app = builder.Build();
+    builder.Services.AddDatabase(builder.Configuration);
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
 
-//app.UseMiddleware<MiddlewareCustomExceptionHandling>();
+    var loggingConfiguration = new LoggerConfiguration()
+        .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.FromLogContext()
+        .Enrich.WithProcessId()
+        .Enrich.WithProcessName()
+        .Enrich.WithMachineName();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var logger = loggingConfiguration.CreateLogger();
+    builder.Host.UseSerilog(logger);
+
+    var app = builder.Build();
+
+    app.UseMiddleware<MiddlewareCustomExceptionHandling>();
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.UseSerilogRequestLogging();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch(Exception ex)
+{
+    Log.Fatal(ex, "Error during Start Api");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

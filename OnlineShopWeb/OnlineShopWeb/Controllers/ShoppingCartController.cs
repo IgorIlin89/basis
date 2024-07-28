@@ -175,7 +175,7 @@ public class ShoppingCartController : Controller
                     Application.Json);
 
             //var requestToBuyItems = _httpClient.PostAsync(_connectionString + _connectToBuyShoppingCartItems, httpBody);
-            var requestToBuyItems = _httpClientWrapper.Post<TransactionHistoryDto>("transactionhistory", transactionHistoryDto);
+            var requestToBuyItems = _httpClientWrapper.Post<TransactionHistoryDto, TransactionHistoryDto>("transactionhistory", transactionHistoryDto);
 
 
             HttpContext.AppendShoppingCart(new ShoppingCartListModel());

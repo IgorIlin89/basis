@@ -4,16 +4,17 @@ using ApiOnlineShopWeb.Database.Interfaces;
 using System.Text.Json;
 using ApiOnlineShopWeb.Dtos;
 using System.Xml.Linq;
+using ApiOnlineShopWeb.Dtos.Mapping;
 
 namespace ApiOnlineShopWeb.Controllers;
 
-public class UserController(IUserRepository _userRepositry) : ControllerBase
+public class UserController(IUserRepository _userRepository) : ControllerBase
 {
     [Route("user/list")]
     [HttpGet]
     public async Task<ActionResult> GetUserList()
     {
-        var userList = _userRepositry.GetUserList();
+        var userList = _userRepository.GetUserList();
 
         if (userList == null)
         {
@@ -46,36 +47,21 @@ public class UserController(IUserRepository _userRepositry) : ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetUserById(int id)
     {
-        var user = _userRepositry.GetUserById(id);
+        var user = _userRepository.GetUserById(id);
 
         if (user == null)
         {
             return NotFound();
         }
 
-        var response = new UserDto
-        {
-            UserId = user.Id,
-            EMail = user.EMail,
-            Password = user.Password,
-            GivenName = user.GivenName,
-            Surname = user.Surname,
-            Age = user.Age,
-            Country = user.Country,
-            City = user.City,
-            Street = user.Street,
-            HouseNumber = user.HouseNumber,
-            PostalCode = user.PostalCode,
-        };
-
-        return Ok(response);
+        return Ok(user.MapToDto());
     }
 
     [Route("user/email/{email}")]
     [HttpGet]
     public async Task<ActionResult> GetUserByEmail(string email)
     {
-        var user = _userRepositry.GetUserByEMail(email);
+        var user = _userRepository.GetUserByEMail(email);
 
         if(user == null)
         {
@@ -119,7 +105,7 @@ public class UserController(IUserRepository _userRepositry) : ControllerBase
             Password = userDto.Password
         };
 
-        _userRepositry.Update(user);
+        _userRepository.Update(user);
 
         return Ok();
     }
@@ -128,7 +114,7 @@ public class UserController(IUserRepository _userRepositry) : ControllerBase
     [HttpDelete]
     public async Task<ActionResult> DeleteUser(int id)
     {
-        _userRepositry.Delete(id);
+        _userRepository.Delete(id);
         return Ok();
     }
 
@@ -150,16 +136,16 @@ public class UserController(IUserRepository _userRepositry) : ControllerBase
             Password = userDto.Password
         };
 
-        _userRepositry.AddUser(userToAdd);
+        var newUser = _userRepository.AddUser(userToAdd);
 
-        return Ok();
+        return Ok(newUser.MapToDto());
     }
 
     [Route("user/changepassword")]
     [HttpPost]
     public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
     {
-        _userRepositry.ChangePassword(changePasswordDto.UserId, changePasswordDto.Password);
+        _userRepository.ChangePassword(changePasswordDto.UserId, changePasswordDto.Password);
         return Ok();
     }
 

@@ -4,7 +4,7 @@ namespace ApiOnlineShopWeb.Database.Interfaces;
 
 public interface IUserRepository
 {
-    void AddUser(User user);
+    User AddUser(User user);
     void Delete(int id);
     User? GetUserById(int id);
     User? GetUserByEMail(string eMail);

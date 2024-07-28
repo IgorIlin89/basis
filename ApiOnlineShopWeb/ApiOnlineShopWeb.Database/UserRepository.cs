@@ -4,6 +4,7 @@ using Azure;
 using System.Diagnostics.Metrics;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using ApiOnlineShopWeb.Domain.Exceptions;
 
 namespace ApiOnlineShopWeb.Database;
 
@@ -56,8 +57,15 @@ internal class UserRepository : IUserRepository
         _context.SaveChanges();
     }
 
-    public void AddUser(User user)
+    public User AddUser(User user)
     {
+        var existingUser = _context.User.FirstOrDefault(x => x.EMail == user.EMail);
+
+        if(existingUser != null)
+        {
+            throw new UserExistsException($"User with email '{user.EMail}' exists");
+        }
+
         _context.User.Add(new User
         {
             EMail = user.EMail,
@@ -73,6 +81,8 @@ internal class UserRepository : IUserRepository
         });
 
         _context.SaveChanges();
+
+        return user;
     }
 
     public void ChangePassword(int userId, string password)

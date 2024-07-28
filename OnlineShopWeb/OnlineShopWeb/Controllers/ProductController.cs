@@ -119,7 +119,7 @@ public class ProductController : Controller
                     Price = model.Price
                 };
 
-                var request = _httpClientWrapper.Post<ProductDto>("product", productToAdd);
+                var request = _httpClientWrapper.Post<ProductDto, ProductDto>("product", productToAdd);
             }
 
             return RedirectToAction("Index", "Product");

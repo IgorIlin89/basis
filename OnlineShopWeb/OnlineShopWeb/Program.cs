@@ -1,13 +1,16 @@
-using OnlineShopWeb.Domain;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using OnlineShopWeb.Misc;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews()
-    .AddSessionStateTempDataProvider();
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    })
+.AddSessionStateTempDataProvider();
 
 builder.Services.AddSession();
 
@@ -43,7 +46,7 @@ builder.Services.AddMvc(options =>
 
 var app = builder.Build();
 
-//app.UseMiddleware<MiddlewareCustomExceptionHandling>();
+app.UseMiddleware<MiddlewareCustomExceptionHandling>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

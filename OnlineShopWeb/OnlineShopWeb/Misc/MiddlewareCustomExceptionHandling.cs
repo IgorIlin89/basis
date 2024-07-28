@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShopWeb.Domain.Exceptions;
 using System.Net;
 using System.Text.Json;
 
@@ -20,6 +21,10 @@ public class MiddlewareCustomExceptionHandling
         try
         {
             await _next(context);
+        }
+        catch(DomainException domainException)
+        {
+
         }
         catch (Exception exception)
         {

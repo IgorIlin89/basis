@@ -10,6 +10,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Text;
 using System.Net;
 using OnlineShopWeb.Misc;
+using OnlineShopWeb.Domain.Exceptions;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -107,51 +108,39 @@ public class LoginController : Controller
         {
             if (model.Password == model.RepeatPassword)
             {
-                var userDto = await _httpClientWrapper.Get<UserDto>("user", "email", model.EMail);
-
-                if (userDto is null)
+                var userToAdd = new UserDto
                 {
-                    var userToAdd = new UserDto
-                    {
-                        EMail = model.EMail,
-                        Password = model.Password.Trim(),
-                        GivenName = model.FirstName,
-                        Surname = model.LastName,
-                        Age = model.Age,
-                        Country = model.Country,
-                        City = model.City,
-                        Street = model.Street,
-                        HouseNumber = model.HouseNumber,
-                        PostalCode = model.PostalCode
-                    };
+                    EMail = model.EMail,
+                    Password = model.Password.Trim(),
+                    GivenName = model.FirstName,
+                    Surname = model.LastName,
+                    Age = model.Age,
+                    Country = model.Country,
+                    City = model.City,
+                    Street = model.Street,
+                    HouseNumber = model.HouseNumber,
+                    PostalCode = model.PostalCode
+                };
 
-                    var request = await _httpClientWrapper.Post<UserDto>("user", userToAdd);
-
-                    var newUserWithId = await _httpClientWrapper.Get<UserDto>("user", "email", model.EMail);
-
-                    var userToLogin = new User
-                    {
-                        Id = newUserWithId.UserId.Value,
-                        EMail = model.EMail,
-                        Password = model.Password.Trim(),
-                        GivenName = model.FirstName,
-                        Surname = model.LastName,
-                        Age = model.Age,
-                        Country = model.Country,
-                        City = model.City,
-                        Street = model.Street,
-                        HouseNumber = model.HouseNumber,
-                        PostalCode = model.PostalCode
-                    };
-
-                    await SignIn(userToLogin);
-                    return RedirectToAction("Index", "User");
-                }
-                else
+                var response = await _httpClientWrapper.Post<UserDto, UserDto>("user", userToAdd);
+                var userToLogin = new User
                 {
-                    ModelState.AddModelError("Model", "The E-Mail adress is already taken");
-                    return View(model);
-                }
+                    Id = response.UserId.Value,
+                    EMail = model.EMail,
+                    Password = model.Password.Trim(),
+                    GivenName = model.FirstName,
+                    Surname = model.LastName,
+                    Age = model.Age,
+                    Country = model.Country,
+                    City = model.City,
+                    Street = model.Street,
+                    HouseNumber = model.HouseNumber,
+                    PostalCode = model.PostalCode
+                };
+
+                await SignIn(userToLogin);
+
+                return RedirectToAction("Index", "User");
             }
             else
             {
@@ -159,6 +148,7 @@ public class LoginController : Controller
                 return View(model);
             }
         }
+
         return View(model);
     }
 }

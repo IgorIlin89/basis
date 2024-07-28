@@ -1,12 +1,18 @@
-﻿namespace ApiOnlineShopWeb.ExceptionHandling;
+﻿using ApiOnlineShopWeb.Domain.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
+
+namespace ApiOnlineShopWeb.ExceptionHandling;
 
 public class MiddlewareCustomExceptionHandling
 {
     private readonly RequestDelegate _next;
-
-    public MiddlewareCustomExceptionHandling(RequestDelegate next)
+    private readonly ILogger<MiddlewareCustomExceptionHandling> _logger;
+    public MiddlewareCustomExceptionHandling(RequestDelegate next,
+        ILogger<MiddlewareCustomExceptionHandling> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -15,12 +21,24 @@ public class MiddlewareCustomExceptionHandling
         {
             await _next(context);
         }
+        catch(UserExistsException userExistsException)
+        {
+            context.Response.Clear();
+            //TODO send to client ErrorCode and ErrorMessage as an object
+            var actionResult = new ObjectResult(userExistsException.Message)
+            {
+                StatusCode = (int)HttpStatusCode.BadRequest
+            };
+
+            await actionResult.ExecuteResultAsync(new ActionContext
+            {
+                HttpContext = context
+            });
+
+            _logger.LogWarning(userExistsException.Message);
+        }
         catch(Exception exception)
         {
-            if (exception.GetType() == typeof(NullReferenceException))
-            {
-                Results.BadRequest();
-            }
             // TODO LOGGING later
 
             //context.Response.Redirect("/UnexpectedError"); // this is controller name unexpected error
