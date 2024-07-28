@@ -15,18 +15,10 @@ namespace OnlineShopWeb.Controllers;
 
 public class LoginController : Controller
 {
-    private readonly HttpClient _httpClient = new HttpClient();
     IHttpClientWrapper _httpClientWrapper;
-    private readonly string _connectionString;
-    private readonly string _connectToGetUserByEMail;
-    private readonly string _connectToAddUser;
 
-    public LoginController(IConfiguration configuration
-        , IHttpClientWrapper clientWrapper)
+    public LoginController(IHttpClientWrapper clientWrapper)
     {
-        _connectionString = configuration.GetConnectionString("ApiClientOptions");
-        _connectToGetUserByEMail = configuration.GetConnectionString("ApiUserControllerGetUserByEmail");
-        _connectToAddUser = configuration.GetConnectionString("ApiUserControllerAddUser");
         _httpClientWrapper = clientWrapper;
     }
 
@@ -41,22 +33,13 @@ public class LoginController : Controller
     {
         if (ModelState.IsValid)
         {
-            var loginDto = new LoginDto
+            var userDto = await _httpClientWrapper.Get<UserDto>("user", "email", model.EMail);
+
+            if (userDto is null)
             {
-                EMail = model.EMail,
-                Password = model.Password
-            };
-
-            var httpBody = new StringContent(
-                    JsonSerializer.Serialize(loginDto),
-                    Encoding.UTF8,
-                    Application.Json
-                    );
-
-            var request = await _httpClient.PostAsync(_connectionString + _connectToGetUserByEMail, httpBody);
-            var response = await request.Content.ReadAsStringAsync();
-
-            var userDto = JsonSerializer.Deserialize<UserDto>(response);
+                ModelState.AddModelError("Model", "User does not exist");
+                return View(model);
+            }
 
             var user = new User
             {
@@ -72,12 +55,6 @@ public class LoginController : Controller
                 PostalCode = userDto.PostalCode,
                 Password = userDto.Password
             };
-
-            if (user is null)
-            {
-                ModelState.AddModelError("Model", "User does not exist");
-                return View(model);
-            }
 
             if (user.Password.Trim() != model.Password.Trim())
             {
@@ -99,9 +76,7 @@ public class LoginController : Controller
             new Claim(ClaimTypes.Surname, user.Surname),
         };
 
-
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
 
         var authProperties = new AuthenticationProperties()
         {
@@ -132,24 +107,11 @@ public class LoginController : Controller
         {
             if (model.Password == model.RepeatPassword)
             {
-                var loginDto = new LoginDto
+                var userDto = await _httpClientWrapper.Get<UserDto>("user", "email", model.EMail);
+
+                if (userDto is null)
                 {
-                    EMail = model.EMail,
-                    Password = model.Password
-                };
-
-                var httpBody = new StringContent(
-                    JsonSerializer.Serialize(loginDto),
-                    Encoding.UTF8,
-                    Application.Json);
-
-                var request = await _httpClient.PostAsync(_connectionString + _connectToGetUserByEMail, httpBody);
-                var response = await request.Content.ReadAsStringAsync();
-
-
-                if (request.StatusCode == HttpStatusCode.NotFound)
-                {
-                    var userToAdd = new User
+                    var userToAdd = new UserDto
                     {
                         EMail = model.EMail,
                         Password = model.Password.Trim(),
@@ -163,35 +125,13 @@ public class LoginController : Controller
                         PostalCode = model.PostalCode
                     };
 
-                    var httpBodyAddUser = new StringContent(
-                    JsonSerializer.Serialize(userToAdd),
-                    Encoding.UTF8,
-                    Application.Json
-                    );
+                    var request = await _httpClientWrapper.Post<UserDto>("user", userToAdd);
 
-                    var requestUserToAdd = await _httpClient.PostAsync(_connectionString + _connectToAddUser, httpBodyAddUser);
-
-                    var loginUser = new LoginDto
-                    {
-                        EMail = userToAdd.EMail,
-                        Password = userToAdd.Password
-                    };
-
-                    var httpBodyLoginUser = new StringContent(
-                    JsonSerializer.Serialize(loginUser),
-                    Encoding.UTF8,
-                    Application.Json
-                    );
-
-                    var requestUserToLogin = await _httpClient.PostAsync(_connectionString + _connectToGetUserByEMail, httpBodyLoginUser);
-
-                    var responseUserToLogin = await requestUserToLogin.Content.ReadAsStringAsync();
-
-                    var responseUserLogin = JsonSerializer.Deserialize<UserDto>(responseUserToLogin);
+                    var newUserWithId = await _httpClientWrapper.Get<UserDto>("user", "email", model.EMail);
 
                     var userToLogin = new User
                     {
-                        Id = responseUserLogin.UserId.Value,
+                        Id = newUserWithId.UserId.Value,
                         EMail = model.EMail,
                         Password = model.Password.Trim(),
                         GivenName = model.FirstName,

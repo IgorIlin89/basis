@@ -39,12 +39,17 @@ public class ProductController(IProductRepository _productRepository) : Controll
         return Ok(response);
     }
 
-    [Route("product")]
+    [Route("product/{id}")]
     [HttpGet]
-    public async Task<IActionResult> GetProductById([FromQuery]int id)
+    public async Task<IActionResult> GetProductById(int id)
     {
         var product = _productRepository.GetProductById(id);
-        //todo notfound
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
         var response = new ProductDto
         {
             ProductId = product.Id,

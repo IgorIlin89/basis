@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Web;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -14,7 +15,7 @@ public class HttpClientWrapper : IHttpClientWrapper
     private readonly string ApiUrl;
     private readonly string ApiHost;
     private readonly string ApiPort;
-    private readonly Uri _baseUri;
+    private readonly string _baseUri;
 
 
     public HttpClientWrapper(IOptions<HttpClientWrapperOptions> options)
@@ -23,115 +24,121 @@ public class HttpClientWrapper : IHttpClientWrapper
         ApiHost = options.Value.ApiHost;
         ApiPort = options.Value.ApiPort;
         _uriBuilder = new UriBuilder();
-        _baseUri = new Uri(options.Value.ApiScheme + ApiUrl);
-        //_uriBuilder = new UriBuilder(options.Value.ApiUrl);
-        //_uriBuilder.Scheme = "https";
-        //_uriBuilder.Host = options.Value.ApiHost;
-        //_uriBuilder.Port = Int32.Parse(options.Value.ApiPort);
-
-    }
-
-    public async Task<T> Get<T>(string methodName)
-    {
-        _uriBuilder.Path = methodName;
-        var response = await _httpClient.GetAsync(_uriBuilder.Uri);
-        var content = await response.Content.ReadAsStringAsync();
-
-        return JsonSerializer.Deserialize<T>(content);
-
+        _baseUri = options.Value.ApiUrl;
     }
 
     public async Task<T> Get<T>(string basePath, params string[] args)
     {
-        var relativeUri = "/" + basePath + "/";
-        var uriBuilder = new UriBuilder();
+        var list = new List<string>();
 
-        for (var i = 0; i < args.Length; i++)
-        {
-            relativeUri += args[i] + "/";
-        }
+        list.Add(basePath);
+        list.AddRange(args);
 
-        var uri = new Uri(_baseUri, relativeUri);
-        var uri2 = new Uri("https://localhost:7149/product/1");
-        var z = uri.Query;
-        var xy = uri.UserInfo;
-        var xzt = uri.Segments;
-        var gdfg = uri.ToString();
-        var y = uri.AbsoluteUri;
-        var x = uri.IsWellFormedOriginalString();
+        var relativeUri = string.Join("/", list.Select(o => o.Replace("/", "")));
+        var uri = new Uri(new Uri(_baseUri), relativeUri);
 
         var response = await _httpClient.GetAsync(uri);
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
-            // return // TODO Read content, write to log, throw custom exception
-
-
-            // beliebig viele varianten muessen unterstuetz werrden,
-
-            //wir schmeißen keine exceptions selbst
-            //ueberflussige "/" in den args werden entfernt
-            //Get<List<ProductDto>>("product", "////list"); muss abgefangen werden
-
-            // TODO CREATE A CUSTOM EXCEPTION
+            return default;
         }
 
-        var content = await response.Content.ReadFromJsonAsync<T>();
+        var options = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
+
+        //options maybe in program.cs? 
+
+        var content = await response.Content.ReadFromJsonAsync<T>(options);
 
         return content;
-
-        //input: _httpClientWrapper.Get<ProductDto>("product") output: https://localhost:500/product
-        //input: _httpClientWrapper.Get<ProductDto>("product", "list") output: https://localhost:500/product/list
-        //input: _httpClientWrapper.Get<ProductDto>("product", 1) output: https://localhost:500/product/1
-        //input: _httpClientWrapper.Get<ProductDto>("product",1,2,3) output: https://localhost:500/product/1/2/3
-        //input: _httpClientWrapper.Get<ProductDto>("product","email","igor@gmail") output: https://localhost:500/product/email/igor@gmail.com
-        //optional //input: _httpClientWrapper.Get<ProductDto>("product",1,2,3) output: https://localhost:500/product?id=1&&id2=2&&id3=3
-
-        //_uriBuilder.Query = args[0];
-        //var uri = c;
-        //var uriString = uri.ToString();
-        //var requestString = uriString.Replace("?", "/");///falschh
     }
 
-    public async Task<HttpStatusCode> Delete(string methodName, string id)
+    public async void Delete(string basePath, params string[] args)
     {
-        var response = await _httpClient.DeleteAsync(ApiUrl + "/" + methodName + id);
-        return response.StatusCode;
+        var list = new List<string>();
+
+
+        foreach (var element in args)
+        {
+            list.Add(basePath);
+            list.Add(element);
+
+            var relativeUri = string.Join("/", list.Select(o => o.Replace("/", "")));
+
+            var uri = new Uri(new Uri(_baseUri), relativeUri);
+
+            var response = await _httpClient.DeleteAsync(uri);
+
+            list.Clear();
+        }
     }
 
-    public async Task<T> Post<T>(string methodName, T body)
+    public async Task<T> Post<T>(string basePath, params Object[] args)
     {
-        var httpBody = new StringContent(
-                    JsonSerializer.Serialize(body),
+        var list = new List<string>();
+        StringContent httpBody = new StringContent("", Encoding.UTF8, Application.Json);
+        T body = default;
+
+        list.Add(basePath);
+
+        foreach (var element in args)
+        {
+            if (element.GetType() == typeof(string))
+            {
+                list.Add(element.ToString());
+            }
+            else if (element.GetType() == typeof(T))
+            {
+                httpBody = new StringContent(
+                    JsonSerializer.Serialize(element),
                     Encoding.UTF8,
                     Application.Json);
 
-        var response = await _httpClient.PostAsync(ApiUrl + "/" + methodName, httpBody);
-        var content = await response.Content.ReadFromJsonAsync<T>();
-
-        if (content == null)
-        {
-            throw new NullReferenceException();
+                body = (T)element;
+            }
         }
 
-        return content;
+        var relativeUri = string.Join("/", list.Select(o => o.Replace("/", "")));
+        var uri = new Uri(new Uri(_baseUri), relativeUri);
+
+        var response = await _httpClient.PostAsync(uri, httpBody);
+
+        return body;
     }
 
-    public async Task<T> Put<T>(string methodName, T body)
+    public async Task<T> Put<T>(string basePath, params Object[] args)
     {
-        var httpBody = new StringContent(
-                    JsonSerializer.Serialize(body),
+        var list = new List<string>();
+        StringContent httpBody = new StringContent("", Encoding.UTF8, Application.Json);
+        T body = default;
+
+        list.Add(basePath);
+
+        foreach (var element in args)
+        {
+            if (element.GetType() == typeof(string))
+            {
+                list.Add(element.ToString());
+            }
+            else if (element.GetType() == typeof(T))
+            {
+                httpBody = new StringContent(
+                    JsonSerializer.Serialize(element),
                     Encoding.UTF8,
                     Application.Json);
 
-        var response = await _httpClient.PutAsync(ApiUrl + "/" + methodName, httpBody);
-        var content = await response.Content.ReadFromJsonAsync<T>();
-
-        if (content == null)
-        {
-            throw new NullReferenceException();
+                body = (T)element;
+            }
         }
 
-        return content;
+        var relativeUri = string.Join("/", list.Select(o => o.Replace("/", "")));
+        var uri = new Uri(new Uri(_baseUri), relativeUri);
+
+        var response = await _httpClient.PutAsync(uri, httpBody);
+
+        return body;
     }
 }

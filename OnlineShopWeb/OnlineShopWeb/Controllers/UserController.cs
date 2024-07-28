@@ -4,19 +4,23 @@ using OnlineShopWeb.Dtos;
 using System.Text;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
+using OnlineShopWeb.Misc;
 
 namespace OnlineShopWeb.Controllers;
 public class UserController : Controller
 {
     private readonly HttpClient _httpClient = new HttpClient();
+    public IHttpClientWrapper _httpClientWrapper;
     private readonly string _connectionString;
     private readonly string _connectToGetUserList;
     private readonly string _connectToDeleteUser;
     private readonly string _connectToGetUserById;
     private readonly string _connectToUpdateUser;
 
-    public UserController(IConfiguration configuration)
+    public UserController(IConfiguration configuration
+        , IHttpClientWrapper clientWrapper)
     {
+        _httpClientWrapper = clientWrapper;
         _connectionString = configuration.GetConnectionString("ApiClientOptions");
         _connectToGetUserList = configuration.GetConnectionString("ApiUserControllerGetUserList");
         _connectToDeleteUser = configuration.GetConnectionString("ApiUserControllerDeleteUser");
@@ -27,10 +31,7 @@ public class UserController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var request = await _httpClient.GetAsync(_connectionString + _connectToGetUserList);
-        var response = await request.Content.ReadAsStringAsync();
-
-        var userDtoList = JsonSerializer.Deserialize<List<UserDto>>(response);
+        var userDtoList = await _httpClientWrapper.Get<List<UserDto>>("user", "list");
 
         var model = new UserListModel();
 
@@ -58,23 +59,15 @@ public class UserController : Controller
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
-        //var httpBody = new StringContent(
-        //            JsonSerializer.Serialize(id),
-        //            Encoding.UTF8,
-        //            Application.Json);
+        _httpClientWrapper.Delete("user", id.ToString());
 
-        var request = await _httpClient.GetAsync(_connectionString + _connectToDeleteUser + id); 
         return RedirectToAction("Index", "User");
     }
 
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
-
-        var request = await _httpClient.GetAsync(_connectionString + _connectToGetUserById + id);
-        var response = await request.Content.ReadAsStringAsync();
-
-        var userDto = JsonSerializer.Deserialize<UserDto>(response);
+        var userDto = await _httpClientWrapper.Get<UserDto>("user", id.ToString());
 
         var model = new UserModel
         {
@@ -100,10 +93,7 @@ public class UserController : Controller
 
         if (HttpContext.User.Identity.Name is not null)
         {
-            var request = await _httpClient.GetAsync(_connectionString + _connectToGetUserById + id);
-            var response = await request.Content.ReadAsStringAsync();
-
-            var userDto = JsonSerializer.Deserialize<UserDto>(response);
+            var userDto = await _httpClientWrapper.Get<UserDto>("user", id.ToString());
 
             model.UserId = userDto.UserId;
             model.EMail = userDto.EMail.Trim();
@@ -140,12 +130,7 @@ public class UserController : Controller
                 PostalCode = model.PostalCode
             };
 
-            var httpBody = new StringContent(
-                    JsonSerializer.Serialize(userToUpdate),
-                    Encoding.UTF8,
-                    Application.Json);
-
-            _httpClient.PostAsync(_connectionString + _connectToUpdateUser, httpBody);
+            var request = _httpClientWrapper.Put<UserDto>("user", userToUpdate);
 
             return RedirectToAction("Index", "User");
         }

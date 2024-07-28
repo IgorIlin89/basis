@@ -42,7 +42,7 @@ public class UserController(IUserRepository _userRepositry) : ControllerBase
         return Ok(response);
     }
 
-    [Route("user{id}")]
+    [Route("user/{id}")]
     [HttpGet]
     public async Task<ActionResult> GetUserById(int id)
     {
@@ -71,11 +71,11 @@ public class UserController(IUserRepository _userRepositry) : ControllerBase
         return Ok(response);
     }
 
-    [Route("userbyemail")]
-    [HttpPost]
-    public async Task<ActionResult> GetUserByEmail([FromBody] LoginDto loginDto)
+    [Route("user/email/{email}")]
+    [HttpGet]
+    public async Task<ActionResult> GetUserByEmail(string email)
     {
-        var user = _userRepositry.GetUserByEMail(loginDto.EMail);
+        var user = _userRepositry.GetUserByEMail(email);
 
         if(user == null)
         {
@@ -100,8 +100,8 @@ public class UserController(IUserRepository _userRepositry) : ControllerBase
         return Ok(response);
     }
 
-    [Route("userupdate")]
-    [HttpPost]
+    [Route("user")]
+    [HttpPut]
     public async Task<ActionResult> UpdateUser([FromBody] UserDto userDto)
     {
         var user = new User
@@ -124,15 +124,15 @@ public class UserController(IUserRepository _userRepositry) : ControllerBase
         return Ok();
     }
 
-    [Route("deleteuser{id}")]
-    [HttpGet]
+    [Route("user/{id}")]
+    [HttpDelete]
     public async Task<ActionResult> DeleteUser(int id)
     {
         _userRepositry.Delete(id);
         return Ok();
     }
 
-    [Route("useradd")]
+    [Route("user")]
     [HttpPost]
     public async Task<ActionResult> AddUser([FromBody] UserDto userDto)
     {
@@ -155,7 +155,7 @@ public class UserController(IUserRepository _userRepositry) : ControllerBase
         return Ok();
     }
 
-    [Route("userchangepassword")]
+    [Route("user/changepassword")]
     [HttpPost]
     public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
     {

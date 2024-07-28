@@ -39,9 +39,9 @@ public class CouponController(ICouponRepository _couponRepository) : ControllerB
         return Ok(response);
     }
 
-    [Route("couponbyid{id}")]
+    [Route("coupon/{id}")]
     [HttpGet]
-    public async Task<ActionResult> GetCouponById(int id)
+    public async Task<IActionResult> GetCouponById(int id)
     {
         var coupon = _couponRepository.GetCouponById(id);
 
@@ -64,16 +64,16 @@ public class CouponController(ICouponRepository _couponRepository) : ControllerB
         return Ok(response);
     }
 
-    [Route("coupondelete{id}")]
-    [HttpGet]
+    [Route("coupon/{id}")]
+    [HttpDelete]
     public async Task<ActionResult> DeleteCoupon(int id)
     {
         _couponRepository.DeleteCoupon(id);
         return Ok();
     }
 
-    [Route("couponedit")]
-    [HttpPost]
+    [Route("coupon")]
+    [HttpPut]
     public async Task<ActionResult> EditCoupon([FromBody] CouponDto couponDto)
     {
         var couponToEdit = new Coupon
@@ -92,7 +92,7 @@ public class CouponController(ICouponRepository _couponRepository) : ControllerB
         return Ok();
     }
 
-    [Route("couponadd")]
+    [Route("coupon")]
     [HttpPost]
     public async Task<ActionResult> AddCoupon([FromBody] CouponDto couponDto)
     {
@@ -112,7 +112,7 @@ public class CouponController(ICouponRepository _couponRepository) : ControllerB
         return Ok();
     }
 
-    [Route("coupongetbycode{code}")]
+    [Route("coupon/code/{code}")]
     [HttpGet]
     public async Task<ActionResult> GetCouponByCode(string code)
     {

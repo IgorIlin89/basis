@@ -5,21 +5,21 @@ using OnlineShopWeb.Dtos;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text.Json;
 using System.Text;
+using OnlineShopWeb.Misc;
 
 namespace OnlineShopWeb.Controllers;
 
 public class PasswordController : Controller
 {
+    public IHttpClientWrapper _httpClientWrapper;
     private readonly HttpClient _httpClient = new HttpClient();
     private readonly string _connectionString;
     private readonly string _connectToChangePassword;
     private readonly string _connectToGetUserById;
 
-    public PasswordController(IConfiguration configuration)
+    public PasswordController(IHttpClientWrapper clientWrapper)
     {
-        _connectionString = configuration.GetConnectionString("ApiClientOptions");
-        _connectToChangePassword = configuration.GetConnectionString("ApiUserControllerChangePassword");
-        _connectToGetUserById = configuration.GetConnectionString("ApiUserControllerGetUserById");
+        _httpClientWrapper = clientWrapper;
     }
 
     [HttpGet]
@@ -38,10 +38,7 @@ public class PasswordController : Controller
     {
         if (ModelState.IsValid)
         {
-            var requestUser = await _httpClient.GetAsync(_connectionString + _connectToGetUserById + model.UserId);
-            var responseUser = await requestUser.Content.ReadAsStringAsync();
-
-            var userDto = JsonSerializer.Deserialize<UserDto>(responseUser);
+            var userDto = await _httpClientWrapper.Get<UserDto>("user", model.UserId.ToString());
 
             if (model.OldPassword == userDto.Password && model.Password == model.RepeatPassword)
             {
@@ -51,13 +48,8 @@ public class PasswordController : Controller
                     Password = model.Password
                 };
 
-                var httpBody = new StringContent(
-                    JsonSerializer.Serialize(changePasswordDto),
-                    Encoding.UTF8,
-                    Application.Json
-                    );
+                var request = await _httpClientWrapper.Post<ChangePasswordDto>("user", "changepassword", changePasswordDto);
 
-                var request = _httpClient.PostAsync(_connectionString + _connectToChangePassword, httpBody);
                 return RedirectToAction("Index", "Product");
             }
             else

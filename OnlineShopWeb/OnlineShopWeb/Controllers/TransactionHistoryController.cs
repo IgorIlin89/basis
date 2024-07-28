@@ -4,20 +4,20 @@ using OnlineShopWeb.Models;
 using OnlineShopWeb.Dtos;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using OnlineShopWeb.Misc;
 
 namespace OnlineShopWeb.Controllers;
 
 public class TransactionHistoryController : Controller
 {
+    public IHttpClientWrapper _httpClientWrapper;
     private readonly HttpClient _httpClient = new HttpClient();
     private readonly string _connectionString;
     private readonly string _connectToGetTransactionHistoryList;
 
-    public TransactionHistoryController(IConfiguration configuration)
+    public TransactionHistoryController(IHttpClientWrapper clientWrapper)
     {
-        _connectionString = configuration.GetConnectionString("ApiClientOptions");
-        _connectToGetTransactionHistoryList = configuration.
-            GetConnectionString("ApiTransactionHistoryControllerGetTransactionHistoryList");
+        _httpClientWrapper = clientWrapper;
     }
 
     [HttpGet]
@@ -25,17 +25,8 @@ public class TransactionHistoryController : Controller
     {
         var model = new TransactionHistoryListModel();
 
-        var request = await _httpClient.GetAsync(_connectionString + _connectToGetTransactionHistoryList
-            + Int32.Parse(HttpContext.User.Identity.Name));
-
-        var response = await request.Content.ReadAsStringAsync();
-
-        var options = new JsonSerializerOptions
-        {
-            ReferenceHandler = ReferenceHandler.Preserve
-        };
-
-        var transactionHistoryDtoList = JsonSerializer.Deserialize<List<TransactionHistoryObjectsDto>>(response, options);
+        var transactionHistoryDtoList = await _httpClientWrapper.Get<List<TransactionHistoryObjectsDto>>("transactionhistory"
+            , "list", HttpContext.User.Identity.Name);
 
         var transactionHistoryList = new List<TransactionHistory>();
 

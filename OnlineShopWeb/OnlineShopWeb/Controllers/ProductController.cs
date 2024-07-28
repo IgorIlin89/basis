@@ -13,8 +13,7 @@ public class ProductController : Controller
 {
     public IHttpClientWrapper _httpClientWrapper;
 
-    public ProductController(IConfiguration configuration
-        , IHttpClientWrapper clientWrapper)
+    public ProductController(IHttpClientWrapper clientWrapper)
     {
         _httpClientWrapper = clientWrapper;
     }
@@ -23,19 +22,8 @@ public class ProductController : Controller
     public async Task<ActionResult> Index()
     {
         var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "list");
-        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "213list");
-        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
-        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
-        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
-        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
-        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
-        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
-        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
-        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
-        //var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "////list");
 
         var model = new ProductListModel();
-
 
         foreach (var productDto in productDtoList)
         {
@@ -118,7 +106,7 @@ public class ProductController : Controller
                     Price = model.Price
                 };
 
-                _httpClientWrapper.Put("product", productToEdit);
+                _httpClientWrapper.Put<ProductDto>("product", productToEdit);
             }
             else
             {

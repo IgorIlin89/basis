@@ -13,7 +13,7 @@ public class TransactionHistoryController(ITransactionHistoryRepository _transac
     , ICouponRepository _couponRepository
     , IProductRepository _productRepository) : ControllerBase
 {
-    [Route("transactionhistorylist{id}")]
+    [Route("transactionhistory/list/{id}")]
     [HttpGet]
     public async Task<ActionResult> GetTransactionHistoryList(int id)
     {
@@ -42,7 +42,7 @@ public class TransactionHistoryController(ITransactionHistoryRepository _transac
         return Ok(response);
     }
 
-    [Route("buyshoppingcartitems")]
+    [Route("transactionhistory")]
     [HttpPost]
     public async Task<ActionResult> BuyShoppingCartItems([FromBody] TransactionHistoryDto transactionHistoryDto)
     {
