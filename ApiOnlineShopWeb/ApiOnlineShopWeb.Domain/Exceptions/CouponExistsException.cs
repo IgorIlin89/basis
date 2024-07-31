@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace ApiOnlineShopWeb.Domain.Exceptions;
 
-public class UserExistsException : Exception
+public class CouponExistsException : Exception
 {
     int StatusCode { get; set; }
-    public UserExistsException(string message)
+    public CouponExistsException(string message)
         : base(message)
     {
 
     }
 
-    public UserExistsException(string message, Exception exception)
-    : base(message, exception)
+    public CouponExistsException(string message, Exception exception)
+        : base(message, exception)
     {
 
     }

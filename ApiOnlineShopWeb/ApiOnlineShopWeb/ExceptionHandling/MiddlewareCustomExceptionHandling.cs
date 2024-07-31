@@ -1,6 +1,7 @@
 ﻿using ApiOnlineShopWeb.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using ApiOnlineShopWeb.Dtos;
 
 namespace ApiOnlineShopWeb.ExceptionHandling;
 
@@ -27,10 +28,13 @@ public class MiddlewareCustomExceptionHandling
             //TODO send to client ErrorCode and ErrorMessage as an object
             // errorDto, int code, string message
             // object result
-            var actionResult = new ObjectResult(userExistsException.Message)
+            var actionResult = new ObjectResult(new ErrorDto()
             {
-                StatusCode = (int)HttpStatusCode.BadRequest
-            };
+                StatusCode = userExistsException,
+                Message = userExistsException.Message
+            });
+
+            actionResult.StatusCode = (int)HttpStatusCode.BadRequest;
 
             await actionResult.ExecuteResultAsync(new ActionContext
             {
