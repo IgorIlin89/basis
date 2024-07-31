@@ -25,6 +25,8 @@ public class MiddlewareCustomExceptionHandling
         {
             context.Response.Clear();
             //TODO send to client ErrorCode and ErrorMessage as an object
+            // errorDto, int code, string message
+            // object result
             var actionResult = new ObjectResult(userExistsException.Message)
             {
                 StatusCode = (int)HttpStatusCode.BadRequest
@@ -36,8 +38,11 @@ public class MiddlewareCustomExceptionHandling
             });
 
             _logger.LogWarning(userExistsException.Message);
+
+            // var response = new UserExistsExceptionDto (userExistsException.ErrorCode, userExistsException.Message)
+            // _next(response)
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             // TODO LOGGING later
 

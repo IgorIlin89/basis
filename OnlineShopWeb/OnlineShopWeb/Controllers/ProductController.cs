@@ -106,7 +106,7 @@ public class ProductController : Controller
                     Price = model.Price
                 };
 
-                _httpClientWrapper.Put<ProductDto>("product", productToEdit);
+                _httpClientWrapper.Put<ProductDto, ProductDto>("product", productToEdit);
             }
             else
             {

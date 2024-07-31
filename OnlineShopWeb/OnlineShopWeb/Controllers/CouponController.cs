@@ -127,7 +127,7 @@ public class CouponController : Controller
                     EndDate = model.EndDate,
                 };
 
-                _httpClientWrapper.Put<CouponDto>("coupon", couponToEdit);
+                _httpClientWrapper.Put<CouponDto, CouponDto>("coupon", couponToEdit);
 
             }
             else

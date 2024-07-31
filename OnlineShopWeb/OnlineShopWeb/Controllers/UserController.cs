@@ -130,7 +130,7 @@ public class UserController : Controller
                 PostalCode = model.PostalCode
             };
 
-            var request = _httpClientWrapper.Put<UserDto>("user", userToUpdate);
+            var request = _httpClientWrapper.Put<UserDto, UserDto>("user", userToUpdate);
 
             return RedirectToAction("Index", "User");
         }

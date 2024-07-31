@@ -7,13 +7,14 @@ namespace OnlineShopWeb.Misc;
 
 public class MiddlewareCustomExceptionHandling
 {
-    [TempData]
-    public string ExceptionFromMiddleware { get; set; }
     private readonly RequestDelegate _next;
+    private readonly ILogger<MiddlewareCustomExceptionHandling> _logger;
 
-    public MiddlewareCustomExceptionHandling(RequestDelegate next)
+    public MiddlewareCustomExceptionHandling(RequestDelegate next
+        , ILogger<MiddlewareCustomExceptionHandling> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -22,12 +23,13 @@ public class MiddlewareCustomExceptionHandling
         {
             await _next(context);
         }
-        catch(DomainException domainException)
+        catch (DomainException domainException)
         {
-
+            _logger.LogWarning(domainException.Message);
         }
         catch (Exception exception)
         {
+            _logger.LogWarning(exception.Message);
             //ExceptionFromMiddleware = exception.InnerException.ToString();
             //context.Session.SetString("ExceptionFromMiddleware", exception.Message);
             //context.Response.Redirect("unexpectederror");

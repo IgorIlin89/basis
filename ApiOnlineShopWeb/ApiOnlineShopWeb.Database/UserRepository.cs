@@ -44,6 +44,13 @@ internal class UserRepository : IUserRepository
     {
         var userToUpdate = _context.User.FirstOrDefault(o => o.Id == user.Id);
 
+        if (userToUpdate is null)
+        {
+            throw new NotFoundException($"User with the Id {user.Id} could not be found and updated");
+        }
+
+        if (userToUpdate is null)
+
         userToUpdate.EMail = user.EMail;
         userToUpdate.GivenName = user.GivenName;
         userToUpdate.Surname = user.Surname;
@@ -88,6 +95,12 @@ internal class UserRepository : IUserRepository
     public void ChangePassword(int userId, string password)
     {
         var user = GetUserById(userId);
+
+        if (user is null)
+        {
+            throw new NotFoundException($"Password of user {userId} could not be changed. User not found");
+        }
+
         user.Password = password;
         _context.SaveChanges();
     }
