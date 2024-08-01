@@ -8,7 +8,6 @@ namespace ApiOnlineShopWeb.Domain.Exceptions;
 
 public class UserExistsException : Exception
 {
-    int StatusCode { get; set; }
     public UserExistsException(string message)
         : base(message)
     {

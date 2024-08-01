@@ -1,7 +1,7 @@
 ﻿namespace OnlineShopWeb.Dtos;
 
-public class ErrorDto : Exception
+public class ErrorDto
 {
-    public int? StatusCode { get; set; }
+    public ErrorStatusCodeDto StatusCode { get; set; }
     public string? Message { get; set; }
 }

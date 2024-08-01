@@ -8,7 +8,6 @@ namespace ApiOnlineShopWeb.Domain.Exceptions;
 
 public class CouponExistsException : Exception
 {
-    int StatusCode { get; set; }
     public CouponExistsException(string message)
         : base(message)
     {

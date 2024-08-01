@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using OnlineShopWeb.Domain.Exceptions;
+using OnlineShopWeb.Dtos;
 using System.Net;
 using System.Text.Json;
 
@@ -25,16 +27,16 @@ public class MiddlewareCustomExceptionHandling
         }
         catch (DomainException domainException)
         {
+            // TODO redirect to a site with error message 
             _logger.LogWarning(domainException.Message);
+        }
+        catch (ApiException apiException)
+        {
+            _logger.LogWarning(apiException.Message);
         }
         catch (Exception exception)
         {
             _logger.LogWarning(exception.Message);
-            //ExceptionFromMiddleware = exception.InnerException.ToString();
-            //context.Session.SetString("ExceptionFromMiddleware", exception.Message);
-            //context.Response.Redirect("unexpectederror");
-            // TODO LOGGING later
-            //Results.BadRequest();
         }
     }
 

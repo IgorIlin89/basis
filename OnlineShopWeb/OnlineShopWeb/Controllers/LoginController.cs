@@ -123,6 +123,7 @@ public class LoginController : Controller
                 };
 
                 var response = await _httpClientWrapper.Post<UserDto, UserDto>("user", userToAdd);
+
                 var userToLogin = new User
                 {
                     Id = response.UserId.Value,

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using OnlineShopWeb.Domain.Exceptions;
+using OnlineShopWeb.Dtos;
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -101,9 +103,12 @@ public class HttpClientWrapper : IHttpClientWrapper
         if (response.StatusCode == HttpStatusCode.BadRequest)
         {
             var errorResponse = await response.Content.ReadAsStringAsync();
-            throw new ApiException(errorResponse);
+            var errorDto = JsonSerializer.Deserialize<ErrorDto>(errorResponse);
+
+            throw new ApiException($"Exception in '{uri}'. Statuscode: '{response.StatusCode}'." +
+                $" Response: '{errorDto.Message}' ExceptionType: '{errorDto.StatusCode}'");
         }
-        else if(!response.IsSuccessStatusCode)
+        else if (!response.IsSuccessStatusCode)
         {
             await CreateDomainExceptionFromErrorResponse(uri, response);
         }
@@ -113,7 +118,10 @@ public class HttpClientWrapper : IHttpClientWrapper
 
     private async Task CreateDomainExceptionFromErrorResponse(Uri uri, HttpResponseMessage response)
     {
-        var errorResponse = await response.Content.ReadAsStringAsync();
-        throw new DomainException($"Exception in '{uri}'. Statuscode: '{response.StatusCode}'. Response: '{errorResponse}'");
+        //var errorResponse = await response.Content.ReadAsStringAsync();
+        var errorDto = JsonSerializer.Deserialize<ErrorDto>(await response.Content.ReadAsStringAsync());
+
+        throw new DomainException($"Exception in '{uri}'. Statuscode: '{response.StatusCode}'." +
+            $" Response: '{errorDto.Message}' ExceptionType: '{errorDto.StatusCode}'");
     }
 }

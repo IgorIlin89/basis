@@ -25,12 +25,10 @@ public class MiddlewareCustomExceptionHandling
         catch(UserExistsException userExistsException)
         {
             context.Response.Clear();
-            //TODO send to client ErrorCode and ErrorMessage as an object
-            // errorDto, int code, string message
-            // object result
+
             var actionResult = new ObjectResult(new ErrorDto()
             {
-                StatusCode = userExistsException,
+                StatusCode = ErrorStatusCodeDto.UserExists,
                 Message = userExistsException.Message
             });
 
@@ -42,17 +40,43 @@ public class MiddlewareCustomExceptionHandling
             });
 
             _logger.LogWarning(userExistsException.Message);
+        }
+        catch (CouponExistsException couponExistsException)
+        {
+            context.Response.Clear();
 
-            // var response = new UserExistsExceptionDto (userExistsException.ErrorCode, userExistsException.Message)
-            // _next(response)
+            var actionResult = new ObjectResult(new ErrorDto()
+            {
+                StatusCode = ErrorStatusCodeDto.CouponExists,
+                Message = couponExistsException.Message
+            });
+
+            actionResult.StatusCode = (int)HttpStatusCode.BadRequest;
+
+            await actionResult.ExecuteResultAsync(new ActionContext
+            {
+                HttpContext = context
+            });
+
+            _logger.LogWarning(couponExistsException.Message);
         }
         catch (Exception exception)
         {
-            // TODO LOGGING later
+            var actionResult = new ObjectResult(new ErrorDto()
+            {
+                StatusCode = ErrorStatusCodeDto.DefaultException,
+                Message = exception.Message
+            });
 
-            //context.Response.Redirect("/UnexpectedError"); // this is controller name unexpected error
+            actionResult.StatusCode = (int)HttpStatusCode.BadRequest;
+
+            await actionResult.ExecuteResultAsync(new ActionContext
+            {
+                HttpContext = context
+            });
+
+            _logger.LogWarning(exception.Message);
         }
     }
-
     // TODO invoke without async implement, check with debugger
 }
