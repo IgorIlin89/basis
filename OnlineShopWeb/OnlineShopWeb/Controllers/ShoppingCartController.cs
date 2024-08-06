@@ -1,27 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Models;
 using System.Text.Json;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.ExtensionMethods;
-using OnlineShopWeb.Dtos;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 using OnlineShopWeb.Misc;
+using OnlineShopWeb.TransferObjects.Models;
+using OnlineShopWeb.TransferObjects.Dtos;
+using OnlineShopWeb.TransferObjects.Models.ListModels;
+using OnlineShopWeb.Adapters.Interfaces;
 
 namespace OnlineShopWeb.Controllers;
 
 public class ShoppingCartController : Controller
 {
-    public IHttpClientWrapper _httpClientWrapper;
-    private readonly HttpClient _httpClient = new HttpClient();
-    private readonly string _connectionString;
-    public readonly string _connectToGetCouponByCode;
-    private readonly string _connectToGetUserById;
-    private readonly string _connectToBuyShoppingCartItems;
+    private readonly IHttpClientWrapper _httpClientWrapper;
+    private readonly IUserAdapter _userAdapter;
+    private readonly IProductCouponAdapter _productCouponAdapter;
+    private readonly ITransactionHistoryAdapter _transactionHistoryAdapter;
 
-    public ShoppingCartController(IHttpClientWrapper clientWrapper)
+    public ShoppingCartController(IHttpClientWrapper clientWrapper,
+        IUserAdapter userAdapter, IProductCouponAdapter productCouponAdapter,
+        ITransactionHistoryAdapter transactionHistoryAdapter)
     {
         _httpClientWrapper = clientWrapper;
+        _userAdapter = userAdapter;
+        _productCouponAdapter = productCouponAdapter;
+        _transactionHistoryAdapter = transactionHistoryAdapter;
     }
 
     [HttpGet]
@@ -90,7 +95,7 @@ public class ShoppingCartController : Controller
     [HttpPost]
     public async Task<ActionResult> AddCoupon([FromBody] string couponCode)
     {
-        var couponDto = await _httpClientWrapper.Get<CouponDto>("coupon", "code", couponCode);
+        var couponDto = await _productCouponAdapter.GetCouponByCode(couponCode);
 
         if (couponDto == null)
         {
@@ -174,9 +179,7 @@ public class ShoppingCartController : Controller
                     Encoding.UTF8,
                     Application.Json);
 
-            //var requestToBuyItems = _httpClient.PostAsync(_connectionString + _connectToBuyShoppingCartItems, httpBody);
-            var requestToBuyItems = _httpClientWrapper.Post<TransactionHistoryDto, TransactionHistoryDto>("transactionhistory", transactionHistoryDto);
-
+            await _transactionHistoryAdapter.AddTransactionHistory(transactionHistoryDto);
 
             HttpContext.AppendShoppingCart(new ShoppingCartListModel());
 

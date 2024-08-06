@@ -1,42 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Domain;
-using OnlineShopWeb.Models;
-using System.Text.Json;
-using System.Text;
-using OnlineShopWeb.Dtos;
-using static System.Net.Mime.MediaTypeNames;
 using OnlineShopWeb.Misc;
+using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.TransferObjects.Models;
+using OnlineShopWeb.TransferObjects.Models.ListModels;
+using OnlineShopWeb.TransferObjects.Dtos;
+using OnlineShopWeb.TransferObjects.Mapping;
 
 namespace OnlineShopWeb.Controllers;
 
 public class ProductController : Controller
 {
-    public IHttpClientWrapper _httpClientWrapper;
+    private readonly IProductCouponAdapter _productCouponAdapter;
 
-    public ProductController(IHttpClientWrapper clientWrapper)
+    public ProductController(IProductCouponAdapter productCouponAdapter)
     {
-        _httpClientWrapper = clientWrapper;
+        _productCouponAdapter = productCouponAdapter;
     }
 
     [HttpGet]
     public async Task<ActionResult> Index()
     {
-        var productDtoList = await _httpClientWrapper.Get<List<ProductDto>>("product", "list");
+        var productDtoList = await _productCouponAdapter.GetProductList();
 
         var model = new ProductListModel();
 
-        foreach (var productDto in productDtoList)
+        foreach (var element in productDtoList)
         {
-            model.ProductModelList.Add(
-                new ProductModel
-                {
-                    ProductId = productDto.ProductId,
-                    Name = productDto.Name,
-                    Producer = productDto.Producer,
-                    Category = productDto.Category,
-                    Picture = productDto.Picture,
-                    Price = productDto.Price
-                });
+            model.ProductModelList.Add(element.MapToModel());
         }
 
         return View(model);
@@ -45,7 +35,7 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<ActionResult> Delete(int id)
     {
-        _httpClientWrapper.Delete("product", id.ToString());
+        _productCouponAdapter.ProductDelete(id.ToString());
 
         return RedirectToAction("Index", "Product");
     }
@@ -53,7 +43,7 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<ActionResult> Details(int id)
     {
-        var productDto = await _httpClientWrapper.Get<ProductDto>("product", id.ToString());
+        var productDto = await _productCouponAdapter.GetProductById(id.ToString());
 
         var model = new ProductModel
         {
@@ -75,7 +65,7 @@ public class ProductController : Controller
 
         if (id is not null)
         {
-            var productDto = await _httpClientWrapper.Get<ProductDto>("product", id.ToString());
+            var productDto = await _productCouponAdapter.GetProductById(id.ToString());
 
             model.ProductId = productDto.ProductId;
             model.Name = productDto.Name.Trim();
@@ -90,7 +80,7 @@ public class ProductController : Controller
 
 
     [HttpPost]
-    public IActionResult Update(ProductModel model)
+    public async Task<IActionResult> Update(ProductModel model)
     {
         if (ModelState.IsValid)
         {
@@ -106,7 +96,7 @@ public class ProductController : Controller
                     Price = model.Price
                 };
 
-                _httpClientWrapper.Put<ProductDto, ProductDto>("product", productToEdit);
+                await _productCouponAdapter.ProductUpdate(productToEdit);
             }
             else
             {
@@ -119,7 +109,7 @@ public class ProductController : Controller
                     Price = model.Price
                 };
 
-                var request = _httpClientWrapper.Post<ProductDto, ProductDto>("product", productToAdd);
+                await _productCouponAdapter.ProductAdd(productToAdd);
             }
 
             return RedirectToAction("Index", "Product");

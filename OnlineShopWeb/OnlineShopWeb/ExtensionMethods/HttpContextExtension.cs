@@ -1,4 +1,4 @@
-﻿using OnlineShopWeb.Models;
+﻿using OnlineShopWeb.TransferObjects.Models.ListModels;
 using System.Security.Claims;
 using System.Text.Json;
 

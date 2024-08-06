@@ -1,25 +1,22 @@
 ﻿using OnlineShopWeb.ExtensionMethods;
 using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Models;
-using OnlineShopWeb.Dtos;
+using OnlineShopWeb.TransferObjects.Dtos;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text.Json;
 using System.Text;
 using OnlineShopWeb.Misc;
+using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.TransferObjects.Models;
 
 namespace OnlineShopWeb.Controllers;
 
 public class PasswordController : Controller
 {
-    public IHttpClientWrapper _httpClientWrapper;
-    private readonly HttpClient _httpClient = new HttpClient();
-    private readonly string _connectionString;
-    private readonly string _connectToChangePassword;
-    private readonly string _connectToGetUserById;
+    private readonly IUserAdapter _userAdapter;
 
-    public PasswordController(IHttpClientWrapper clientWrapper)
+    public PasswordController(IUserAdapter userAdapter)
     {
-        _httpClientWrapper = clientWrapper;
+        _userAdapter = userAdapter;
     }
 
     [HttpGet]
@@ -38,7 +35,7 @@ public class PasswordController : Controller
     {
         if (ModelState.IsValid)
         {
-            var userDto = await _httpClientWrapper.Get<UserDto>("user", model.UserId.ToString());
+            var userDto = await _userAdapter.GetUserById(model.UserId.ToString());
 
             if (model.OldPassword == userDto.Password && model.Password == model.RepeatPassword)
             {
@@ -48,7 +45,7 @@ public class PasswordController : Controller
                     Password = model.Password
                 };
 
-                var request = await _httpClientWrapper.Post<ChangePasswordDto, ChangePasswordDto>("user", changePasswordDto, "changepassword");
+                var request = await _userAdapter.ChangeUserPassword(changePasswordDto);
 
                 return RedirectToAction("Index", "Product");
             }

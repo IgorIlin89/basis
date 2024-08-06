@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Domain;
-using OnlineShopWeb.Models;
-using OnlineShopWeb.Dtos;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using OnlineShopWeb.TransferObjects.Models;
+using OnlineShopWeb.TransferObjects.Models.ListModels;
 using OnlineShopWeb.Misc;
+using OnlineShopWeb.TransferObjects.Dtos;
 
 namespace OnlineShopWeb.Controllers;
 

@@ -25,19 +25,7 @@ public class UserController(IUserRepository _userRepository) : ControllerBase
 
         foreach (var element in userList)
         {
-            response.Add(new UserDto
-            {
-                UserId = element.Id,
-                EMail = element.EMail,
-                GivenName = element.GivenName,
-                Surname = element.Surname,
-                Age = element.Age,
-                Country = element.Country,
-                City = element.City,
-                Street = element.Street,
-                HouseNumber = element.HouseNumber,
-                PostalCode = element.PostalCode,
-            });
+            response.Add(element.MapToDto());
         }
 
         return Ok(response);

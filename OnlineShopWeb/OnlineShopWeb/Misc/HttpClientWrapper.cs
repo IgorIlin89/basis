@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using OnlineShopWeb.Domain.Exceptions;
-using OnlineShopWeb.Dtos;
+using OnlineShopWeb.TransferObjects.Dtos;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
@@ -13,16 +13,10 @@ namespace OnlineShopWeb.Misc;
 public class HttpClientWrapper : IHttpClientWrapper
 {
     private readonly HttpClient _httpClient = new HttpClient();
-    private readonly string _baseUri;
 
-    public HttpClientWrapper(IOptions<HttpClientWrapperOptions> options)
+    public async Task<T> Get<T>(string apiUrl, string basePath, params string[] args)
     {
-        _baseUri = options.Value.ApiUrl;
-    }
-
-    public async Task<T> Get<T>(string basePath, params string[] args)
-    {
-        Uri uri = CreateUri(basePath, args);
+        Uri uri = CreateUri(apiUrl, basePath, args);
 
         var response = await _httpClient.GetAsync(uri);
 
@@ -34,28 +28,16 @@ public class HttpClientWrapper : IHttpClientWrapper
         return await response.Content.ReadFromJsonAsync<T>();
     }
 
-    public async void Delete(string basePath, params string[] args)
+    public async void Delete(string apiUrl, string basePath, params string[] args)
     {
         var list = new List<string>();
-
-        foreach (var element in args)
-        {
-            list.Add(basePath);
-            list.Add(element);
-
-            var relativeUri = string.Join("/", list.Select(o => o.Replace("/", "")));
-
-            var uri = new Uri(new Uri(_baseUri), relativeUri);
-
-            var response = await _httpClient.DeleteAsync(uri);
-
-            list.Clear();
-        }
+        Uri uri = CreateUri(apiUrl, basePath, args);
+        var response = await _httpClient.DeleteAsync(uri);
     }
 
-    public async Task<TOut> Post<TIn, TOut>(string basePath, TIn postObject, params string[] args)
+    public async Task<TOut> Post<TIn, TOut>(string apiUrl, string basePath, TIn postObject, params string[] args)
     {
-        var uri = CreateUri(basePath, args);
+        var uri = CreateUri(apiUrl, basePath, args);
         var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Post);
 
         var result = await response.Content.ReadFromJsonAsync<TOut>();
@@ -64,23 +46,24 @@ public class HttpClientWrapper : IHttpClientWrapper
 
 
 
-    public async Task<TOut> Put<TIn, TOut>(string basePath, TIn postObject, params string[] args)
+    public async Task<TOut> Put<TIn, TOut>(string apiUrl, string basePath, TIn postObject, params string[] args)
     {
-        var uri = CreateUri(basePath, args);
+        var uri = CreateUri(apiUrl, basePath, args);
         var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Put);
 
         var result = await response.Content.ReadFromJsonAsync<TOut>();
         return result;
     }
-    private Uri CreateUri(string basePath, string[] args)
+    private Uri CreateUri(string apiUrl, string basePath, string[] args)
     {
         var list = new List<string>();
 
+        list.Add(apiUrl);
         list.Add(basePath);
         list.AddRange(args);
 
         var relativeUri = string.Join("/", list.Select(o => o.Replace("/", "")));
-        var uri = new Uri(new Uri(_baseUri), relativeUri);
+        var uri = new Uri(new Uri(apiUrl), relativeUri);
         return uri;
     }
 

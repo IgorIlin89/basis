@@ -1,26 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using OnlineShopWeb.Domain;
 using System.Text.Json;
-using OnlineShopWeb.Dtos;
+using OnlineShopWeb.TransferObjects.Dtos;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text;
 using System.Net;
 using OnlineShopWeb.Misc;
 using OnlineShopWeb.Domain.Exceptions;
+using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.TransferObjects.Models;
 
 namespace OnlineShopWeb.Controllers;
 
 public class LoginController : Controller
 {
-    IHttpClientWrapper _httpClientWrapper;
+    private readonly IUserAdapter _userAdapter;
 
-    public LoginController(IHttpClientWrapper clientWrapper)
+    public LoginController(IUserAdapter userAdapter)
     {
-        _httpClientWrapper = clientWrapper;
+        _userAdapter = userAdapter;
     }
 
     [HttpGet]
@@ -34,7 +35,7 @@ public class LoginController : Controller
     {
         if (ModelState.IsValid)
         {
-            var userDto = await _httpClientWrapper.Get<UserDto>("user", "email", model.EMail);
+            var userDto = await _userAdapter.GetUserByEmail(model.EMail);
 
             if (userDto is null)
             {
@@ -122,7 +123,7 @@ public class LoginController : Controller
                     PostalCode = model.PostalCode
                 };
 
-                var response = await _httpClientWrapper.Post<UserDto, UserDto>("user", userToAdd);
+                var response = await _userAdapter.UserAdd(userToAdd);
 
                 var userToLogin = new User
                 {

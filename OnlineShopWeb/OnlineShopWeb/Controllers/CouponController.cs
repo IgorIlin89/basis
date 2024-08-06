@@ -1,62 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Domain;
-using OnlineShopWeb.Models;
-using System.Text.Json;
-using OnlineShopWeb.Dtos;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 using OnlineShopWeb.Misc;
+using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.TransferObjects.Models;
+using OnlineShopWeb.TransferObjects.Models.ListModels;
+using OnlineShopWeb.TransferObjects.Dtos;
+using OnlineShopWeb.TransferObjects.Mapping;
 
 namespace OnlineShopWeb.Controllers;
-// mappint dto to model, and other way around
+// mapping dto to model, and other way around
 public class CouponController : Controller
 {
-    public IHttpClientWrapper _httpClientWrapper;
+    private readonly IProductCouponAdapter _productCouponAdapter;
 
-    public CouponController(IConfiguration configuration
-        , IHttpClientWrapper clientWrapper)
+    public CouponController(IProductCouponAdapter productCouponAdapter)
     {
-        _httpClientWrapper = clientWrapper;
+        _productCouponAdapter = productCouponAdapter;
     }
 
     [HttpGet]
     public async Task<ActionResult> Index()
     {
-
-        var couponDtoList = await _httpClientWrapper.Get<List<CouponDto>>("coupon", "list");
-
-        List<Coupon> couponList = new List<Coupon>();
-
-        foreach (var element in couponDtoList)
-        {
-            couponList.Add(new Coupon
-            {
-                Id = element.CouponId.Value,
-                Code = element.Code,
-                AmountOfDiscount = element.AmountOfDiscount,
-                TypeOfDiscount = element.TypeOfDiscount,
-                MaxNumberOfUses = element.MaxNumberOfUses,
-                StartDate = element.StartDate,
-                EndDate = element.EndDate
-            });
-        }
+        var couponDtoList = await _productCouponAdapter.GetCouponList();
 
         var model = new CouponListModel();
 
-        foreach (var coupon in couponList)
+        foreach (var element in couponDtoList)
         {
-            model.CouponModelList.Add(
-                new CouponModel
-                {
-                    CouponId = coupon.Id,
-                    Code = coupon.Code,
-                    AmountOfDiscount = coupon.AmountOfDiscount,
-                    TypeOfDiscount = coupon.TypeOfDiscount,
-                    MaxNumberOfUses = coupon.MaxNumberOfUses,
-                    StartDate = coupon.StartDate,
-                    EndDate = coupon.EndDate,
-                }
-            );
+            model.CouponModelList.Add(element.MapToModel());
         }
 
         return View(model);
@@ -65,14 +35,14 @@ public class CouponController : Controller
     [HttpGet]
     public IActionResult Delete(int id)
     {
-        _httpClientWrapper.Delete("coupon", id.ToString());
+        _productCouponAdapter.CouponDelete(id.ToString());
         return RedirectToAction("Index", "Coupon");
     }
 
     [HttpGet]
     public async Task<ActionResult> Details(int id)
     {
-        var couponDto = await _httpClientWrapper.Get<CouponDto>("coupon", id.ToString());
+        var couponDto = await _productCouponAdapter.GetCouponById(id.ToString());
 
         var model = new CouponModel
         {
@@ -95,7 +65,7 @@ public class CouponController : Controller
 
         if (id is not null)
         {
-            var couponDto = await _httpClientWrapper.Get<CouponDto>("coupon", id.ToString());
+            var couponDto = await _productCouponAdapter.GetCouponById(id.ToString());
 
             model.CouponId = couponDto.CouponId;
             model.Code = couponDto.Code;
@@ -127,8 +97,7 @@ public class CouponController : Controller
                     EndDate = model.EndDate,
                 };
 
-                _httpClientWrapper.Put<CouponDto, CouponDto>("coupon", couponToEdit);
-
+                await _productCouponAdapter.CouponUpdate(couponToEdit);
             }
             else
             {
@@ -142,7 +111,7 @@ public class CouponController : Controller
                     EndDate = model.EndDate,
                 };
 
-                var request = _httpClientWrapper.Post<CouponDto, CouponDto>("coupon", couponToAdd);
+                await _productCouponAdapter.CouponAdd(couponToAdd);
             }
 
             return RedirectToAction("Index", "Coupon");

@@ -1,38 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Models;
-using OnlineShopWeb.Dtos;
-using System.Text;
-using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
-using OnlineShopWeb.Misc;
+using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.TransferObjects.Models;
+using OnlineShopWeb.TransferObjects.Dtos;
+using OnlineShopWeb.TransferObjects.Models.ListModels;
 
 namespace OnlineShopWeb.Controllers;
 public class UserController : Controller
 {
-    private readonly HttpClient _httpClient = new HttpClient();
-    public IHttpClientWrapper _httpClientWrapper;
-    private readonly string _connectionString;
-    private readonly string _connectToGetUserList;
-    private readonly string _connectToDeleteUser;
-    private readonly string _connectToGetUserById;
-    private readonly string _connectToUpdateUser;
+    private readonly IUserAdapter _userAdapter;
 
-    public UserController(IConfiguration configuration
-        , IHttpClientWrapper clientWrapper)
+    public UserController(IUserAdapter userAdapter)
     {
-        _httpClientWrapper = clientWrapper;
-        _connectionString = configuration.GetConnectionString("ApiClientOptions");
-        _connectToGetUserList = configuration.GetConnectionString("ApiUserControllerGetUserList");
-        _connectToDeleteUser = configuration.GetConnectionString("ApiUserControllerDeleteUser");
-        _connectToGetUserById = configuration.GetConnectionString("ApiUserControllerGetUserById");
-        _connectToUpdateUser = configuration.GetConnectionString("ApiUserControllerUpdateUser");
+        _userAdapter = userAdapter;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var userDtoList = await _httpClientWrapper.Get<List<UserDto>>("user", "list");
-
+        var userDtoList = await _userAdapter.GetUserList();
         var model = new UserListModel();
 
         foreach (var userDto in userDtoList)
@@ -59,7 +44,7 @@ public class UserController : Controller
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
-        _httpClientWrapper.Delete("user", id.ToString());
+        _userAdapter.UserDelete(id.ToString());
 
         return RedirectToAction("Index", "User");
     }
@@ -67,7 +52,7 @@ public class UserController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
-        var userDto = await _httpClientWrapper.Get<UserDto>("user", id.ToString());
+        var userDto = await _userAdapter.GetUserById(id.ToString());
 
         var model = new UserModel
         {
@@ -93,7 +78,7 @@ public class UserController : Controller
 
         if (HttpContext.User.Identity.Name is not null)
         {
-            var userDto = await _httpClientWrapper.Get<UserDto>("user", id.ToString());
+            var userDto = await _userAdapter.GetUserById(id.ToString());
 
             model.UserId = userDto.UserId;
             model.EMail = userDto.EMail.Trim();
@@ -130,7 +115,7 @@ public class UserController : Controller
                 PostalCode = model.PostalCode
             };
 
-            var request = _httpClientWrapper.Put<UserDto, UserDto>("user", userToUpdate);
+            await _userAdapter.UserUpdate(userToUpdate);
 
             return RedirectToAction("Index", "User");
         }

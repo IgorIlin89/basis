@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Models;
+using OnlineShopWeb.TransferObjects.Models.ListModels;
 namespace OnlineShopWeb.ViewComponents;
 
 public class CouponTableViewComponent : ViewComponent

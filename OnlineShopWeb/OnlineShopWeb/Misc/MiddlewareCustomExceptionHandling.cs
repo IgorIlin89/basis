@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OnlineShopWeb.Domain.Exceptions;
-using OnlineShopWeb.Dtos;
+using OnlineShopWeb.TransferObjects.Dtos;
 using System.Net;
 using System.Text.Json;
 

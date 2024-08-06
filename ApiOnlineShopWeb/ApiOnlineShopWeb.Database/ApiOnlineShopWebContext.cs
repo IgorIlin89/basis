@@ -49,8 +49,6 @@ public class ApiOnlineShopWebContext : DbContext
             .Property(o => o.FinalPrice)
             .HasColumnType("decimal(10,2)");
 
-
-
         modelBuilder.Entity<User>()
             .HasData(new Domain.User
             {
