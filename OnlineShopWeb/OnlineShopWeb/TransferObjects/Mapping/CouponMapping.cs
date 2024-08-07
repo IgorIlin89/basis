@@ -9,26 +9,15 @@ public static class CouponMapping
 {
     public static CouponModel MapToModel(this CouponDto couponDto)
     {
-        var couponModel = new CouponModel();
-
-        // if (couponDto.CouponId == null || !couponDto.CouponId.HasValue) is that the same?
-
-        if (couponDto.MaxNumberOfUses is not null)
+        return new CouponModel
         {
-            couponModel.MaxNumberOfUses = couponDto.MaxNumberOfUses;
-        }
-
-        if (couponDto.CouponId is not null)
-        {
-            couponModel.CouponId = couponDto.CouponId;
-        }
-
-        couponModel.Code = couponDto.Code;
-        couponModel.AmountOfDiscount = couponDto.AmountOfDiscount;
-        couponModel.TypeOfDiscount = couponDto.TypeOfDiscount;
-        couponModel.StartDate = couponDto.StartDate;
-        couponModel.EndDate = couponDto.EndDate;
-
-        return couponModel;
+            CouponId = couponDto.CouponId,
+            Code = couponDto.Code,
+            AmountOfDiscount = couponDto.AmountOfDiscount,
+            TypeOfDiscount = couponDto.TypeOfDiscount,
+            MaxNumberOfUses = couponDto.MaxNumberOfUses,
+            StartDate = couponDto.StartDate,
+            EndDate = couponDto.EndDate,
+        };
     }
 }

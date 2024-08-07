@@ -1,19 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ApiUser.Database.Interfaces;
+using ApiUser.Domain;
+using ApiUser.Dtos;
+using ApiUser.Application.Handlers.Interfaces;
+using ApiUser.Application.Commands;
 namespace ApiUser.Controllers;
 
-public class UserController : ControllerBase
+public class UserController (IGetUserListCommandHandler getUserListCommandHandler,
+    IGetUserByEmailCommandHandler getUserByEmailCommandHandler) : ControllerBase
 {
     [Route("user/list")]
     [HttpGet]
     public async Task<IActionResult> GetUserList()
     {
-        //Create Dto here to return to ShopWeb
-        return Ok();
+        var userList = getUserListCommandHandler.Handle();
+
+        return Ok(userList.MapToDtoList());
     }
 
-    public async Task<IActionResult> AddUser()
+    [Route("user/email/{email}")]
+    [HttpGet]
+    public async Task<ActionResult> GetUserByEmail(string email)
     {
-        // you get dto here, convert to command 
-        return Ok();
+        var command = new GetUserByEmailCommand(email);
+
+        var user = getUserByEmailCommandHandler.Handle(command);
+
+        return Ok(user.MapToDto);
     }
 }

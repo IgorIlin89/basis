@@ -7,19 +7,15 @@ public static class ProductMapping
 {
     public static ProductModel MapToModel(this ProductDto productDto)
     {
-        var productModel = new ProductModel();
-
-        if (productDto.ProductId is not null)
+        return new ProductModel
         {
-            productModel.ProductId = productDto.ProductId;
-        }
-
-        productModel.Name = productDto.Name;
-        productModel.Producer = productDto.Producer;
-        productModel.Category = productDto.Category;
-        productModel.Picture = productDto.Picture;
-        productModel.Price = productDto.Price;
-
-        return productModel;
+            ProductId = productDto.ProductId,
+            Name = productDto.Name,
+            Producer = productDto.Producer,
+            Category = productDto.Category,
+            Picture = productDto.Picture,
+            Price = productDto.Price,
+        };
+        
     }
 }

@@ -1,22 +1,18 @@
 using ApiUser.Database;
+using ApiUser.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using System.Reflection;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddDatabase(builder.Configuration);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-//var registeredServices = builder.Services
-//            .Where(sd => sd.ServiceType.GetTypeInfo().IsInterface)
-//            .Select(sd => sd.ServiceType)
-//            .ToList();
+//builder.Services.AddApplication();
 
 var app = builder.Build();
 

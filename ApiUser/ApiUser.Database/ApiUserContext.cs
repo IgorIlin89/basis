@@ -3,7 +3,7 @@ using ApiUser.Domain;
 
 namespace ApiUser.Database;
 
-internal class ApiUserContext : DbContext
+public class ApiUserContext : DbContext
 {
     public ApiUserContext(DbContextOptions<ApiUserContext> options)
         : base(options)

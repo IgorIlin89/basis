@@ -36,7 +36,11 @@ public class MiddlewareCustomExceptionHandling
         }
         catch (Exception exception)
         {
+            
             _logger.LogWarning(exception.Message);
+            context.Response.Clear();
+            //context.Response.Redirect("/error/errorview");
+            await context.Response.SendFileAsync("/Views/Shared/DefaultErrorPage.cshtml");
         }
     }
 
