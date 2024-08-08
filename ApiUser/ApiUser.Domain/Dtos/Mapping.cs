@@ -1,5 +1,4 @@
-﻿using ApiUser.Domain;
-namespace ApiUser.Dtos;
+﻿namespace ApiUser.Domain.Dtos;
 
 public static class Mapping
 {
@@ -21,11 +20,34 @@ public static class Mapping
         };
     }
 
+    public static User MapToUser(this UserDto userDto)
+    {
+        var user = new User();
+
+        if (userDto.UserId is not null)
+        {
+            user.Id = userDto.UserId.Value;
+        }
+
+        user.EMail = userDto.EMail;
+        user.Password = userDto.Password;
+        user.GivenName = userDto.GivenName;
+        user.Surname = userDto.Surname;
+        user.Age = userDto.Age;
+        user.Country = userDto.Country;
+        user.City = userDto.City;
+        user.Street = userDto.Street;
+        user.HouseNumber = userDto.HouseNumber;
+        user.PostalCode = userDto.PostalCode;
+
+        return user;
+    }
+
     public static List<UserDto> MapToDtoList(this List<User> userList)
     {
         List<UserDto> response = new List<UserDto>();
 
-        foreach(var element in userList)
+        foreach (var element in userList)
         {
             response.Add(element.MapToDto());
         }
