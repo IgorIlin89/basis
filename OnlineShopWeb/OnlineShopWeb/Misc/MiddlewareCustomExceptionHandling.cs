@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using OnlineShopWeb.Domain.Exceptions;
-using OnlineShopWeb.TransferObjects.Dtos;
-using System.Net;
-using System.Text.Json;
+﻿using OnlineShopWeb.Domain.Exceptions;
 
 namespace OnlineShopWeb.Misc;
 
@@ -36,11 +31,10 @@ public class MiddlewareCustomExceptionHandling
         }
         catch (Exception exception)
         {
-            
+
             _logger.LogWarning(exception.Message);
             context.Response.Clear();
-            //context.Response.Redirect("/error/errorview");
-            await context.Response.SendFileAsync("/Views/Shared/DefaultErrorPage.cshtml");
+            context.Response.Redirect("/error");
         }
     }
 

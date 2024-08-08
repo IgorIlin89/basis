@@ -1,19 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Misc;
-using OnlineShopWeb.Adapters.Interfaces;
-using OnlineShopWeb.TransferObjects.Models;
-using OnlineShopWeb.TransferObjects.Models.ListModels;
-using OnlineShopWeb.TransferObjects.Dtos;
-using OnlineShopWeb.TransferObjects.Mapping;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OnlineShopWeb.Controllers;
 
 public class ErrorController : Controller
 {
     [HttpGet]
-    [Route("errorview")]
+    [AllowAnonymous]
     public IActionResult Index()
     {
-        return View("Views/Shared/DefaultErrorPage");
+        return View("~/Views/Shared/DefaultErrorPage.cshtml");
     }
 }

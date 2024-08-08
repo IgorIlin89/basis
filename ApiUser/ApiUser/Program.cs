@@ -1,7 +1,5 @@
-using ApiUser.Database;
 using ApiUser.Application;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using ApiUser.Database;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +10,7 @@ builder.Services.AddDatabase(builder.Configuration);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddApplication();
+builder.Services.AddApplication();
 
 var app = builder.Build();
 

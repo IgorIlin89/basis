@@ -1,17 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
-using OnlineShopWeb.Domain;
-using System.Text.Json;
-using OnlineShopWeb.TransferObjects.Dtos;
-using static System.Net.Mime.MediaTypeNames;
-using System.Text;
-using System.Net;
-using OnlineShopWeb.Misc;
-using OnlineShopWeb.Domain.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.Domain;
+using OnlineShopWeb.TransferObjects.Dtos;
 using OnlineShopWeb.TransferObjects.Models;
+using System.Security.Claims;
 
 namespace OnlineShopWeb.Controllers;
 

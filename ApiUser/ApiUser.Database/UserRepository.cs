@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ApiUser.Database.Interfaces;
+﻿using ApiUser.Database.Interfaces;
 using ApiUser.Domain;
 using ApiUser.Domain.Exceptions;
 
@@ -21,9 +16,6 @@ internal class UserRepository : IUserRepository
 
     public User AddUser(User user)
     {
-        //_context.Add(user);
-        //return user;
-
         var existingUser = _context.User.FirstOrDefault(o => o.EMail == user.EMail);
 
         if (existingUser is not null)
@@ -45,7 +37,7 @@ internal class UserRepository : IUserRepository
             Password = user.Password
         });
 
-        return user;
+        return response.Entity;
     }
 
     public User ChangePassword(int id, string password)

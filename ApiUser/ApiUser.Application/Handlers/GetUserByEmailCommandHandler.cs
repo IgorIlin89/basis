@@ -1,12 +1,7 @@
-﻿using ApiUser.Database.Interfaces;
-using ApiUser.Domain;
-using ApiUser.Application.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ApiUser.Application.Commands;
 using ApiUser.Application.Handlers.Interfaces;
+using ApiUser.Database.Interfaces;
+using ApiUser.Domain;
 
 namespace ApiUser.Application.Handlers;
 

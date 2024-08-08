@@ -1,11 +1,8 @@
-﻿using Microsoft.Extensions.Options;
-using OnlineShopWeb.Domain.Exceptions;
+﻿using OnlineShopWeb.Domain.Exceptions;
 using OnlineShopWeb.TransferObjects.Dtos;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace OnlineShopWeb.Misc;
@@ -58,7 +55,6 @@ public class HttpClientWrapper : IHttpClientWrapper
     {
         var list = new List<string>();
 
-        list.Add(apiUrl);
         list.Add(basePath);
         list.AddRange(args);
 

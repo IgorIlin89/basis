@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using ApiUser.Application.Handlers;
+﻿using ApiUser.Application.Handlers;
 using ApiUser.Application.Handlers.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ApiUser.Application;
 

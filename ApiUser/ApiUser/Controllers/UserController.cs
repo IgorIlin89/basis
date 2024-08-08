@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ApiUser.Database.Interfaces;
-using ApiUser.Domain;
-using ApiUser.Dtos;
+﻿using ApiUser.Application.Commands;
 using ApiUser.Application.Handlers.Interfaces;
-using ApiUser.Application.Commands;
+using ApiUser.Dtos;
+using Microsoft.AspNetCore.Mvc;
 namespace ApiUser.Controllers;
 
-public class UserController (IGetUserListCommandHandler getUserListCommandHandler,
+public class UserController(IGetUserListCommandHandler getUserListCommandHandler,
     IGetUserByEmailCommandHandler getUserByEmailCommandHandler) : ControllerBase
 {
     [Route("user/list")]
@@ -26,6 +24,6 @@ public class UserController (IGetUserListCommandHandler getUserListCommandHandle
 
         var user = getUserByEmailCommandHandler.Handle(command);
 
-        return Ok(user.MapToDto);
+        return Ok(user.MapToDto());
     }
 }
