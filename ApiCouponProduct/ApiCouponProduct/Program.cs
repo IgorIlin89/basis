@@ -1,5 +1,6 @@
-using ApiOnlineShopWeb.Database;
-using ApiOnlineShopWeb.ExceptionHandling;
+using ApiCouponProduct.Application;
+using ApiCouponProduct.Database;
+using ApiCouponProduct.Middlewares;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,27 +8,29 @@ var builder = WebApplication.CreateBuilder(args);
 try
 {
     var bootstrapLoggingConfiguration = new LoggerConfiguration()
-        .WriteTo.File("ApiOnlineShopWeb_Fatal.log");
+    .WriteTo.File("ApiCouponProduct_Fatal.log");
     Log.Logger = bootstrapLoggingConfiguration.CreateBootstrapLogger();
 
     // Add services to the container.
+
     builder.Services.AddControllers().
         AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-    });
+        {
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        });
 
     builder.Services.AddDatabase(builder.Configuration);
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+    builder.Services.AddApplication();
 
     var loggingConfiguration = new LoggerConfiguration()
-        .ReadFrom.Configuration(builder.Configuration)
-        .Enrich.FromLogContext()
-        .Enrich.WithProcessId()
-        .Enrich.WithProcessName()
-        .Enrich.WithMachineName();
+.ReadFrom.Configuration(builder.Configuration)
+.Enrich.FromLogContext()
+.Enrich.WithProcessId()
+.Enrich.WithProcessName()
+.Enrich.WithMachineName();
 
     var logger = loggingConfiguration.CreateLogger();
     builder.Host.UseSerilog(logger);
@@ -49,13 +52,12 @@ try
 
     app.MapControllers();
 
-    app.UseSerilogRequestLogging();
-
     app.Run();
+
 }
-catch (Exception ex)
+catch (Exception exception)
 {
-    Log.Fatal(ex, "Error during Start Api");
+    Log.Fatal(exception, "Error during start Api");
 }
 finally
 {

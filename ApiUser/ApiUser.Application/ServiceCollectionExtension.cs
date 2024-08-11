@@ -12,6 +12,9 @@ public static class ServiceCollectionExtension
             AddScoped<IGetUserListCommandHandler, GetUserListCommandHandler>().
             AddScoped<IGetUserByEmailCommandHandler, GetUserByEmailCommandHandler>().
             AddScoped<IGetUserByIdCommandHandler, GetUserByIdCommandHandler>().
-            AddScoped<IUpdateUserCommandHandler, UpdateUserCommandHandler>();
+            AddScoped<IUpdateUserCommandHandler, UpdateUserCommandHandler>().
+            AddScoped<IDeleteUserCommandHandler, DeleteUserCommandHandler>().
+            AddScoped<IAddUserCommandHandler, AddUserCommandHandler>().
+            AddScoped<IChangePasswordCommandHandler, ChangePasswordCommandHandler>();
     }
 }

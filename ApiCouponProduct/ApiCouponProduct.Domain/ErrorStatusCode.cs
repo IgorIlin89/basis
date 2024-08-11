@@ -1,6 +1,6 @@
-﻿namespace OnlineShopWeb.TransferObjects.Dtos;
+﻿namespace ApiCouponProduct.Domain;
 
-public enum ErrorStatusCodeDto
+public enum ErrorStatusCode
 {
     NotFound = 1,
     UserExists = 2,

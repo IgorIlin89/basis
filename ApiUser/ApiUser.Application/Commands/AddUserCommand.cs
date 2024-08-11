@@ -1,5 +1,13 @@
-﻿namespace ApiUser.Application.Commands;
+﻿using ApiUser.Domain;
+using ApiUser.Domain.Dtos;
+namespace ApiUser.Application.Commands;
 
-public record AddUserCommand(string email, string name)
+public record AddUserCommand
 {
+    public User UserToAdd { get; init; }
+
+    public AddUserCommand(UserDto userDto)
+    {
+        UserToAdd = userDto.MapToUser();
+    }
 }

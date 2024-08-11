@@ -7,7 +7,10 @@ namespace ApiUser.Controllers;
 public class UserController(IGetUserListCommandHandler getUserListCommandHandler,
     IGetUserByEmailCommandHandler getUserByEmailCommandHandler,
     IGetUserByIdCommandHandler getUserByIdCommandHandler,
-    IUpdateUserCommandHandler updateUserCommandHandler) : ControllerBase
+    IUpdateUserCommandHandler updateUserCommandHandler,
+    IDeleteUserCommandHandler deleteUserCommandHandler,
+    IAddUserCommandHandler addUserCommandHandler,
+    IChangePasswordCommandHandler changePasswordCommandHandler) : ControllerBase
 {
     [Route("user/list")]
     [HttpGet]
@@ -45,6 +48,33 @@ public class UserController(IGetUserListCommandHandler getUserListCommandHandler
         var commmand = new UpdateUserCommand(userDto);
         var user = updateUserCommandHandler.Handle(commmand);
 
+        return Ok(user.MapToDto());
+    }
+
+    [Route("user/{id}")]
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        var command = new DeleteUserCommand(id.ToString());
+        deleteUserCommandHandler.Handle(command);
+        return Ok();
+    }
+
+    [Route("user")]
+    [HttpPost]
+    public async Task<IActionResult> AddUser([FromBody] UserDto userDto)
+    {
+        var command = new AddUserCommand(userDto);
+        var user = addUserCommandHandler.Handle(command);
+        return Ok(user.MapToDto());
+    }
+
+    [Route("user/changepassword")]
+    [HttpPost]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+    {
+        var command = new ChangePasswordCommand(changePasswordDto);
+        var user = changePasswordCommandHandler.Handle(command);
         return Ok(user.MapToDto());
     }
 }

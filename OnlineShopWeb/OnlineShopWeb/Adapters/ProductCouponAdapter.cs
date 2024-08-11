@@ -13,7 +13,7 @@ public class ProductCouponAdapter : IProductCouponAdapter
         IOptionsSnapshot<HttpClientWrapperOptions> options)
     {
         _httpClientWrapper = httpClientWrapper;
-        _apiUrl = options.Get("ApiClientOptions").ApiUrl;
+        _apiUrl = options.Get("ApiCouponProductClientOptions").ApiUrl;
     }
 
     public async Task<List<ProductDto>> GetProductList()

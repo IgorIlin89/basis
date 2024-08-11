@@ -1,4 +1,4 @@
-﻿namespace OnlineShopWeb.TransferObjects.Dtos;
+﻿namespace ApiUser.Domain.Dtos;
 
 public enum ErrorStatusCodeDto
 {

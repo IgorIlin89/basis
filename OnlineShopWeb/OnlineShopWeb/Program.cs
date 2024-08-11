@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using OnlineShopWeb.Adapters.Interfaces;
 using OnlineShopWeb.Adapters;
+using OnlineShopWeb.Adapters.Interfaces;
 using OnlineShopWeb.Misc;
 using Serilog;
 
@@ -24,10 +24,11 @@ try
     builder.Services.AddSession();
 
     builder.Services.Configure<HttpClientWrapperOptions>("ApiClientOptions",
-        builder.Configuration.GetSection("ApiClientOptions"));
-
-    builder.Services.Configure<HttpClientWrapperOptions>("ApiUserClientOptions",
-        builder.Configuration.GetSection("ApiUserClientOptions"));
+        builder.Configuration.GetSection("ApiClientOptions")).
+        Configure<HttpClientWrapperOptions>("ApiUserClientOptions",
+        builder.Configuration.GetSection("ApiUserClientOptions")).
+        Configure<HttpClientWrapperOptions>("ApiCouponProductClientOptions",
+        builder.Configuration.GetSection("ApiCouponProductClientOptions"));
 
     builder.Services.AddScoped<IHttpClientWrapper, HttpClientWrapper>()
         .AddScoped<IUserAdapter, UserAdapter>()

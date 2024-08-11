@@ -24,14 +24,17 @@ public class MiddlewareCustomExceptionHandling
         {
             // TODO redirect to a site with error message 
             _logger.LogWarning(domainException.Message);
+            context.Response.Clear();
+            context.Response.Redirect("/error");
         }
         catch (ApiException apiException)
         {
             _logger.LogWarning(apiException.Message);
+            context.Response.Clear();
+            context.Response.Redirect("/error");
         }
         catch (Exception exception)
         {
-
             _logger.LogWarning(exception.Message);
             context.Response.Clear();
             context.Response.Redirect("/error");
