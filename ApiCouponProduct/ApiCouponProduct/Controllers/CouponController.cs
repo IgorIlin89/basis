@@ -22,7 +22,7 @@ public class CouponController(IGetCouponListCommandHandler getCouponListCommandH
 
     [Route("coupon/{id}")]
     [HttpGet]
-    public async Task<IActionResult> GetCouponById(string id)
+    public async Task<IActionResult> GetCouponById(int id)
     {
         var command = new GetCouponByIdCommand(id);
         var coupon = getCouponByIdCommandHandler.Handle(command);
@@ -49,16 +49,16 @@ public class CouponController(IGetCouponListCommandHandler getCouponListCommandH
 
     [Route("coupon")]
     [HttpPut]
-    public async Task<IActionResult> UpdateCoupon([FromBody] CouponDto couponDto)
+    public async Task<IActionResult> UpdateCoupon([FromBody] UpdateCouponDto updateCouponDto)
     {
-        var command = new UpdateCouponCommand(couponDto);
+        var command = new UpdateCouponCommand(updateCouponDto);
         var coupon = updateCouponCommandHandler.Handle(command);
         return Ok(coupon.MapToDto());
     }
 
     [Route("coupon")]
     [HttpPost]
-    public async Task<IActionResult> AddCoupon([FromBody] CouponDto couponDto)
+    public async Task<IActionResult> AddCoupon([FromBody] AddCouponDto couponDto)
     {
         var command = new AddCouponCommand(couponDto);
         var coupon = addCouponCommandHandler.Handle(command);

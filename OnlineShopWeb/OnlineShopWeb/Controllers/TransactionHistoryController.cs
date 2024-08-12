@@ -1,31 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShopWeb.Adapters.Interfaces;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.TransferObjects.Models;
 using OnlineShopWeb.TransferObjects.Models.ListModels;
-using OnlineShopWeb.Misc;
-using OnlineShopWeb.TransferObjects.Dtos;
 
 namespace OnlineShopWeb.Controllers;
 
-public class TransactionHistoryController : Controller
+public class TransactionHistoryController(ITransactionHistoryAdapter transactionHistoryAdapter) : Controller
 {
-    public IHttpClientWrapper _httpClientWrapper;
-    private readonly HttpClient _httpClient = new HttpClient();
-    private readonly string _connectionString;
-    private readonly string _connectToGetTransactionHistoryList;
+    //public IHttpClientWrapper _httpClientWrapper;
+    //private readonly HttpClient _httpClient = new HttpClient();
 
-    public TransactionHistoryController(IHttpClientWrapper clientWrapper)
-    {
-        _httpClientWrapper = clientWrapper;
-    }
+    //public TransactionHistoryController(IHttpClientWrapper clientWrapper)
+    //{
+    //    _httpClientWrapper = clientWrapper;
+    //}
 
     [HttpGet]
     public async Task<ActionResult> Index()
     {
         var model = new TransactionHistoryListModel();
 
-        var transactionHistoryDtoList = await _httpClientWrapper.Get<List<TransactionHistoryObjectsDto>>("transactionhistory"
-            , "list", HttpContext.User.Identity.Name);
+        var transactionHistoryDtoList = await transactionHistoryAdapter.GetTransactionHistoryList(
+            HttpContext.User.Identity.Name);
 
         var transactionHistoryList = new List<TransactionHistory>();
 

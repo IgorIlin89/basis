@@ -30,9 +30,10 @@ try
         Configure<HttpClientWrapperOptions>("ApiCouponProductClientOptions",
         builder.Configuration.GetSection("ApiCouponProductClientOptions"));
 
-    builder.Services.AddScoped<IHttpClientWrapper, HttpClientWrapper>()
-        .AddScoped<IUserAdapter, UserAdapter>()
-        .AddScoped<IProductCouponAdapter, ProductCouponAdapter>();
+    builder.Services.AddScoped<IHttpClientWrapper, HttpClientWrapper>().
+        AddScoped<IUserAdapter, UserAdapter>().
+        AddScoped<IProductCouponAdapter, ProductCouponAdapter>().
+        AddScoped<ITransactionHistoryAdapter, TransactionHistoryAdapter>();
 
     builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>

@@ -2,7 +2,7 @@
 
 namespace ApiCouponProduct.Database;
 
-public class UnitOfWork(ApiCouponProductContext DbContext) : IUnitOfWork
+internal class UnitOfWork(ApiCouponProductContext DbContext) : IUnitOfWork
 {
     public void SaveChanges()
     {

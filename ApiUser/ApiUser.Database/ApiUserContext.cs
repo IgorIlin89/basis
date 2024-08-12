@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ApiUser.Domain;
+﻿using ApiUser.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiUser.Database;
 

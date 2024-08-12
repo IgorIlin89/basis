@@ -23,14 +23,7 @@ internal class ProductRepository : IProductRepository
                 $"{product.Producer}' allready exists");
         }
 
-        var response = _context.Product.Add(new Product
-        {
-            Name = product.Name,
-            Producer = product.Producer,
-            Category = product.Category,
-            Picture = product.Picture,
-            Price = product.Price
-        });
+        var response = _context.Product.Add(product);
 
         return response.Entity;
     }

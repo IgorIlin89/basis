@@ -8,7 +8,7 @@ public record AddProductCommand
 {
     public Product ProductToAdd { get; init; }
 
-    public AddProductCommand(ProductDto productDto)
+    public AddProductCommand(AddProductDto productDto)
     {
         if (productDto is null)
         {

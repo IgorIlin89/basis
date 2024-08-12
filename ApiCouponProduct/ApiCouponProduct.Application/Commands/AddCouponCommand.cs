@@ -8,7 +8,7 @@ public record AddCouponCommand
 {
     public Coupon CouponToAdd { get; init; }
 
-    public AddCouponCommand(CouponDto couponDto)
+    public AddCouponCommand(AddCouponDto couponDto)
     {
         if (couponDto is null)
         {

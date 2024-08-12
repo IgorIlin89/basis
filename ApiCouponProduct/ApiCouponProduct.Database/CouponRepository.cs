@@ -23,16 +23,7 @@ internal class CouponRepository : ICouponRepository
                 $"allready exists and can not be added");
         }
 
-        //maybe just _context.Coupon.Add(coupon) ???
-        var response = _context.Coupon.Add(new Coupon
-        {
-            Code = coupon.Code,
-            AmountOfDiscount = coupon.AmountOfDiscount,
-            TypeOfDiscount = coupon.TypeOfDiscount,
-            MaxNumberOfUses = coupon.MaxNumberOfUses,
-            StartDate = coupon.StartDate,
-            EndDate = coupon.EndDate
-        });
+        var response = _context.Coupon.Add(coupon);
 
         return response.Entity;
     }

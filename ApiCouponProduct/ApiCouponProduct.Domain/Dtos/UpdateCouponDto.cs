@@ -1,8 +1,8 @@
 ﻿namespace ApiCouponProduct.Domain.Dtos;
 
-public class CouponDto
+public class UpdateCouponDto
 {
-    public int? CouponId { get; set; }
+    public int CouponId { get; set; }
     public string Code { get; set; }
     public double AmountOfDiscount { get; set; }
     public TypeOfDiscount TypeOfDiscount { get; set; }

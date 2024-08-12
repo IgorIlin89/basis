@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiCouponProduct.Controllers;
 
+//[Route("[controller]")]
 public class ProductController(IGetProductListCommandHandler getProductListCommandHandler,
     IGetProductByIdCommandHandler getProductByIdCommandHandler,
     IDeleteProductByIdCommandHandler deleteProductByIdCommandHandler,
@@ -21,7 +22,7 @@ public class ProductController(IGetProductListCommandHandler getProductListComma
 
     [Route("product/{id}")]
     [HttpGet]
-    public async Task<IActionResult> GetProductById(string id)
+    public async Task<IActionResult> GetProductById(int id)
     {
         var command = new GetProductByIdCommand(id);
         var product = getProductByIdCommandHandler.Handle(command);
@@ -39,16 +40,16 @@ public class ProductController(IGetProductListCommandHandler getProductListComma
 
     [Route("product")]
     [HttpPut]
-    public async Task<IActionResult> UpdateProduct([FromBody] ProductDto productDto)
+    public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDto updateProductDto)
     {
-        var command = new UpdateProductCommand(productDto);
+        var command = new UpdateProductCommand(updateProductDto);
         var product = updateProductCommandHandler.Handle(command);
         return Ok(product.MapToDto());
     }
 
     [Route("product")]
     [HttpPost]
-    public async Task<IActionResult> AddProduct([FromBody] ProductDto productDto)
+    public async Task<IActionResult> AddProduct([FromBody] AddProductDto productDto)
     {
         var command = new AddProductCommand(productDto);
         var product = addProductCommandHandler.Handle(command);
