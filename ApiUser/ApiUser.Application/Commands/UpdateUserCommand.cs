@@ -7,7 +7,7 @@ public record UpdateUserCommand
 {
     public User User { get; init; }
 
-    public UpdateUserCommand(UserDto userDto)
+    public UpdateUserCommand(DtoUpdateUser userDto)
     {
         User = userDto.MapToUser();
     }

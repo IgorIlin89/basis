@@ -5,7 +5,7 @@ namespace ApiTransactionHistory.Database;
 
 public class ApiTransactionHistoryContext : DbContext
 {
-    public ApiTransactionHistoryContext(DbContextOptions<TransactionHistory> context)
+    public ApiTransactionHistoryContext(DbContextOptions<ApiTransactionHistoryContext> context)
         : base(context)
     {
 

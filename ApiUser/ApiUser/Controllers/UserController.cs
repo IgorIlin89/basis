@@ -43,9 +43,9 @@ public class UserController(IGetUserListCommandHandler getUserListCommandHandler
 
     [Route("user")]
     [HttpPut]
-    public async Task<IActionResult> UpdateUser([FromBody] UserDto userDto)
+    public async Task<IActionResult> UpdateUser([FromBody] DtoUpdateUser updateUserDto)
     {
-        var commmand = new UpdateUserCommand(userDto);
+        var commmand = new UpdateUserCommand(updateUserDto);
         var user = updateUserCommandHandler.Handle(commmand);
 
         return Ok(user.MapToDto());
@@ -62,9 +62,9 @@ public class UserController(IGetUserListCommandHandler getUserListCommandHandler
 
     [Route("user")]
     [HttpPost]
-    public async Task<IActionResult> AddUser([FromBody] UserDto userDto)
+    public async Task<IActionResult> AddUser([FromBody] DtoAddUser addUserDto)
     {
-        var command = new AddUserCommand(userDto);
+        var command = new AddUserCommand(addUserDto);
         var user = addUserCommandHandler.Handle(command);
         return Ok(user.MapToDto());
     }

@@ -1,10 +1,10 @@
 ﻿namespace ApiUser.Domain.Dtos;
 
-public static class Mapping
+public static class MappingUser
 {
-    public static UserDto MapToDto(this User user)
+    public static DtoUpdateUser MapToDto(this User user)
     {
-        return new UserDto
+        return new DtoUpdateUser
         {
             UserId = user.Id,
             EMail = user.EMail,
@@ -20,14 +20,28 @@ public static class Mapping
         };
     }
 
-    public static User MapToUser(this UserDto userDto)
+    public static User MapToUser(this DtoUpdateUser userDto)
     {
         var user = new User();
 
-        if (userDto.UserId is not null)
-        {
-            user.Id = userDto.UserId.Value;
-        }
+        user.Id = userDto.UserId;
+        user.EMail = userDto.EMail;
+        user.Password = userDto.Password;
+        user.GivenName = userDto.GivenName;
+        user.Surname = userDto.Surname;
+        user.Age = userDto.Age;
+        user.Country = userDto.Country;
+        user.City = userDto.City;
+        user.Street = userDto.Street;
+        user.HouseNumber = userDto.HouseNumber;
+        user.PostalCode = userDto.PostalCode;
+
+        return user;
+    }
+
+    public static User MapToUser(this DtoAddUser userDto)
+    {
+        var user = new User();
 
         user.EMail = userDto.EMail;
         user.Password = userDto.Password;
@@ -43,9 +57,9 @@ public static class Mapping
         return user;
     }
 
-    public static List<UserDto> MapToDtoList(this List<User> userList)
+    public static List<DtoUpdateUser> MapToDtoList(this List<User> userList)
     {
-        List<UserDto> response = new List<UserDto>();
+        List<DtoUpdateUser> response = new List<DtoUpdateUser>();
 
         foreach (var element in userList)
         {

@@ -6,7 +6,7 @@ public record AddUserCommand
 {
     public User UserToAdd { get; init; }
 
-    public AddUserCommand(UserDto userDto)
+    public AddUserCommand(DtoAddUser userDto)
     {
         UserToAdd = userDto.MapToUser();
     }

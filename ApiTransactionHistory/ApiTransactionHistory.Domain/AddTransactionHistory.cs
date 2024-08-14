@@ -1,9 +1,8 @@
 ﻿namespace ApiTransactionHistory.Domain;
 
-public class TransactionHistory
+public class AddTransactionHistory
 {
-    public int Id { get; set; }
-    public int UserId { get; set; }
     public DateTimeOffset PaymentDate { get; set; }
     public decimal FinalPrice { get; set; }
+    public int UserId { get; set; }
 }
