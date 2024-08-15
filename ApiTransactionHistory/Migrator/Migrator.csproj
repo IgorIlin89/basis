@@ -17,10 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiCouponProduct.Application\ApiCouponProduct.Application.csproj" />
-    <ProjectReference Include="..\ApiCouponProduct.Database\ApiCouponProduct.Database.csproj" />
-    <ProjectReference Include="..\ApiCouponProduct.Domain\ApiCouponProduct.Domain.csproj" />
-    <ProjectReference Include="..\ApiCouponProduct\ApiCouponProduct.csproj" />
+    <ProjectReference Include="..\ApiTransactionHistory.Application\ApiTransactionHistory.Application.csproj" />
+    <ProjectReference Include="..\ApiTransactionHistory.Database\ApiTransactionHistory.Database.csproj" />
+    <ProjectReference Include="..\ApiTransactionHistory.Domain\ApiTransactionHistory.Domain.csproj" />
+    <ProjectReference Include="..\ApiTransactionHistory\ApiTransactionHistory.csproj" />
   </ItemGroup>
 
 </Project>

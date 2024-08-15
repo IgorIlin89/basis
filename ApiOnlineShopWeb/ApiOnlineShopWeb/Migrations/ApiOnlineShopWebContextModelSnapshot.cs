@@ -51,7 +51,7 @@ namespace ApiOnlineShopWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Coupon");
+                    b.ToTable("Coupon", (string)null);
 
                     b.HasData(
                         new
@@ -134,7 +134,7 @@ namespace ApiOnlineShopWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
 
                     b.HasData(
                         new
@@ -198,7 +198,7 @@ namespace ApiOnlineShopWeb.Migrations
 
                     b.HasIndex("TransactionHistoryId");
 
-                    b.ToTable("ProductInCart");
+                    b.ToTable("ProductInCart", (string)null);
                 });
 
             modelBuilder.Entity("ApiOnlineShopWeb.Domain.TransactionHistory", b =>
@@ -227,7 +227,7 @@ namespace ApiOnlineShopWeb.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TransactionHistory");
+                    b.ToTable("TransactionHistory", (string)null);
                 });
 
             modelBuilder.Entity("ApiOnlineShopWeb.Domain.User", b =>
@@ -276,7 +276,7 @@ namespace ApiOnlineShopWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
 
                     b.HasData(
                         new

@@ -12,4 +12,17 @@ public class ApiTransactionHistoryContext : DbContext
     }
 
     public DbSet<TransactionHistory> TransactionHistory { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ProductInCart>()
+            .Property(o => o.PricePerProduct)
+            .HasColumnType("decimal(10,2)");
+
+        modelBuilder.Entity<TransactionHistory>()
+            .HasMany(o => o.ProductsInCart)
+            .WithOne()
+            .HasForeignKey(o => o.TransactionHistoryId)
+            .IsRequired();
+    }
 }

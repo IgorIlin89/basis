@@ -11,12 +11,12 @@ public record AddTransactionHistoryCommand
     public AddTransactionHistoryCommand(AddTransactionHistoryDto addTransactionHistoryDto)
     {
 
-        ProductsInCartToAdd = addTransactionHistoryDto.ProductsInCart;
-        TransactionHistoryToCouponToAdd = addTransactionHistoryDto.Coupons;
+        //ProductsInCartToAdd = addTransactionHistoryDto.ProductsInCart;
+        //TransactionHistoryToCouponToAdd = addTransactionHistoryDto.Coupons;
 
-        TransactionHistoryToAdd = TransactionHistoryToAdd{
-            tr
-        };
+        //TransactionHistoryToAdd = TransactionHistoryToAdd{
+        //    tr
+        //};
 
     }
 }

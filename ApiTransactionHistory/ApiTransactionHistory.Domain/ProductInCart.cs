@@ -7,4 +7,7 @@ public class ProductInCart
     public int ProductId { get; set; }
     public decimal PricePerProduct { get; set; }
     public int TransactionHistoryId { get; set; }
+
+    //[ForeignKey("ProductId")]
+    //public virtual Product  { get; set; }
 }

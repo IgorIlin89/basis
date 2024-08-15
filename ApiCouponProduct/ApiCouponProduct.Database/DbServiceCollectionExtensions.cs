@@ -12,7 +12,7 @@ public static class DbServiceCollectionExtensions
     {
         services.AddDbContext<ApiCouponProductContext>(configure =>
         {
-            configure.UseSqlServer(configuration.GetConnectionString("ApiOnlineShopWebDb"));
+            configure.UseSqlServer(configuration.GetConnectionString("ApiOnlineShopWebDb"), b => b.MigrationsAssembly("ApiCouponProduct"));
         });
 
         services.AddScoped<IUnitOfWork, UnitOfWork>().

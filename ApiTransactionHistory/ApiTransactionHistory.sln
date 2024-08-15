@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTransactionHistory", "ApiTransactionHistory\ApiTransactionHistory.csproj", "{48C68ED1-8497-4AE7-93D6-0502431843CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiTransactionHistory", "ApiTransactionHistory\ApiTransactionHistory.csproj", "{48C68ED1-8497-4AE7-93D6-0502431843CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTransactionHistory.Domain", "ApiTransactionHistory.Domain\ApiTransactionHistory.Domain.csproj", "{BCEBB181-FCC6-459D-915A-6883FA3712C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiTransactionHistory.Domain", "ApiTransactionHistory.Domain\ApiTransactionHistory.Domain.csproj", "{BCEBB181-FCC6-459D-915A-6883FA3712C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTransactionHistory.Database", "ApiTransactionHistory.Database\ApiTransactionHistory.Database.csproj", "{12DC499B-9741-4BCA-A98A-1AE2F0B530AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiTransactionHistory.Database", "ApiTransactionHistory.Database\ApiTransactionHistory.Database.csproj", "{12DC499B-9741-4BCA-A98A-1AE2F0B530AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTransactionHistory.Application", "ApiTransactionHistory.Application\ApiTransactionHistory.Application.csproj", "{C49F0CDD-4ED4-4279-8E5F-E673B5E6C839}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiTransactionHistory.Application", "ApiTransactionHistory.Application\ApiTransactionHistory.Application.csproj", "{C49F0CDD-4ED4-4279-8E5F-E673B5E6C839}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrator", "Migrator\Migrator.csproj", "{D81E4F0F-C7D4-4223-B561-B8D5C66FA8C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C49F0CDD-4ED4-4279-8E5F-E673B5E6C839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C49F0CDD-4ED4-4279-8E5F-E673B5E6C839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C49F0CDD-4ED4-4279-8E5F-E673B5E6C839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D81E4F0F-C7D4-4223-B561-B8D5C66FA8C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D81E4F0F-C7D4-4223-B561-B8D5C66FA8C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D81E4F0F-C7D4-4223-B561-B8D5C66FA8C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D81E4F0F-C7D4-4223-B561-B8D5C66FA8C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

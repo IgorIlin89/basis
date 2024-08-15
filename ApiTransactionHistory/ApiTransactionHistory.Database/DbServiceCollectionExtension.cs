@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ApiTransactionHistory.Database.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,10 +12,10 @@ public static class DbServiceCollectionExtension
     {
         serviceCollection.AddDbContext<ApiTransactionHistoryContext>(configure =>
         {
-            configure.UseSqlServer(configuration.GetConnectionString("ApiOnlineShopWebDb"));
+            configure.UseSqlServer(configuration.GetConnectionString("ApiOnlineShopWebDb"), b => b.MigrationsAssembly("ApiTransactionHistory"));
         });
 
-        //serviceCollection.AddScoped<>
+        serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return serviceCollection;
     }
