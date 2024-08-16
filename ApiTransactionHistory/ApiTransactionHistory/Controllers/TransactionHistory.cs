@@ -14,7 +14,7 @@ public class TransactionHistory : ControllerBase
 
     [Route("transactionhistory")]
     [HttpPost]
-    public async Task<ActionResult> BuyShoppingCartItems([FromBody] TransactionHistoryDto transactionHistoryDto)
+    public async Task<ActionResult> BuyShoppingCartItems([FromBody] AddTransactionHistoryDto addTransactionHistoryDto)
     {
         return Ok();
     }

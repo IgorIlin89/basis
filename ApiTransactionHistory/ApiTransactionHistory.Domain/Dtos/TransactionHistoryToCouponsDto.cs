@@ -2,6 +2,8 @@
 
 public class TransactionHistoryToCouponsDto
 {
-    public int TransactionHistoriesId { get; set; }
-    public ICollection<int> CouponsId { get; set; }
+    public int Id { get; set; }
+    public int TransactionHistoryId { get; set; }
+    public TransactionHistoryDto TransactionHistoryDto { get; set; }
+    public ICollection<int> CouponsDtoId { get; set; }
 }

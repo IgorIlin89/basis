@@ -14,9 +14,9 @@ internal class ApiTransactionHistoryRepository
         return _context.TransactionHistory.Where(o => o.Id == id).ToList();
     }
 
-    public void Add(TransactionHistory transactionHistory,
-        ProductInCart productInCart, TransactionHistoryToCoupons transactionHistoryToCoupons)
-    {
-        var result = _context.TransactionHistory.Add(transactionHistory);
-    }
+    //public TransactionHistory Add(TransactionHistory transactionHistory)
+    //{
+    //    //TODO
+    //    return _context.TransactionHistory.Add(transactionHistory);
+    //}
 }

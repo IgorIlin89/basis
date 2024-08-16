@@ -24,5 +24,10 @@ public class ApiTransactionHistoryContext : DbContext
             .WithOne()
             .HasForeignKey(o => o.TransactionHistoryId)
             .IsRequired();
+
+        modelBuilder.Entity<TransactionHistory>()
+            .HasOne(o => o.Coupons)
+            .WithMany()
+            .HasForeignKey(o => o.TransactionHistoryToCouponsId);
     }
 }
