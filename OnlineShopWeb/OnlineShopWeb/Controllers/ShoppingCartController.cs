@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using OnlineShopWeb.Domain;
-using OnlineShopWeb.ExtensionMethods;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
-using OnlineShopWeb.Misc;
-using OnlineShopWeb.TransferObjects.Models;
-using OnlineShopWeb.TransferObjects.Dtos;
-using OnlineShopWeb.TransferObjects.Models.ListModels;
 using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.ExtensionMethods;
+using OnlineShopWeb.Misc;
+using OnlineShopWeb.TransferObjects.Dtos;
+using OnlineShopWeb.TransferObjects.Models;
+using OnlineShopWeb.TransferObjects.Models.ListModels;
+using System.Text;
+using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -155,8 +154,9 @@ public class ShoppingCartController : Controller
             {
                 productsInCartList.Add(new ProductInCartDto
                 {
-                    ProductCount = element.Count,
-                    ProductId = element.ProductModelInCart.ProductId.Value
+                    Count = element.Count,
+                    ProductId = element.ProductModelInCart.ProductId.Value,
+                    PricePerProduct = element.ProductModelInCart.Price,
                 });
             }
 
@@ -170,8 +170,8 @@ public class ShoppingCartController : Controller
             var transactionHistoryDto = new TransactionHistoryDto
             {
                 UserId = HttpContext.Name(),
+                PaymentDate = DateTime.Now,
                 ProductsInCartDto = productsInCartList,
-                CouponCodes = couponCodeList,
             };
 
             var httpBody = new StringContent(
