@@ -9,5 +9,6 @@ public record AddTransactionHistoryCommand
     public AddTransactionHistoryCommand(AddTransactionHistoryDto addTransactionHistoryDto)
     {
         TransactionHistoryToAdd = addTransactionHistoryDto.MapToTransactionHistory();
+        TransactionHistoryToAdd.PaymentDate = DateTime.Now;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using OnlineShopWeb.TransferObjects.Dtos;
-using OnlineShopWeb.Misc;
 using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.Misc;
+using OnlineShopWeb.TransferObjects.Dtos;
 
 namespace OnlineShopWeb.Adapters;
 
@@ -13,7 +13,7 @@ public class TransactionHistoryAdapter : ITransactionHistoryAdapter
         IOptionsSnapshot<HttpClientWrapperOptions> options)
     {
         _httpClientWrapper = httpClientWrapper;
-        _apiUrl = options.Get("ApiClientOptions").ApiUrl;
+        _apiUrl = options.Get("ApiTransactionHistory").ApiUrl;
     }
 
     public async Task<List<TransactionHistoryObjectsDto>> GetTransactionHistoryList(string id)

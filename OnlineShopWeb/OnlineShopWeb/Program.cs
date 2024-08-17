@@ -28,7 +28,9 @@ try
         Configure<HttpClientWrapperOptions>("ApiUserClientOptions",
         builder.Configuration.GetSection("ApiUserClientOptions")).
         Configure<HttpClientWrapperOptions>("ApiCouponProductClientOptions",
-        builder.Configuration.GetSection("ApiCouponProductClientOptions"));
+        builder.Configuration.GetSection("ApiCouponProductClientOptions")).
+        Configure<HttpClientWrapperOptions>("ApiTransactionHistory",
+        builder.Configuration.GetSection("ApiTransactionHistory"));
 
     builder.Services.AddScoped<IHttpClientWrapper, HttpClientWrapper>().
         AddScoped<IUserAdapter, UserAdapter>().
