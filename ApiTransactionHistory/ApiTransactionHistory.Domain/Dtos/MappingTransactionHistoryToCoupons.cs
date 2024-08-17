@@ -13,4 +13,16 @@ public static class MappingTransactionHistoryToCoupons
             CouponsId = new List<int>(transactionHistoryToCouponsDto.CouponsDtoId.ToList())
         };
     }
+
+    public static TransactionHistoryToCouponsDto MapToDto(
+        this TransactionHistoryToCoupons transactionHistoryToCoupons)
+    {
+        return new TransactionHistoryToCouponsDto
+        {
+            Id = transactionHistoryToCoupons.Id,
+            TransactionHistoryId = transactionHistoryToCoupons.TransactionHistoryId,
+            TransactionHistoryDto = transactionHistoryToCoupons.TransactionHistory.MapToDto(),
+            CouponsDtoId = new List<int>(transactionHistoryToCoupons.CouponsId.ToList())
+        };
+    }
 }

@@ -25,4 +25,29 @@ public static class MappingProductInCart
 
         return listProductsInCart;
     }
+
+    public static ProductInCartDto MapToDto(this ProductInCart productInCart)
+    {
+        return new ProductInCartDto
+        {
+            Id = productInCart.Id,
+            ProductId = productInCart.ProductId,
+            Count = productInCart.Count,
+            PricePerProduct = productInCart.PricePerProduct,
+            TransactionHistoryId = productInCart.TransactionHistoryId
+        };
+    }
+
+    public static List<ProductInCartDto> MapToDtoList(
+        this ICollection<ProductInCart> productsInCartDto)
+    {
+        var result = new List<ProductInCartDto>();
+
+        foreach (var element in productsInCartDto)
+        {
+            result.Add(element.MapToDto());
+        }
+
+        return result;
+    }
 }

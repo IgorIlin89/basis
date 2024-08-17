@@ -15,7 +15,8 @@ public static class DbServiceCollectionExtension
             configure.UseSqlServer(configuration.GetConnectionString("ApiOnlineShopWebDb"), b => b.MigrationsAssembly("ApiTransactionHistory"));
         });
 
-        serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
+        serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>()
+            .AddScoped<IApiTransactionHistoryRepository, ApiTransactionHistoryRepository>();
 
         return serviceCollection;
     }
