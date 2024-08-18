@@ -1,6 +1,0 @@
-@ApiTransactionHistory_HostAddress = http://localhost:5291
-
-GET {{ApiTransactionHistory_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
