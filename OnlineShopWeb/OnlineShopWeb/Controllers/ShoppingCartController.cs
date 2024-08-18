@@ -190,6 +190,10 @@ public class ShoppingCartController : Controller
 
             await _transactionHistoryAdapter.AddTransactionHistory(transactionHistoryDto);
 
+            // If this doesnt work, THAN make it event based
+            // In Ui make 2 buttons, 1 is immedaite, one make it so he´waits 1 min 
+            //with transaction SEPA-Lastschrift
+
             HttpContext.AppendShoppingCart(new ShoppingCartListModel());
 
 

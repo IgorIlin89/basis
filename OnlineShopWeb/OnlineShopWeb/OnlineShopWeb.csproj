@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OnlineShopWeb.Domain\OnlineShopWeb.Domain.csproj" />
+    <ProjectReference Include="..\OnlineShopWeb.NServiceBus.Messages\OnlineShopWeb.Messages.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Logs\" />
     <Folder Include="Views\UnexpectedError\" />
   </ItemGroup>
 
