@@ -2,6 +2,21 @@
 
 public static class MappingTransactionHistory
 {
+    //public class MappingTransactionHistoryAccessToken
+    //{
+    //}
+
+    //public static bool AccessAuthorization(Object token)
+    //{
+    //    //if(typeof(TransactionHistory) token)
+    //    //return true;
+    //}
+
+    private static void CallSetFinalPrice(TransactionHistory transactionHistory)
+    {
+        transactionHistory.CalculateFinalPrice();
+    }
+
     public static TransactionHistory MapToTransactionHistory(this AddTransactionHistoryDto addTransactionHistoryDto)
     {
         var transactionHistory = new TransactionHistory();
@@ -18,7 +33,7 @@ public static class MappingTransactionHistory
 
         transactionHistory.UserId = addTransactionHistoryDto.UserId;
         transactionHistory.PaymentDate = addTransactionHistoryDto.PaymentDate;
-        transactionHistory.FinalPrice = addTransactionHistoryDto.FinalPrice;
+        //transactionHistory.FinalPrice = addTransactionHistoryDto.FinalPrice;
 
         if (addTransactionHistoryDto.CouponsDto is not null)
         {
@@ -26,6 +41,8 @@ public static class MappingTransactionHistory
         }
 
         transactionHistory.ProductsInCart = addTransactionHistoryDto.ProductsInCartDto.MapToProductInCartList();
+
+        CallSetFinalPrice(transactionHistory);
 
         return transactionHistory;
     }
@@ -38,12 +55,14 @@ public static class MappingTransactionHistory
         transactionHistory.TransactionHistoryToCouponsId = addTransactionHistoryDto.TransactionHistoryToCouponsId;
         transactionHistory.UserId = addTransactionHistoryDto.UserId;
         transactionHistory.PaymentDate = addTransactionHistoryDto.PaymentDate;
-        transactionHistory.FinalPrice = addTransactionHistoryDto.FinalPrice;
+        //transactionHistory.FinalPrice = addTransactionHistoryDto.FinalPrice;
         if (addTransactionHistoryDto.CouponsDto is not null)
         {
             transactionHistory.Coupons = addTransactionHistoryDto.CouponsDto.MapToTransactionHistoryToCoupons();
         }
         transactionHistory.ProductsInCart = addTransactionHistoryDto.ProductsInCartDto.MapToProductInCartList();
+
+        CallSetFinalPrice(transactionHistory);
 
         return transactionHistory;
     }

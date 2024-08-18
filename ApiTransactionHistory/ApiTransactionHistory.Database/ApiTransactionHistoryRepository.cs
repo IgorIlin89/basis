@@ -1,5 +1,6 @@
 ﻿using ApiTransactionHistory.Database.Interfaces;
 using ApiTransactionHistory.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiTransactionHistory.Database;
 
@@ -12,7 +13,10 @@ internal class ApiTransactionHistoryRepository : IApiTransactionHistoryRepositor
     }
     public List<TransactionHistory> GetList(int id)
     {
-        return _context.TransactionHistory.Where(o => o.Id == id).ToList();
+        return _context.TransactionHistory
+            .Include(o => o.ProductsInCart)
+            .Include(o => o.Coupons)
+            .Where(o => o.UserId == id).ToList();
     }
 
     public TransactionHistory Add(TransactionHistory transactionHistory)

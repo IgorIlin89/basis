@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiTransactionHistory.Datab
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiTransactionHistory.Application", "ApiTransactionHistory.Application\ApiTransactionHistory.Application.csproj", "{C49F0CDD-4ED4-4279-8E5F-E673B5E6C839}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrator", "Migrator\Migrator.csproj", "{D81E4F0F-C7D4-4223-B561-B8D5C66FA8C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Migrator", "Migrator\Migrator.csproj", "{D81E4F0F-C7D4-4223-B561-B8D5C66FA8C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterfaceProject", "InterfaceProject\InterfaceProject.csproj", "{4342E35B-D89E-4AFE-B4FA-8B8DE8D37FD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{D81E4F0F-C7D4-4223-B561-B8D5C66FA8C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D81E4F0F-C7D4-4223-B561-B8D5C66FA8C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D81E4F0F-C7D4-4223-B561-B8D5C66FA8C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4342E35B-D89E-4AFE-B4FA-8B8DE8D37FD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4342E35B-D89E-4AFE-B4FA-8B8DE8D37FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4342E35B-D89E-4AFE-B4FA-8B8DE8D37FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4342E35B-D89E-4AFE-B4FA-8B8DE8D37FD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

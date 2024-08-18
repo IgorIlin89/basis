@@ -48,7 +48,7 @@ public class ProductCouponAdapter : IProductCouponAdapter
 
     public async Task<CouponDto> GetCouponByCode(string couponCode)
     {
-        return await _httpClientWrapper.Get<CouponDto>("coupon", "code", couponCode);
+        return await _httpClientWrapper.Get<CouponDto>(_apiUrl, "coupon", "code", couponCode);
     }
 
     public async Task<ProductDto> ProductUpdate(ProductDto productDto)

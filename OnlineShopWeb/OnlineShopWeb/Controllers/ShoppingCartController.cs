@@ -160,18 +160,27 @@ public class ShoppingCartController : Controller
                 });
             }
 
-            List<string> couponCodeList = new List<string>();
+            List<int> couponDtoList = new List<int>();
 
             foreach (var element in model.CouponModelList)
             {
-                couponCodeList.Add(element.Code);
+                couponDtoList.Add(element.CouponId.Value);
             }
+
+            //foreach (var element in model.CouponModelList)
+            //{
+            //    couponCodeList.Add(element.Code);
+            //}
 
             var transactionHistoryDto = new TransactionHistoryDto
             {
                 UserId = HttpContext.Name(),
                 PaymentDate = DateTime.Now,
                 ProductsInCartDto = productsInCartList,
+                CouponsDto = new TransactionHistoryToCouponsDto
+                {
+                    CouponsDtoId = couponDtoList
+                }
             };
 
             var httpBody = new StringContent(

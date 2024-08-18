@@ -9,26 +9,11 @@ public class AddTransactionHistoryCommandHandler(IUnitOfWork UnitOfWork,
 {
     public TransactionHistory Handle(AddTransactionHistoryCommand command)
     {
-        command.TransactionHistoryToAdd.FinalPrice = CalculateFinalPrice(
-            command.TransactionHistoryToAdd.ProductsInCart,
-            command.TransactionHistoryToAdd.Coupons);
+        //command.TransactionHistoryToAdd.CalculateFinalPrice();
 
         var result = apiTransactionHistoryRepository.Add(command.TransactionHistoryToAdd);
 
         UnitOfWork.SaveChanges();
-
-        return result;
-    }
-
-    private decimal CalculateFinalPrice(ICollection<ProductInCart> productsInCart,
-        TransactionHistoryToCoupons? coupons)
-    {
-        decimal result = new();
-
-        foreach (var element in productsInCart)
-        {
-            result += element.PricePerProduct * element.Count;
-        }
 
         return result;
     }

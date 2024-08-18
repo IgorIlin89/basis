@@ -22,7 +22,10 @@ public static class MappingTransactionHistoryToCoupons
             Id = transactionHistoryToCoupons.Id,
             TransactionHistoryId = transactionHistoryToCoupons.TransactionHistoryId,
             TransactionHistoryDto = transactionHistoryToCoupons.TransactionHistory.MapToDto(),
-            CouponsDtoId = new List<int>(transactionHistoryToCoupons.CouponsId.ToList())
+            //CouponsDtoId = new List<int>(transactionHistoryToCoupons.CouponsId.ToList()),
+            CouponsDtoId = transactionHistoryToCoupons.CouponsId.ToList()
+
         };
+
     }
 }
