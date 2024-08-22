@@ -13,7 +13,7 @@ IEndpointInstance endpointInstance = null;
 try
 {
     var bootstrapLoggingConfiguration = new LoggerConfiguration()
-        .WriteTo.File("OnlineShopWeb_Fatal.log");
+        .WriteTo.File("Logs/OnlineShopWeb_Fatal.log");
     Log.Logger = bootstrapLoggingConfiguration.CreateBootstrapLogger();
 
     // Add services to the container.
