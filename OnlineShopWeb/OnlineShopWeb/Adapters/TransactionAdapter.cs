@@ -5,25 +5,25 @@ using OnlineShopWeb.TransferObjects.Dtos;
 
 namespace OnlineShopWeb.Adapters;
 
-public class TransactionHistoryAdapter : ITransactionHistoryAdapter
+public class TransactionAdapter : ITransactionHistoryAdapter
 {
     private readonly IHttpClientWrapper _httpClientWrapper;
     private readonly string _apiUrl;
-    public TransactionHistoryAdapter(IHttpClientWrapper httpClientWrapper,
+    public TransactionAdapter(IHttpClientWrapper httpClientWrapper,
         IOptionsSnapshot<HttpClientWrapperOptions> options)
     {
         _httpClientWrapper = httpClientWrapper;
-        _apiUrl = options.Get("ApiTransactionHistory").ApiUrl;
+        _apiUrl = options.Get("ApiTransaction").ApiUrl;
     }
 
     public async Task<List<TransactionHistoryObjectsDto>> GetTransactionHistoryList(string id)
     {
-        return await _httpClientWrapper.Get<List<TransactionHistoryObjectsDto>>(_apiUrl, "transactionhistory", "list", id);
+        return await _httpClientWrapper.Get<List<TransactionHistoryObjectsDto>>(_apiUrl, "transaction", "list", id);
     }
 
     public async Task<TransactionHistoryDto> AddTransactionHistory(TransactionHistoryDto transactionHistoryDto)
     {
-        return await _httpClientWrapper.Post<TransactionHistoryDto, TransactionHistoryDto>(_apiUrl, "transactionhistory",
+        return await _httpClientWrapper.Post<TransactionHistoryDto, TransactionHistoryDto>(_apiUrl, "transaction",
             transactionHistoryDto);
     }
 }

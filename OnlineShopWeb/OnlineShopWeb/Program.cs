@@ -33,13 +33,13 @@ try
         builder.Configuration.GetSection("ApiUserClientOptions")).
         Configure<HttpClientWrapperOptions>("ApiCouponProductClientOptions",
         builder.Configuration.GetSection("ApiCouponProductClientOptions")).
-        Configure<HttpClientWrapperOptions>("ApiTransactionHistory",
-        builder.Configuration.GetSection("ApiTransactionHistory"));
+        Configure<HttpClientWrapperOptions>("ApiTransaction",
+        builder.Configuration.GetSection("ApiTransaction"));
 
     builder.Services.AddScoped<IHttpClientWrapper, HttpClientWrapper>().
         AddScoped<IUserAdapter, UserAdapter>().
         AddScoped<IProductCouponAdapter, ProductCouponAdapter>().
-        AddScoped<ITransactionHistoryAdapter, TransactionHistoryAdapter>();
+        AddScoped<ITransactionHistoryAdapter, TransactionAdapter>();
 
     builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
