@@ -16,14 +16,14 @@ public class TransactionAdapter : ITransactionHistoryAdapter
         _apiUrl = options.Get("ApiTransaction").ApiUrl;
     }
 
-    public async Task<List<TransactionHistoryObjectsDto>> GetTransactionHistoryList(string id)
+    public async Task<List<TransactionObjectsDto>> GetTransactionHistoryList(string id)
     {
-        return await _httpClientWrapper.Get<List<TransactionHistoryObjectsDto>>(_apiUrl, "transaction", "list", id);
+        return await _httpClientWrapper.Get<List<TransactionObjectsDto>>(_apiUrl, "transaction", "list", id);
     }
 
-    public async Task<TransactionHistoryDto> AddTransactionHistory(TransactionHistoryDto transactionHistoryDto)
+    public async Task<AddTransactionDto> AddTransaction(AddTransactionDto transactionHistoryDto)
     {
-        return await _httpClientWrapper.Post<TransactionHistoryDto, TransactionHistoryDto>(_apiUrl, "transaction",
+        return await _httpClientWrapper.Post<AddTransactionDto, AddTransactionDto>(_apiUrl, "transaction",
             transactionHistoryDto);
     }
 }

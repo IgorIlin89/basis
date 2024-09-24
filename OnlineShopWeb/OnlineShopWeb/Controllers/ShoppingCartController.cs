@@ -124,6 +124,7 @@ public class ShoppingCartController : Controller
         return Ok(new
         {
             isValid = true,
+            couponId = couponDto.CouponId,
             amountOfDiscount = couponDto.AmountOfDiscount,
             typeOfDiscount = couponDto.TypeOfDiscount
         });
@@ -160,43 +161,38 @@ public class ShoppingCartController : Controller
                 });
             }
 
-            List<int> couponDtoList = new List<int>();
+            List<AddTransactionToCouponsDto> couponDtoList = new List<AddTransactionToCouponsDto>();
 
             foreach (var element in model.CouponModelList)
             {
-                couponDtoList.Add(element.CouponId.Value);
+                couponDtoList.Add(new AddTransactionToCouponsDto
+                {
+                    CouponId = element.CouponId.Value,
+                    Code = element.Code,
+                    AmountOfDiscount = element.AmountOfDiscount,
+                    TypeOfDiscountDto = (TypeOfDiscountDto)element.TypeOfDiscount
+                });
             }
 
-            //foreach (var element in model.CouponModelList)
-            //{
-            //    couponCodeList.Add(element.Code);
-            //}
-
-            var transactionHistoryDto = new TransactionHistoryDto
+            var transactionDto = new AddTransactionDto
             {
                 UserId = HttpContext.Name(),
-                PaymentDate = DateTime.Now,
-                ProductsInCartDto = productsInCartList,
-                CouponsDto = new TransactionHistoryToCouponsDto
-                {
-                    CouponsDtoId = couponDtoList
-                }
+                ProductsInCart = productsInCartList,
+                Coupons = couponDtoList
             };
 
             var httpBody = new StringContent(
-                    JsonSerializer.Serialize(transactionHistoryDto),
+                    JsonSerializer.Serialize(transactionDto),
                     Encoding.UTF8,
                     Application.Json);
 
-            await _transactionHistoryAdapter.AddTransactionHistory(transactionHistoryDto);
+            await _transactionHistoryAdapter.AddTransaction(transactionDto);
 
             // If this doesnt work, THAN make it event based
             // In Ui make 2 buttons, 1 is immedaite, one make it so he´waits 1 min 
             //with transaction SEPA-Lastschrift
 
             HttpContext.AppendShoppingCart(new ShoppingCartListModel());
-
-
 
             return RedirectToAction("Index", "TransactionHistory");
         }

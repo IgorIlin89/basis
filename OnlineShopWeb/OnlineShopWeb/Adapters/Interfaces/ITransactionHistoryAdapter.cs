@@ -4,6 +4,6 @@ namespace OnlineShopWeb.Adapters.Interfaces;
 
 public interface ITransactionHistoryAdapter
 {
-    Task<TransactionHistoryDto> AddTransactionHistory(TransactionHistoryDto transactionHistoryDto);
-    Task<List<TransactionHistoryObjectsDto>> GetTransactionHistoryList(string id);
+    Task<AddTransactionDto> AddTransaction(AddTransactionDto transactionHistoryDto);
+    Task<List<TransactionObjectsDto>> GetTransactionHistoryList(string id);
 }

@@ -2,7 +2,7 @@
 
 namespace OnlineShopWeb.TransferObjects.Dtos;
 
-public class TransactionHistoryObjectsDto
+public class TransactionObjectsDto
 {
     public int Id { get; set; }
     public int UserId { get; set; }

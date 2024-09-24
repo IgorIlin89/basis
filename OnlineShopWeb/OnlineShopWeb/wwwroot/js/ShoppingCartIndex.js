@@ -27,6 +27,7 @@ async function getCouponCode() {
 
     let coupon = {
         Code: couponCode,
+        CouponId: couponCodeData.couponId,
         AmountOfDiscount: couponCodeData.amountOfDiscount,
         TypeOfDiscount: couponCodeData.typeOfDiscount
     }

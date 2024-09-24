@@ -9,6 +9,7 @@
 }
 <table>
     <tr>
+        <th hidden>CouponId Id</th>
         <th>Coupon Code</th>
         <th>Amount of Discount</th>
         <th>Type of Discount</th>
@@ -20,6 +21,7 @@
         {
             <tr>
                 @{
+                    <td hidden> @(element.CouponId)</td>
                     <td> @(element.Code)</td>
                     <td> @(element.AmountOfDiscount)</td>
                     <td> @(element.TypeOfDiscount)</td>

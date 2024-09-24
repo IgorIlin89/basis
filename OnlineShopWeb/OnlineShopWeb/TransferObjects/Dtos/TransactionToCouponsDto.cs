@@ -1,0 +1,15 @@
+﻿namespace OnlineShopWeb.TransferObjects.Dtos;
+
+public class TransactionToCouponsDto
+{
+    public int Id { get; set; }
+    public int? TransactionDtoId { get; set; }
+    public int CouponId { get; set; }
+    public string Code { get; set; }
+    public double AmountOfDiscount { get; set; }
+    public TypeOfDiscountDto TypeOfDiscountDto { get; set; }
+    //public int Id { get; set; }
+    //public int TransactionHistoryId { get; set; }
+    //public TransactionDto TransactionHistoryDto { get; set; }
+    //public ICollection<int> CouponsDtoId { get; set; }
+}

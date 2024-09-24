@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Logs\" />
-    <Folder Include="Views\UnexpectedError\" />
   </ItemGroup>
 
 </Project>
