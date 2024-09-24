@@ -149,11 +149,11 @@ public class ShoppingCartController : Controller
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            List<ProductInCartDto> productsInCartList = new List<ProductInCartDto>();
+            List<AddProductInCartDto> productsInCartList = new List<AddProductInCartDto>();
 
             foreach (var element in model.ShoppingCartModelList)
             {
-                productsInCartList.Add(new ProductInCartDto
+                productsInCartList.Add(new AddProductInCartDto
                 {
                     Count = element.Count,
                     ProductId = element.ProductModelInCart.ProductId.Value,
@@ -177,8 +177,8 @@ public class ShoppingCartController : Controller
             var transactionDto = new AddTransactionDto
             {
                 UserId = HttpContext.Name(),
-                ProductsInCart = productsInCartList,
-                Coupons = couponDtoList
+                AddProductsInCartDto = productsInCartList,
+                AddCouponsDto = couponDtoList
             };
 
             var httpBody = new StringContent(
