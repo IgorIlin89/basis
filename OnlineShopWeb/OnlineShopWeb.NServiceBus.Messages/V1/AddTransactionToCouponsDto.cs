@@ -1,4 +1,4 @@
-﻿namespace OnlineShopWeb.TransferObjects.Dtos;
+﻿namespace OnlineShopWeb.Messages.V1;
 
 public class AddTransactionToCouponsDto
 {

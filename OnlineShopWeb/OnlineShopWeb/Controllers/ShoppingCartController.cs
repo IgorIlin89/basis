@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NServiceBus;
 using OnlineShopWeb.Adapters.Interfaces;
 using OnlineShopWeb.ExtensionMethods;
 using OnlineShopWeb.Misc;
@@ -17,15 +18,18 @@ public class ShoppingCartController : Controller
     private readonly IUserAdapter _userAdapter;
     private readonly IProductCouponAdapter _productCouponAdapter;
     private readonly ITransactionHistoryAdapter _transactionHistoryAdapter;
+    private readonly IMessageSession _messageSession;
 
     public ShoppingCartController(IHttpClientWrapper clientWrapper,
         IUserAdapter userAdapter, IProductCouponAdapter productCouponAdapter,
-        ITransactionHistoryAdapter transactionHistoryAdapter)
+        ITransactionHistoryAdapter transactionHistoryAdapter,
+        IMessageSession messageSession)
     {
         _httpClientWrapper = clientWrapper;
         _userAdapter = userAdapter;
         _productCouponAdapter = productCouponAdapter;
         _transactionHistoryAdapter = transactionHistoryAdapter;
+        _messageSession = messageSession;
     }
 
     [HttpGet]
@@ -137,7 +141,19 @@ public class ShoppingCartController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult> BuyAllItemsInShoppingCart()
+    public async Task<ActionResult> BuyAllItemsInShoppingCartServiceBus()
+    {
+        return await BuyAllItemsInShoppingCart(true);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> BuyAllItemsInShoppingCartSynchronous()
+    {
+        return await BuyAllItemsInShoppingCart(false);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> BuyAllItemsInShoppingCart(Boolean nServiceBus)
     {
         var model = GetShoppingCart();
 
@@ -149,44 +165,32 @@ public class ShoppingCartController : Controller
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            List<AddProductInCartDto> productsInCartList = new List<AddProductInCartDto>();
+            var productsInCartList = new List<AddProductInCartDto>();
+            var couponDtoList = new List<AddTransactionToCouponsDto>();
+            var transactionDto = new AddTransactionDto();
 
-            foreach (var element in model.ShoppingCartModelList)
-            {
-                productsInCartList.Add(new AddProductInCartDto
-                {
-                    Count = element.Count,
-                    ProductId = element.ProductModelInCart.ProductId.Value,
-                    PricePerProduct = element.ProductModelInCart.Price,
-                });
-            }
+            var serviceBusProductInCartDto = new List<OnlineShopWeb.Messages.V1.AddProductInCartDto>();
+            var serviceBusCouponsDto = new List<OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto>();
+            var serviceBusTransactionDto = new OnlineShopWeb.Messages.V1.Events.AddTransactionEvent();
 
-            List<AddTransactionToCouponsDto> couponDtoList = new List<AddTransactionToCouponsDto>();
-
-            foreach (var element in model.CouponModelList)
-            {
-                couponDtoList.Add(new AddTransactionToCouponsDto
-                {
-                    CouponId = element.CouponId.Value,
-                    Code = element.Code,
-                    AmountOfDiscount = element.AmountOfDiscount,
-                    TypeOfDiscountDto = (TypeOfDiscountDto)element.TypeOfDiscount
-                });
-            }
-
-            var transactionDto = new AddTransactionDto
-            {
-                UserId = HttpContext.Name(),
-                AddProductsInCartDto = productsInCartList,
-                AddCouponsDto = couponDtoList
-            };
+            CreateTransferObject(model, ref productsInCartList, ref couponDtoList, ref transactionDto,
+                ref serviceBusProductInCartDto, ref serviceBusCouponsDto, ref serviceBusTransactionDto);
 
             var httpBody = new StringContent(
                     JsonSerializer.Serialize(transactionDto),
                     Encoding.UTF8,
                     Application.Json);
 
-            await _transactionHistoryAdapter.AddTransaction(transactionDto);
+            if (nServiceBus)
+            {
+                await _messageSession.Publish(serviceBusTransactionDto);
+            }
+            else
+            {
+                await _transactionHistoryAdapter.AddTransaction(transactionDto);
+            }
+
+
 
             // If this doesnt work, THAN make it event based
             // In Ui make 2 buttons, 1 is immedaite, one make it so he´waits 1 min 
@@ -200,6 +204,73 @@ public class ShoppingCartController : Controller
         {
             return RedirectToAction("Index", "TransactionHistory");
         }
+    }
+
+    private void CreateTransferObject(ShoppingCartListModel model, ref List<AddProductInCartDto> productsInCartList,
+        ref List<AddTransactionToCouponsDto> couponDtoList,
+        ref AddTransactionDto transactionDto,
+        ref List<OnlineShopWeb.Messages.V1.AddProductInCartDto> serviceBusProductInCartDto,
+        ref List<OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto> serviceBusCouponsDto,
+        ref OnlineShopWeb.Messages.V1.Events.AddTransactionEvent serviceBusTransactionDto)
+    {
+
+
+        foreach (var element in model.ShoppingCartModelList)
+        {
+            serviceBusProductInCartDto.Add(new OnlineShopWeb.Messages.V1.AddProductInCartDto
+            {
+                Count = element.Count,
+                ProductId = element.ProductModelInCart.ProductId.Value,
+                PricePerProduct = element.ProductModelInCart.Price,
+            });
+        }
+
+        foreach (var element in model.ShoppingCartModelList)
+        {
+            productsInCartList.Add(new AddProductInCartDto
+            {
+                Count = element.Count,
+                ProductId = element.ProductModelInCart.ProductId.Value,
+                PricePerProduct = element.ProductModelInCart.Price,
+            });
+        }
+
+        foreach (var element in model.CouponModelList)
+        {
+            couponDtoList.Add(new AddTransactionToCouponsDto
+            {
+                CouponId = element.CouponId.Value,
+                Code = element.Code,
+                AmountOfDiscount = element.AmountOfDiscount,
+                TypeOfDiscountDto = (TypeOfDiscountDto)element.TypeOfDiscount
+            });
+        }
+
+        foreach (var element in model.CouponModelList)
+        {
+            serviceBusCouponsDto.Add(new OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto
+            {
+                CouponId = element.CouponId.Value,
+                Code = element.Code,
+                AmountOfDiscount = element.AmountOfDiscount,
+                TypeOfDiscountDto = (OnlineShopWeb.Messages.V1.TypeOfDiscountDto)element.TypeOfDiscount
+            });
+        }
+
+        transactionDto = new AddTransactionDto
+        {
+            UserId = HttpContext.Name(),
+            AddProductsInCartDto = productsInCartList,
+            AddCouponsDto = couponDtoList
+        };
+
+        //transactionDto.UserId = HttpContext.Name();
+        //transactionDto.AddProductsInCartDto = serviceBusProductInCartDto;
+        //transactionDto.AddCouponsDto = serviceBusCouponsDto;
+
+        serviceBusTransactionDto.UserId = HttpContext.Name();
+        serviceBusTransactionDto.AddProductsInCartDto = serviceBusProductInCartDto;
+        serviceBusTransactionDto.AddCouponsDto = serviceBusCouponsDto;
     }
 
     private ShoppingCartListModel GetShoppingCart()

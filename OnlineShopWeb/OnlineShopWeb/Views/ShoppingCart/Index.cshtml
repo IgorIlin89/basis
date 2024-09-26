@@ -97,6 +97,10 @@
 <br />
 <br />
 <br />
-@(Html.ActionLink("Buy everything", "BuyAllItemsInShoppingCart", "ShoppingCart", new { }, new { @class = "btn btn-secondary" }))
+@(Html.ActionLink("Buy everything synchronous", "BuyAllItemsInShoppingCartSynchronous", "ShoppingCart", new { }, new { @class = "btn btn-secondary" }))
+<br />
+<br />
+@(Html.ActionLink("Buy everything NServiceBus", "BuyAllItemsInShoppingCartServiceBus", "ShoppingCart", new { }, new { @class = "btn btn-secondary" }))
+
 
 

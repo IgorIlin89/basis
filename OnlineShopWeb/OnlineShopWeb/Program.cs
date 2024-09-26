@@ -3,8 +3,8 @@ using Microsoft.Data.SqlClient;
 using NServiceBus;
 using OnlineShopWeb.Adapters;
 using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.Messages.V1.Events;
 using OnlineShopWeb.Misc;
-using OnlineShopWeb.NServiceBus.Messages;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -105,7 +105,7 @@ try
     transportConfig.SchemaAndCatalog.UseSchemaForQueue("audit", "dbo");
 
     var transport = endpointConfiguration.UseTransport<SqlServerTransport>(transportConfig);
-    transport.RouteToEndpoint(typeof(TestCommand), "ApiTransaction");
+    transport.RouteToEndpoint(typeof(AddTransactionEvent), "ApiTransaction");
 
     //persistence
     var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
@@ -118,6 +118,8 @@ try
 
     var endpointContainer = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, builder.Services);
     endpointInstance = await endpointContainer.Start(builder.Services.BuildServiceProvider());
+
+    builder.Services.AddSingleton<NServiceBus.IMessageSession>(endpointInstance);
 
     //End NServiceBus
 
