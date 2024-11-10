@@ -39,7 +39,7 @@ try
     builder.Services.AddScoped<IHttpClientWrapper, HttpClientWrapper>().
         AddScoped<IUserAdapter, UserAdapter>().
         AddScoped<IProductCouponAdapter, ProductCouponAdapter>().
-        AddScoped<ITransactionHistoryAdapter, TransactionAdapter>();
+        AddScoped<ITransactionAdapter, TransactionAdapter>();
 
     builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>

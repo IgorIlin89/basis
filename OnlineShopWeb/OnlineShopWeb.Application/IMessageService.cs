@@ -1,8 +1,8 @@
 ﻿
-namespace OnlineShopWeb.Application
-{
-    public interface IMessageService
-    {
-        Task SendOrder();
-    }
-}
+//namespace OnlineShopWeb.Application
+//{
+//    public interface IMessageService
+//    {
+//        Task SendOrder();
+//    }
+//}

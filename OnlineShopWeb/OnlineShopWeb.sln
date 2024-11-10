@@ -14,7 +14,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShopWeb.Messages", "OnlineShopWeb.NServiceBus.Messages\OnlineShopWeb.Messages.csproj", "{CB812432-7412-41BB-B957-BFC65BE836B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShopWeb.Application", "OnlineShopWeb.Application\OnlineShopWeb.Application.csproj", "{4B0763FE-0849-4172-B517-F85D3714CC83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShopWeb.Application", "OnlineShopWeb.Application\OnlineShopWeb.Application.csproj", "{4B0763FE-0849-4172-B517-F85D3714CC83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserAdapter", "UserAdapter\UserAdapter.csproj", "{9E291FB9-EC8B-4574-90AA-0ED37745480F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionAdapter", "TransactionAdapter\TransactionAdapter.csproj", "{CDCD46A8-C0AC-432C-A3F2-D38717EDF825}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductCouponAdapter", "ProductCouponAdapter\ProductCouponAdapter.csproj", "{9D5206B1-98AF-4600-93EC-38127280820E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Input", "Input", "{1C6C0DEB-03F6-4511-9B0E-B13D7B577EC3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "output", "output", "{BC306CB3-1779-4713-AD86-C5699C42B974}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,9 +48,28 @@ Global
 		{4B0763FE-0849-4172-B517-F85D3714CC83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B0763FE-0849-4172-B517-F85D3714CC83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B0763FE-0849-4172-B517-F85D3714CC83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E291FB9-EC8B-4574-90AA-0ED37745480F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E291FB9-EC8B-4574-90AA-0ED37745480F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E291FB9-EC8B-4574-90AA-0ED37745480F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E291FB9-EC8B-4574-90AA-0ED37745480F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDCD46A8-C0AC-432C-A3F2-D38717EDF825}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDCD46A8-C0AC-432C-A3F2-D38717EDF825}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDCD46A8-C0AC-432C-A3F2-D38717EDF825}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDCD46A8-C0AC-432C-A3F2-D38717EDF825}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D5206B1-98AF-4600-93EC-38127280820E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D5206B1-98AF-4600-93EC-38127280820E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D5206B1-98AF-4600-93EC-38127280820E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D5206B1-98AF-4600-93EC-38127280820E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B5BC9F1-68EC-43EA-8A17-871B1A2E85F2} = {1C6C0DEB-03F6-4511-9B0E-B13D7B577EC3}
+		{CB812432-7412-41BB-B957-BFC65BE836B6} = {BC306CB3-1779-4713-AD86-C5699C42B974}
+		{9E291FB9-EC8B-4574-90AA-0ED37745480F} = {BC306CB3-1779-4713-AD86-C5699C42B974}
+		{CDCD46A8-C0AC-432C-A3F2-D38717EDF825} = {BC306CB3-1779-4713-AD86-C5699C42B974}
+		{9D5206B1-98AF-4600-93EC-38127280820E} = {BC306CB3-1779-4713-AD86-C5699C42B974}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3356DED8-67F6-436E-82F2-A172506F2329}

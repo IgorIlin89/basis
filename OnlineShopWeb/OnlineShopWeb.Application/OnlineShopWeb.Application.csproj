@@ -9,6 +9,13 @@
   <ItemGroup>
     <ProjectReference Include="..\OnlineShopWeb.Domain\OnlineShopWeb.Domain.csproj" />
     <ProjectReference Include="..\OnlineShopWeb.NServiceBus.Messages\OnlineShopWeb.Messages.csproj" />
+    <ProjectReference Include="..\ProductCouponAdapter\ProductCouponAdapter.csproj" />
+    <ProjectReference Include="..\TransactionAdapter\TransactionAdapter.csproj" />
+    <ProjectReference Include="..\UserAdapter\UserAdapter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

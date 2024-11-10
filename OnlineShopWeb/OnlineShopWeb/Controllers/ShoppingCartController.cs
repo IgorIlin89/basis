@@ -17,12 +17,12 @@ public class ShoppingCartController : Controller
     private readonly IHttpClientWrapper _httpClientWrapper;
     private readonly IUserAdapter _userAdapter;
     private readonly IProductCouponAdapter _productCouponAdapter;
-    private readonly ITransactionHistoryAdapter _transactionHistoryAdapter;
+    private readonly ITransactionAdapter _transactionHistoryAdapter;
     private readonly IMessageSession _messageSession;
 
     public ShoppingCartController(IHttpClientWrapper clientWrapper,
         IUserAdapter userAdapter, IProductCouponAdapter productCouponAdapter,
-        ITransactionHistoryAdapter transactionHistoryAdapter,
+        ITransactionAdapter transactionHistoryAdapter,
         IMessageSession messageSession)
     {
         _httpClientWrapper = clientWrapper;

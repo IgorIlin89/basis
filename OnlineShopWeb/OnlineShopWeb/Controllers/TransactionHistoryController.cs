@@ -5,7 +5,7 @@ using OnlineShopWeb.TransferObjects.Models.ListModels;
 
 namespace OnlineShopWeb.Controllers;
 
-public class TransactionHistoryController(ITransactionHistoryAdapter transactionHistoryAdapter) : Controller
+public class TransactionHistoryController(ITransactionAdapter transactionHistoryAdapter) : Controller
 {
     //public IHttpClientWrapper _httpClientWrapper;
     //private readonly HttpClient _httpClient = new HttpClient();

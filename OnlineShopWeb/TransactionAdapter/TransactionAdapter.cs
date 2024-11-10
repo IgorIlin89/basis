@@ -1,11 +1,6 @@
-﻿using Microsoft.Extensions.Options;
-using OnlineShopWeb.Adapters.Interfaces;
-using OnlineShopWeb.Misc;
-using OnlineShopWeb.TransferObjects.Dtos;
+﻿namespace TransactionAdapter;
 
-namespace OnlineShopWeb.Adapters;
-
-public class TransactionAdapter : ITransactionAdapter
+public class TransactionAdapter : ITransactionHistoryAdapter
 {
     private readonly IHttpClientWrapper _httpClientWrapper;
     private readonly string _apiUrl;

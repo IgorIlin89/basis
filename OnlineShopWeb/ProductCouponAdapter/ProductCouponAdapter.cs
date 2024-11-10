@@ -1,9 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using OnlineShopWeb.Adapters.Interfaces;
-using OnlineShopWeb.Misc;
-using OnlineShopWeb.TransferObjects.Dtos;
-
-namespace OnlineShopWeb.Adapters;
+﻿namespace ProductCouponAdapter;
 //TODO
 // In adapter mapping output to domain
 //commanhandler needded in application

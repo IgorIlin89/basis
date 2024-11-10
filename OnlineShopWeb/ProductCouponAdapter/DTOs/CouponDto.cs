@@ -1,13 +1,12 @@
-﻿namespace OnlineShopWeb.Domain;
+﻿namespace ProductCouponAdapter.DTOs;
 
-public class Coupon
+public class CouponDto
 {
-    public int Id { get; set; }
+    public int? CouponId { get; set; }
     public string Code { get; set; }
     public double AmountOfDiscount { get; set; }
     public TypeOfDiscountDto TypeOfDiscount { get; set; }
     public long? MaxNumberOfUses { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
-    public ICollection<TransactionHistory>? TransactionHistories { get; set; }
 }

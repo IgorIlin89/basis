@@ -1,5 +1,5 @@
-﻿@using OnlineShopWeb.TransferObjects.Models;
-@using OnlineShopWeb.Domain;
+﻿@using OnlineShopWeb.TransferObjects.Dtos
+@using OnlineShopWeb.TransferObjects.Models;
 @model CouponModel
 @{
     ViewData["Title"] = "Igors Home Page";
@@ -32,7 +32,7 @@
 
     <label>Type of Discount :</label>
     @Html.DropDownList("TypeOfDiscount",
-            Html.GetEnumSelectList<TypeOfDiscount>(), "-- Select One --", new { @required = "required" })
+            Html.GetEnumSelectList<TypeOfDiscountDto>(), "-- Select One --", new { @required = "required" })
 
     <br />
 
