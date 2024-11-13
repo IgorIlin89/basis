@@ -1,11 +1,16 @@
-﻿namespace UserAdapter;
+﻿using Microsoft.Extensions.Options;
+using OnlineShopWeb.Domain;
+using UserAdapter.DTOs;
+using Utility.Misc;
 
-public class UserAdapter : IUserAdapter
+namespace UserAdapter;
+
+public class UserAdapterProject : IUserAdapterProject
 {
     private readonly IHttpClientWrapper _httpClientWrapper;
     private readonly string _apiUrl;
 
-    public UserAdapter(IHttpClientWrapper httpClientWrapper,
+    public UserAdapterProject(IHttpClientWrapper httpClientWrapper,
         IOptionsSnapshot<HttpClientWrapperOptions> options)
     {
         _httpClientWrapper = httpClientWrapper;
@@ -27,9 +32,14 @@ public class UserAdapter : IUserAdapter
         return await _httpClientWrapper.Get<UserDto>(_apiUrl, "user", id);
     }
 
-    public async Task<UserDto> GetUserByEmail(string email)
+    public async Task<User> GetUserByEmail(User user)
     {
-        return await _httpClientWrapper.Get<UserDto>(_apiUrl, "user", "email", email);
+        var request = user.MapToDto();
+        var received = await _httpClientWrapper.Get<UserDto>(_apiUrl, "user", "email", request.EMail);
+
+        var result = received.MapToUser();
+
+        return result;
     }
 
     public async Task<UserDto> UserUpdate(UserDto userToUpdate)

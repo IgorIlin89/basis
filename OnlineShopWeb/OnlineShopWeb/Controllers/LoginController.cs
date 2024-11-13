@@ -2,21 +2,26 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.Application.Commands;
+using OnlineShopWeb.Application.Interfaces;
 using OnlineShopWeb.Domain;
 using OnlineShopWeb.TransferObjects.Dtos;
 using OnlineShopWeb.TransferObjects.Models;
 using System.Security.Claims;
+using UserAdapter;
 
 namespace OnlineShopWeb.Controllers;
 
-public class LoginController : Controller
+public class LoginController(IGetUserByEmailCommandHandler getUserByEmailCommandHandler) : Controller
 {
     private readonly IUserAdapter _userAdapter;
+    private readonly IUserAdapterProject _userAdapterProject;
 
-    public LoginController(IUserAdapter userAdapter)
-    {
-        _userAdapter = userAdapter;
-    }
+    //public LoginController(IUserAdapter userAdapter, IUserAdapterProject userAdapterProject)
+    //{
+    //    _userAdapter = userAdapter;
+    //    _userAdapterProject = userAdapterProject;
+    //}
 
     [HttpGet]
     public IActionResult SignIn()
@@ -29,28 +34,31 @@ public class LoginController : Controller
     {
         if (ModelState.IsValid)
         {
-            var userDto = await _userAdapter.GetUserByEmail(model.EMail);
+            var command = new GetUserByEmailCommand(model.EMail);
+            var user = getUserByEmailCommandHandler.Handle(command);
 
-            if (userDto is null)
+            //var userDto = await _userAdapter.GetUserByEmail(model.EMail);
+
+            if (user is null)
             {
                 ModelState.AddModelError("Model", "User does not exist");
                 return View(model);
             }
 
-            var user = new User
-            {
-                Id = userDto.UserId.Value,
-                EMail = userDto.EMail,
-                GivenName = userDto.GivenName,
-                Surname = userDto.Surname,
-                Age = userDto.Age,
-                Country = userDto.Country,
-                City = userDto.City,
-                Street = userDto.Street,
-                HouseNumber = userDto.HouseNumber,
-                PostalCode = userDto.PostalCode,
-                Password = userDto.Password
-            };
+            //var user = new User
+            //{
+            //    Id = userDto.UserId.Value,
+            //    EMail = userDto.EMail,
+            //    GivenName = userDto.GivenName,
+            //    Surname = userDto.Surname,
+            //    Age = userDto.Age,
+            //    Country = userDto.Country,
+            //    City = userDto.City,
+            //    Street = userDto.Street,
+            //    HouseNumber = userDto.HouseNumber,
+            //    PostalCode = userDto.PostalCode,
+            //    Password = userDto.Password
+            //};
 
             if (user.Password.Trim() != model.Password.Trim())
             {

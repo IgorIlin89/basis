@@ -1,6 +1,10 @@
-﻿namespace TransactionAdapter;
+﻿using Microsoft.Extensions.Options;
+using TransactionAdapter.DTOs;
+using Utility.Misc;
 
-public class TransactionAdapter : ITransactionHistoryAdapter
+namespace TransactionAdapter;
+
+public class TransactionAdapter : ITransactionAdapter
 {
     private readonly IHttpClientWrapper _httpClientWrapper;
     private readonly string _apiUrl;

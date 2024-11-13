@@ -1,7 +1,11 @@
-﻿namespace ProductCouponAdapter;
+﻿using Microsoft.Extensions.Options;
+using ProductCouponAdapter.DTOs;
+using Utility.Misc;
+
+namespace ProductCouponAdapter;
 //TODO
 // In adapter mapping output to domain
-//commanhandler needded in application
+//commandhandler needded in application
 public class ProductCouponAdapter : IProductCouponAdapter
 {
     private readonly IHttpClientWrapper _httpClientWrapper;

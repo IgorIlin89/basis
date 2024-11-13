@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Data.SqlClient;
 using NServiceBus;
-using OnlineShopWeb.Adapters;
 using OnlineShopWeb.Adapters.Interfaces;
 using OnlineShopWeb.Messages.V1.Events;
 using OnlineShopWeb.Misc;
@@ -37,9 +36,10 @@ try
         builder.Configuration.GetSection("ApiTransaction"));
 
     builder.Services.AddScoped<IHttpClientWrapper, HttpClientWrapper>().
-        AddScoped<IUserAdapter, UserAdapter>().
-        AddScoped<IProductCouponAdapter, ProductCouponAdapter>().
-        AddScoped<ITransactionAdapter, TransactionAdapter>();
+        AddScoped<IUserAdapter, OnlineShopWeb.Adapters.UserAdapter>().
+        AddScoped<IProductCouponAdapter, OnlineShopWeb.Adapters.ProductCouponAdapter>().
+        AddScoped<ITransactionAdapter, OnlineShopWeb.Adapters.TransactionAdapter>().
+        AddApplication();
 
     builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>

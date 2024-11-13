@@ -1,4 +1,6 @@
-﻿namespace ProductCouponAdapter;
+﻿using ProductCouponAdapter.DTOs;
+
+namespace ProductCouponAdapter;
 
 public interface IProductCouponAdapter
 {

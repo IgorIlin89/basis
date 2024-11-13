@@ -3,7 +3,6 @@ using OnlineShopWeb.TransferObjects.Dtos;
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace OnlineShopWeb.Misc;
 
@@ -42,7 +41,6 @@ public class HttpClientWrapper : IHttpClientWrapper
     }
 
 
-
     public async Task<TOut> Put<TIn, TOut>(string apiUrl, string basePath, TIn postObject, params string[] args)
     {
         var uri = CreateUri(apiUrl, basePath, args);
@@ -68,7 +66,7 @@ public class HttpClientWrapper : IHttpClientWrapper
         var httpBody = new StringContent(
                             JsonSerializer.Serialize(postObject),
                             Encoding.UTF8,
-                            Application.Json);
+                            System.Net.Mime.MediaTypeNames.Application.Json);
 
         var request = new HttpRequestMessage()
         {

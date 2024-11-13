@@ -1,4 +1,6 @@
-﻿namespace TransactionAdapter;
+﻿using TransactionAdapter.DTOs;
+
+namespace TransactionAdapter;
 
 public interface ITransactionAdapter
 {

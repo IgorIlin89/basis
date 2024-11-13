@@ -16,15 +16,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShopWeb.Messages", "O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShopWeb.Application", "OnlineShopWeb.Application\OnlineShopWeb.Application.csproj", "{4B0763FE-0849-4172-B517-F85D3714CC83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserAdapter", "UserAdapter\UserAdapter.csproj", "{9E291FB9-EC8B-4574-90AA-0ED37745480F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserAdapter", "UserAdapter\UserAdapter.csproj", "{9E291FB9-EC8B-4574-90AA-0ED37745480F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionAdapter", "TransactionAdapter\TransactionAdapter.csproj", "{CDCD46A8-C0AC-432C-A3F2-D38717EDF825}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransactionAdapter", "TransactionAdapter\TransactionAdapter.csproj", "{CDCD46A8-C0AC-432C-A3F2-D38717EDF825}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductCouponAdapter", "ProductCouponAdapter\ProductCouponAdapter.csproj", "{9D5206B1-98AF-4600-93EC-38127280820E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductCouponAdapter", "ProductCouponAdapter\ProductCouponAdapter.csproj", "{9D5206B1-98AF-4600-93EC-38127280820E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Input", "Input", "{1C6C0DEB-03F6-4511-9B0E-B13D7B577EC3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "output", "output", "{BC306CB3-1779-4713-AD86-C5699C42B974}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility\Utility.csproj", "{283E7DB5-C1AF-425E-BA84-36461E7FB6DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +62,10 @@ Global
 		{9D5206B1-98AF-4600-93EC-38127280820E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D5206B1-98AF-4600-93EC-38127280820E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D5206B1-98AF-4600-93EC-38127280820E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{283E7DB5-C1AF-425E-BA84-36461E7FB6DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{283E7DB5-C1AF-425E-BA84-36461E7FB6DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{283E7DB5-C1AF-425E-BA84-36461E7FB6DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{283E7DB5-C1AF-425E-BA84-36461E7FB6DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

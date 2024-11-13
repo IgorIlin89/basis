@@ -7,6 +7,7 @@ public class GetCouponDetailsCommandHandler
 {
     public Coupon Handle(GetCouponDetailsCommand command)
     {
-
+        //TODO
+        return new Coupon();
     }
 }

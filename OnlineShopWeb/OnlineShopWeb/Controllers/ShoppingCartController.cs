@@ -8,7 +8,6 @@ using OnlineShopWeb.TransferObjects.Models;
 using OnlineShopWeb.TransferObjects.Models.ListModels;
 using System.Text;
 using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -179,7 +178,7 @@ public class ShoppingCartController : Controller
             var httpBody = new StringContent(
                     JsonSerializer.Serialize(transactionDto),
                     Encoding.UTF8,
-                    Application.Json);
+                    System.Net.Mime.MediaTypeNames.Application.Json);
 
             if (nServiceBus)
             {

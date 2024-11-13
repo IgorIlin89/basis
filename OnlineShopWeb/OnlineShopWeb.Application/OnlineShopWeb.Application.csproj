@@ -14,8 +14,4 @@
     <ProjectReference Include="..\UserAdapter\UserAdapter.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>

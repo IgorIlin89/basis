@@ -1,8 +1,11 @@
-﻿namespace UserAdapter;
+﻿using OnlineShopWeb.Domain;
+using UserAdapter.DTOs;
 
-public interface IUserAdapter
+namespace UserAdapter;
+
+public interface IUserAdapterProject
 {
-    Task<UserDto> GetUserByEmail(string email);
+    Task<User> GetUserByEmail(User user);
     Task<UserDto> GetUserById(string id);
     Task<UserDto> UserAdd(UserDto userToAdd);
     void UserDelete(string id);
