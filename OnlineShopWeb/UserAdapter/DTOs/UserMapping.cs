@@ -35,4 +35,7 @@ public static class UserMapping
             HouseNumber = userDto.HouseNumber,
             PostalCode = userDto.PostalCode,
         };
+
+    public static List<User> MapToUserList(this List<UserDto> userDto) =>
+        userDto.Select(o => o.MapToUser()).ToList();
 }

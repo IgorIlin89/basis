@@ -1,4 +1,4 @@
-﻿namespace OnlineShopWeb.Application.Commands;
+﻿namespace OnlineShopWeb.Application.Commands.Coupon;
 
 public record GetCouponDetailsCommand
 {

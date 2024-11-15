@@ -1,4 +1,4 @@
-﻿using OnlineShopWeb.Application.Commands;
+﻿using OnlineShopWeb.Application.Commands.User;
 using OnlineShopWeb.Domain;
 
 namespace OnlineShopWeb.Application.Interfaces;

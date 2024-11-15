@@ -5,6 +5,7 @@ using OnlineShopWeb.Adapters.Interfaces;
 using OnlineShopWeb.Messages.V1.Events;
 using OnlineShopWeb.Misc;
 using Serilog;
+using UserAdapter;
 
 var builder = WebApplication.CreateBuilder(args);
 IEndpointInstance endpointInstance = null;
@@ -35,8 +36,10 @@ try
         Configure<HttpClientWrapperOptions>("ApiTransaction",
         builder.Configuration.GetSection("ApiTransaction"));
 
-    builder.Services.AddScoped<IHttpClientWrapper, HttpClientWrapper>().
+    builder.Services.AddScoped<Utility.Misc.IHttpClientWrapper, Utility.Misc.HttpClientWrapper>().
+        AddScoped<OnlineShopWeb.Misc.IHttpClientWrapper, OnlineShopWeb.Misc.HttpClientWrapper>().
         AddScoped<IUserAdapter, OnlineShopWeb.Adapters.UserAdapter>().
+        AddScoped<IUserAdapterProject, UserAdapter.UserAdapterProject>().
         AddScoped<IProductCouponAdapter, OnlineShopWeb.Adapters.ProductCouponAdapter>().
         AddScoped<ITransactionAdapter, OnlineShopWeb.Adapters.TransactionAdapter>().
         AddApplication();

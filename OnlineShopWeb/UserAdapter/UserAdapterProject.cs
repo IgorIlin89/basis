@@ -17,9 +17,10 @@ public class UserAdapterProject : IUserAdapterProject
         _apiUrl = options.Get("ApiUserClientOptions").ApiUrl;
     }
 
-    public async Task<List<UserDto>> GetUserList()
+    public async Task<List<User>> GetUserList()
     {
-        return await _httpClientWrapper.Get<List<UserDto>>(_apiUrl, "user", "list");
+        var received = await _httpClientWrapper.Get<List<UserDto>>(_apiUrl, "user", "list");
+        return received.MapToUserList();
     }
 
     public void UserDelete(string id)
@@ -47,9 +48,12 @@ public class UserAdapterProject : IUserAdapterProject
         return await _httpClientWrapper.Put<UserDto, UserDto>(_apiUrl, "user", userToUpdate);
     }
 
-    public async Task<UserDto> UserAdd(UserDto userToAdd)
+    public async Task<User> UserAdd(User userToAdd)
     {
-        return await _httpClientWrapper.Post<UserDto, UserDto>(_apiUrl, "user", userToAdd);
+        var request = userToAdd.MapToDto();
+        var received = await _httpClientWrapper.Post<UserDto, UserDto>(_apiUrl, "user", request);
+        var result = received.MapToUser();
+        return result;
     }
 
     public async Task<ChangePasswordDto> ChangeUserPassword(ChangePasswordDto changePasswordDto)
