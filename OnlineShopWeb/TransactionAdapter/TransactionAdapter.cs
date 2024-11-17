@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
+using OnlineShopWeb.Domain;
 using TransactionAdapter.DTOs;
+using TransactionAdapter.Mapping;
 using Utility.Misc;
+using Utility.Misc.Options;
 
 namespace TransactionAdapter;
 
@@ -9,20 +12,23 @@ public class TransactionAdapter : ITransactionAdapter
     private readonly IHttpClientWrapper _httpClientWrapper;
     private readonly string _apiUrl;
     public TransactionAdapter(IHttpClientWrapper httpClientWrapper,
-        IOptionsSnapshot<HttpClientWrapperOptions> options)
+        IOptions<ApiTransactionOptions> options)
     {
         _httpClientWrapper = httpClientWrapper;
-        _apiUrl = options.Get("ApiTransaction").ApiUrl;
+        _apiUrl = options.Value.ApiUrl;
     }
 
-    public async Task<List<TransactionObjectsDto>> GetTransactionHistoryList(string id)
+    public async Task<List<Transaction>> GetTransactionList(string id)
     {
-        return await _httpClientWrapper.Get<List<TransactionObjectsDto>>(_apiUrl, "transaction", "list", id);
+        var received = await _httpClientWrapper.Get<List<TransactionObjectsDto>>(_apiUrl, "transaction", "list", id);
+        return received.MapToTransaction();
     }
 
-    public async Task<AddTransactionDto> AddTransaction(AddTransactionDto transactionHistoryDto)
+    public async Task<Transaction> AddTransaction(AddTransaction addTransaction)
     {
-        return await _httpClientWrapper.Post<AddTransactionDto, AddTransactionDto>(_apiUrl, "transaction",
-            transactionHistoryDto);
+        var received = await _httpClientWrapper.Post<AddTransactionDto, TransactionObjectsDto>(_apiUrl, "transaction",
+            addTransaction.MapToDto());
+
+        return received.MapToTransaction();
     }
 }

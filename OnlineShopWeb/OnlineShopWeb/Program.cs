@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Data.SqlClient;
 using NServiceBus;
-using OnlineShopWeb.Adapters.Interfaces;
 using OnlineShopWeb.Messages.V1.Events;
 using OnlineShopWeb.Misc;
 using Serilog;
-using UserAdapter;
+using Utility.Misc.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 IEndpointInstance endpointInstance = null;
@@ -27,21 +26,18 @@ try
 
     builder.Services.AddSession();
 
-    builder.Services.Configure<HttpClientWrapperOptions>("ApiClientOptions",
-        builder.Configuration.GetSection("ApiClientOptions")).
-        Configure<HttpClientWrapperOptions>("ApiUserClientOptions",
-        builder.Configuration.GetSection("ApiUserClientOptions")).
-        Configure<HttpClientWrapperOptions>("ApiCouponProductClientOptions",
-        builder.Configuration.GetSection("ApiCouponProductClientOptions")).
-        Configure<HttpClientWrapperOptions>("ApiTransaction",
-        builder.Configuration.GetSection("ApiTransaction"));
+    //TODO use bind to unify options
+    builder.Services.Configure<ApiClientOptions>(builder.Configuration.GetSection("ApiClientOptions")).
+        Configure<ApiUserOptions>(builder.Configuration.GetSection("ApiUserClientOptions")).
+        Configure<ApiCouponProductOptions>(builder.Configuration.GetSection("ApiCouponProductClientOptions")).
+        //Configure<ApiCouponProductOptions>("ApiCouponProductClientOptions", builder.Configuration).
+        Configure<ApiTransactionOptions>(builder.Configuration.GetSection("ApiTransaction"));
 
+    // If i bind the above todo there will be problems here
     builder.Services.AddScoped<Utility.Misc.IHttpClientWrapper, Utility.Misc.HttpClientWrapper>().
-        AddScoped<OnlineShopWeb.Misc.IHttpClientWrapper, OnlineShopWeb.Misc.HttpClientWrapper>().
-        AddScoped<IUserAdapter, OnlineShopWeb.Adapters.UserAdapter>().
-        AddScoped<IUserAdapterProject, UserAdapter.UserAdapterProject>().
-        AddScoped<IProductCouponAdapter, OnlineShopWeb.Adapters.ProductCouponAdapter>().
-        AddScoped<ITransactionAdapter, OnlineShopWeb.Adapters.TransactionAdapter>().
+        AddScoped<UserAdapter.IUserAdapter, UserAdapter.UserAdapter>().
+        AddScoped<ProductCouponAdapter.IProductCouponAdapter, ProductCouponAdapter.ProductCouponAdapter>().
+        AddScoped<TransactionAdapter.ITransactionAdapter, TransactionAdapter.TransactionAdapter>().
         AddApplication();
 
     builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

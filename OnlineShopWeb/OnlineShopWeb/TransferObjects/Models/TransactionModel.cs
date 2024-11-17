@@ -1,8 +1,6 @@
-﻿using OnlineShopWeb.Domain;
+﻿namespace OnlineShopWeb.TransferObjects.Models;
 
-namespace OnlineShopWeb.TransferObjects.Models;
-
-public class TransactionHistoryModel
+public class TransactionModel
 {
     public int Id { get; set; }
     public int UserId { get; set; }

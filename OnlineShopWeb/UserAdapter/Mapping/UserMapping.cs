@@ -1,6 +1,7 @@
 ﻿using OnlineShopWeb.Domain;
+using UserAdapter.DTOs;
 
-namespace UserAdapter.DTOs;
+namespace UserAdapter.Mapping;
 
 public static class UserMapping
 {

@@ -1,9 +1,9 @@
-﻿using TransactionAdapter.DTOs;
+﻿using OnlineShopWeb.Domain;
 
 namespace TransactionAdapter;
 
 public interface ITransactionAdapter
 {
-    Task<AddTransactionDto> AddTransaction(AddTransactionDto transactionHistoryDto);
-    Task<List<TransactionObjectsDto>> GetTransactionHistoryList(string id);
+    Task<Transaction> AddTransaction(AddTransaction transactionHistory);
+    Task<List<Transaction>> GetTransactionList(string id);
 }

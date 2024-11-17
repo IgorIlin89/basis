@@ -5,5 +5,5 @@ namespace OnlineShopWeb.Application.Interfaces;
 
 public interface IGetUserByEmailCommandHandler
 {
-    User Handle(GetUserByEmailCommand command);
+    Task<User> Handle(GetUserByEmailCommand command);
 }

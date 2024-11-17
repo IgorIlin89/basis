@@ -1,24 +1,14 @@
-﻿using OnlineShopWeb.ExtensionMethods;
-using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.TransferObjects.Dtos;
-using static System.Net.Mime.MediaTypeNames;
-using System.Text.Json;
-using System.Text;
-using OnlineShopWeb.Misc;
-using OnlineShopWeb.Adapters.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShopWeb.Application.Commands.User;
+using OnlineShopWeb.Application.Interfaces;
+using OnlineShopWeb.ExtensionMethods;
 using OnlineShopWeb.TransferObjects.Models;
 
 namespace OnlineShopWeb.Controllers;
 
-public class PasswordController : Controller
+public class PasswordController(IGetUserByIdCommandHandler getUserByIdCommandHandler,
+    IChangeUserPasswordCommandHandler changeUserPasswordCommandHandler) : Controller
 {
-    private readonly IUserAdapter _userAdapter;
-
-    public PasswordController(IUserAdapter userAdapter)
-    {
-        _userAdapter = userAdapter;
-    }
-
     [HttpGet]
     public IActionResult ChangePassword()
     {
@@ -35,17 +25,14 @@ public class PasswordController : Controller
     {
         if (ModelState.IsValid)
         {
-            var userDto = await _userAdapter.GetUserById(model.UserId.ToString());
+            var command = new GetUserByIdCommand(model.UserId.ToString());
 
-            if (model.OldPassword == userDto.Password && model.Password == model.RepeatPassword)
+            var user = await getUserByIdCommandHandler.Handle(command);
+
+            if (model.OldPassword == user.Password && model.Password == model.RepeatPassword)
             {
-                var changePasswordDto = new ChangePasswordDto
-                {
-                    UserId = model.UserId,
-                    Password = model.Password
-                };
-
-                var request = await _userAdapter.ChangeUserPassword(changePasswordDto);
+                var commandChangePassword = new ChangeUserPasswordCommand(model.UserId.ToString(), model.Password);
+                var changedPassword = await changeUserPasswordCommandHandler.Handle(commandChangePassword);
 
                 return RedirectToAction("Index", "Product");
             }

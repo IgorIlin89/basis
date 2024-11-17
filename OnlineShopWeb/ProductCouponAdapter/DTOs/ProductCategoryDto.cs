@@ -1,10 +1,9 @@
-﻿namespace ProductCouponAdapter.DTOs
+﻿namespace ProductCouponAdapter.DTOs;
+
+public enum ProductCategoryDto
 {
-    public enum ProductCategoryDto
-    {
-        Cleaning = 1,
-        Sweets = 2,
-        Food = 3,
-        Electronics = 4,
-    }
+    Cleaning = 1,
+    Sweets = 2,
+    Food = 3,
+    Electronics = 4,
 }

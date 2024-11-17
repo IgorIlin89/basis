@@ -1,5 +1,5 @@
 ﻿@using OnlineShopWeb.TransferObjects.Models.ListModels;
-@model TransactionHistoryListModel
+@model TransactionListModel
 @{
     ViewData["Title"] = "Igors Home Page";
 }
@@ -19,14 +19,14 @@
         </tr>
 
         @{
-            foreach (var element in Model.TransactionHistoryModelList)
+            foreach (var element in Model.TransactionModelList)
             {
                 <tr>
                     <td> @(element.FinalPrice)</td>
                     <td> @(element.ProductNames)</td>
                     <td> @(element.CouponIds)</td>
                     <td> @(element.PaymentDate)</td>
-                    <td> @(Html.ActionLink("Delete", "Delete", "TransactionHistory", new { id = element.Id }, new { @class = "btn btn-secondary" }))</td>
+                    <td> @(Html.ActionLink("Delete", "Delete", "Transaction", new { id = element.Id }, new { @class = "btn btn-secondary" }))</td>
                 </tr>
             }
 

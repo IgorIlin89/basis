@@ -1,33 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Misc;
-using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.Application.Commands.Product;
+using OnlineShopWeb.Application.Interfaces;
+using OnlineShopWeb.TransferObjects.Mapping;
 using OnlineShopWeb.TransferObjects.Models;
 using OnlineShopWeb.TransferObjects.Models.ListModels;
-using OnlineShopWeb.TransferObjects.Dtos;
-using OnlineShopWeb.TransferObjects.Mapping;
 
 namespace OnlineShopWeb.Controllers;
 
-public class ProductController : Controller
+public class ProductController(IGetProductByIdCommandHandler getProductByIdCommandHandler,
+    IGetProductListCommandHandler getProductListCommandHandler,
+    IProductAddCommandHandler productAddCommandHandler,
+    IProductDeleteCommandHandler productDeleteCommandHandler,
+    IProductUpdateCommandHandler productUpdateCommandHandler) : Controller
 {
-    private readonly IProductCouponAdapter _productCouponAdapter;
-
-    public ProductController(IProductCouponAdapter productCouponAdapter)
-    {
-        _productCouponAdapter = productCouponAdapter;
-    }
-
     [HttpGet]
     public async Task<ActionResult> Index()
     {
-        var productDtoList = await _productCouponAdapter.GetProductList();
+        var command = new GetProductListCommand();
+        var productList = await getProductListCommandHandler.Handle(command);
 
+        //TODO change view to model List<ProductModel>
+        //TODO first check ireadonly, dictionary etc. from todoapp
         var model = new ProductListModel();
-
-        foreach (var element in productDtoList)
-        {
-            model.ProductModelList.Add(element.MapToModel());
-        }
+        model.ProductModelList = productList.MapToModelList();
 
         return View(model);
     }
@@ -35,7 +30,8 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<ActionResult> Delete(int id)
     {
-        _productCouponAdapter.ProductDelete(id.ToString());
+        var command = new ProductDeleteCommand(id.ToString());
+        productDeleteCommandHandler.Handle(command);
 
         return RedirectToAction("Index", "Product");
     }
@@ -43,19 +39,10 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<ActionResult> Details(int id)
     {
-        var productDto = await _productCouponAdapter.GetProductById(id.ToString());
+        var command = new GetProductByIdCommand(id.ToString());
+        var product = await getProductByIdCommandHandler.Handle(command);
 
-        var model = new ProductModel
-        {
-            ProductId = productDto.ProductId,
-            Name = productDto.Name.Trim(),
-            Producer = productDto.Producer.Trim(),
-            Category = productDto.Category,
-            Picture = productDto.Picture.Trim(),
-            Price = productDto.Price
-        };
-
-        return View(model);
+        return View(product.MapToModel());
     }
 
     [HttpGet]
@@ -65,14 +52,10 @@ public class ProductController : Controller
 
         if (id is not null)
         {
-            var productDto = await _productCouponAdapter.GetProductById(id.ToString());
+            var command = new GetProductByIdCommand(id.ToString());
+            var product = await getProductByIdCommandHandler.Handle(command);
 
-            model.ProductId = productDto.ProductId;
-            model.Name = productDto.Name.Trim();
-            model.Producer = productDto.Producer.Trim();
-            model.Category = productDto.Category;
-            model.Picture = productDto.Picture.Trim();
-            model.Price = productDto.Price;
+            model = product.MapToModel();
         }
 
         return View(model);
@@ -86,30 +69,19 @@ public class ProductController : Controller
         {
             if (model.ProductId is not null)
             {
-                var productToEdit = new ProductDto
-                {
-                    ProductId = model.ProductId.Value,
-                    Name = model.Name,
-                    Producer = model.Producer,
-                    Category = model.Category,
-                    Picture = model.Picture,
-                    Price = model.Price
-                };
+                var commandToUpdate = new ProductUpdateCommand(model.ProductId.Value,
+                    model.Name, model.Producer, model.Category.MapToModel(), model.Picture,
+                    model.Price);
 
-                await _productCouponAdapter.ProductUpdate(productToEdit);
+                var product = await productUpdateCommandHandler.Handle(commandToUpdate);
             }
             else
             {
-                var productToAdd = new ProductDto
-                {
-                    Name = model.Name,
-                    Producer = model.Producer,
-                    Category = model.Category,
-                    Picture = model.Picture,
-                    Price = model.Price
-                };
+                var commandToAdd = new ProductAddCommand(model.ProductId.Value.ToString(),
+                    model.Name, model.Producer, model.Category.MapToModel(), model.Picture,
+                    model.Price);
 
-                await _productCouponAdapter.ProductAdd(productToAdd);
+                var product = await productAddCommandHandler.Handle(commandToAdd);
             }
 
             return RedirectToAction("Index", "Product");

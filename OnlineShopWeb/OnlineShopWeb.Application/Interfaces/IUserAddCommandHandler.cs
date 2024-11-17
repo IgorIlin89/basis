@@ -4,5 +4,5 @@ namespace OnlineShopWeb.Application.Interfaces;
 
 public interface IUserAddCommandHandler
 {
-    Domain.User Handle(UserAddCommand command);
+    Task<Domain.User> Handle(UserAddCommand command);
 }

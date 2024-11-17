@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
+using OnlineShopWeb.Domain;
 using ProductCouponAdapter.DTOs;
+using ProductCouponAdapter.Mapping;
 using Utility.Misc;
+using Utility.Misc.Options;
 
 namespace ProductCouponAdapter;
 //TODO
@@ -11,20 +14,23 @@ public class ProductCouponAdapter : IProductCouponAdapter
     private readonly IHttpClientWrapper _httpClientWrapper;
     private readonly string _apiUrl;
     public ProductCouponAdapter(IHttpClientWrapper httpClientWrapper,
-        IOptionsSnapshot<HttpClientWrapperOptions> options)
+        IOptions<ApiCouponProductOptions> options)
     {
         _httpClientWrapper = httpClientWrapper;
-        _apiUrl = options.Get("ApiCouponProductClientOptions").ApiUrl;
+        //TODO check for null
+        _apiUrl = options.Value.ApiUrl;
     }
 
-    public async Task<List<ProductDto>> GetProductList()
+    public async Task<List<Product>> GetProductList()
     {
-        return await _httpClientWrapper.Get<List<ProductDto>>(_apiUrl, "product", "list");
+        var received = await _httpClientWrapper.Get<List<ProductDto>>(_apiUrl, "product", "list");
+        return received.MapToList();
     }
 
-    public async Task<List<CouponDto>> GetCouponList()
+    public async Task<List<Coupon>> GetCouponList()
     {
-        return await _httpClientWrapper.Get<List<CouponDto>>(_apiUrl, "coupon", "list");
+        var received = await _httpClientWrapper.Get<List<CouponDto>>(_apiUrl, "coupon", "list");
+        return received.MapToCouponList();
     }
 
     public async void ProductDelete(string id)
@@ -37,40 +43,45 @@ public class ProductCouponAdapter : IProductCouponAdapter
         _httpClientWrapper.Delete(_apiUrl, "coupon", id);
     }
 
-    public async Task<ProductDto> GetProductById(string id)
+    public async Task<Product> GetProductById(string id)
     {
-        //TODO Adapter may not return DTO
-        //mapping domain to dto
-        return await _httpClientWrapper.Get<ProductDto>(_apiUrl, "product", id);
+        var received = await _httpClientWrapper.Get<ProductDto>(_apiUrl, "product", id);
+        return received.MapToProduct();
     }
 
-    public async Task<CouponDto> GetCouponById(string id)
+    public async Task<Coupon> GetCouponById(string id)
     {
-        return await _httpClientWrapper.Get<CouponDto>(_apiUrl, "coupon", id);
+        var received = await _httpClientWrapper.Get<CouponDto>(_apiUrl, "coupon", id);
+        return received.MapToDto();
     }
 
-    public async Task<CouponDto> GetCouponByCode(string couponCode)
+    public async Task<Coupon> GetCouponByCode(string couponCode)
     {
-        return await _httpClientWrapper.Get<CouponDto>(_apiUrl, "coupon", "code", couponCode);
+        var received = await _httpClientWrapper.Get<CouponDto>(_apiUrl, "coupon", "code", couponCode);
+        return received.MapToDto();
     }
 
-    public async Task<ProductDto> ProductUpdate(ProductDto productDto)
+    public async Task<Product> ProductUpdate(Product product)
     {
-        return await _httpClientWrapper.Put<ProductDto, ProductDto>(_apiUrl, "product", productDto);
+        var received = await _httpClientWrapper.Put<ProductDto, ProductDto>(_apiUrl, "product", product.MapToDto());
+        return received.MapToProduct();
     }
 
-    public async Task<CouponDto> CouponUpdate(CouponDto couponDto)
+    public async Task<Coupon> CouponUpdate(Coupon coupon)
     {
-        return await _httpClientWrapper.Put<CouponDto, CouponDto>(_apiUrl, "coupon", couponDto);
+        var received = await _httpClientWrapper.Put<CouponDto, CouponDto>(_apiUrl, "coupon", coupon.MapToCoupon());
+        return received.MapToDto();
     }
 
-    public async Task<ProductDto> ProductAdd(ProductDto productDto)
+    public async Task<Product> ProductAdd(Product product)
     {
-        return await _httpClientWrapper.Post<ProductDto, ProductDto>(_apiUrl, "product", productDto);
+        var received = await _httpClientWrapper.Post<ProductDto, ProductDto>(_apiUrl, "product", product.MapToDto());
+        return received.MapToProduct();
     }
 
-    public async Task<CouponDto> CouponAdd(CouponDto couponDto)
+    public async Task<Coupon> CouponAdd(Coupon coupon)
     {
-        return await _httpClientWrapper.Post<CouponDto, CouponDto>(_apiUrl, "coupon", couponDto);
+        var received = await _httpClientWrapper.Post<CouponDto, CouponDto>(_apiUrl, "coupon", coupon.MapToCoupon());
+        return received.MapToDto();
     }
 }

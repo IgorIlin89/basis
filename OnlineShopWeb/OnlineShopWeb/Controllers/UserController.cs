@@ -1,50 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.Application.Commands.User;
+using OnlineShopWeb.Application.Interfaces;
+using OnlineShopWeb.TransferObjects.Mapping;
 using OnlineShopWeb.TransferObjects.Models;
-using OnlineShopWeb.TransferObjects.Dtos;
-using OnlineShopWeb.TransferObjects.Models.ListModels;
 
 namespace OnlineShopWeb.Controllers;
-public class UserController : Controller
+public class UserController(IGetUserListCommandHandler getUserListCommandHandler,
+    IGetUserByEmailCommandHandler getUserByEmailCommandHandler,
+    IGetUserByIdCommandHandler getUserByIdCommandHandler,
+    IUserAddCommandHandler userAddCommandHandler,
+    IUserDeleteCommandHandler userDeleteCommandHandler,
+    IUserUpdateCommandHandler userUpdateCommandHandler) : Controller
 {
-    private readonly IUserAdapter _userAdapter;
-
-    public UserController(IUserAdapter userAdapter)
-    {
-        _userAdapter = userAdapter;
-    }
-
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var userDtoList = await _userAdapter.GetUserList();
-        var model = new UserListModel();
+        var command = new GetUserListCommand();
+        var userList = await getUserListCommandHandler.Handle(command);
 
-        foreach (var userDto in userDtoList)
-        {
-            model.UserModelList.Add(
-                new UserModel
-                {
-                    UserId = userDto.UserId,
-                    EMail = userDto.EMail,
-                    GivenName = userDto.GivenName,
-                    Surname = userDto.Surname,
-                    Age = userDto.Age,
-                    Country = userDto.Country,
-                    City = userDto.City,
-                    Street = userDto.Street,
-                    HouseNumber = userDto.HouseNumber,
-                    PostalCode = userDto.PostalCode,
-                });
-        }
-
-        return View(model);
+        return View(userList.MapToModelList());
     }
 
     [HttpGet]
-    public async Task<IActionResult> Delete(int id)
+    public IActionResult Delete(int id)
     {
-        _userAdapter.UserDelete(id.ToString());
+        var command = new UserDeleteCommand(id.ToString());
+        userDeleteCommandHandler.Handle(command);
 
         return RedirectToAction("Index", "User");
     }
@@ -52,23 +33,10 @@ public class UserController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
-        var userDto = await _userAdapter.GetUserById(id.ToString());
+        var command = new GetUserByIdCommand(id.ToString());
+        var user = await getUserByIdCommandHandler.Handle(command);
 
-        var model = new UserModel
-        {
-            UserId = userDto.UserId,
-            EMail = userDto.EMail.Trim(),
-            GivenName = userDto.GivenName.Trim(),
-            Surname = userDto.Surname.Trim(),
-            Age = userDto.Age,
-            Country = userDto.Country.Trim(),
-            City = userDto.City.Trim(),
-            Street = userDto.Street.Trim(),
-            HouseNumber = userDto.HouseNumber,
-            PostalCode = userDto.PostalCode
-        };
-
-        return View(model);
+        return View(user.MapToModel());
     }
 
     [HttpGet]
@@ -78,19 +46,9 @@ public class UserController : Controller
 
         if (HttpContext.User.Identity.Name is not null)
         {
-            var userDto = await _userAdapter.GetUserById(id.ToString());
-
-            model.UserId = userDto.UserId;
-            model.EMail = userDto.EMail.Trim();
-            model.GivenName = userDto.GivenName.Trim();
-            model.Surname = userDto.Surname.Trim();
-            model.Age = userDto.Age;
-            model.Country = userDto.Country.Trim();
-            model.City = userDto.City.Trim();
-            model.Street = userDto.Street.Trim();
-            model.HouseNumber = userDto.HouseNumber;
-            model.PostalCode = userDto.PostalCode;
-
+            var command = new GetUserByIdCommand(id.ToString());
+            var user = await getUserByIdCommandHandler.Handle(command);
+            model = user.MapToModel();
         }
 
         return View(model);
@@ -101,21 +59,12 @@ public class UserController : Controller
     {
         if (ModelState.IsValid)
         {
-            var userToUpdate = new UserDto
-            {
-                UserId = model.UserId,
-                EMail = model.EMail.Trim(),
-                GivenName = model.GivenName.Trim(),
-                Surname = model.Surname.Trim(),
-                Age = model.Age,
-                Country = model.Country.Trim(),
-                City = model.City.Trim(),
-                Street = model.Street.Trim(),
-                HouseNumber = model.HouseNumber,
-                PostalCode = model.PostalCode
-            };
 
-            await _userAdapter.UserUpdate(userToUpdate);
+            var command = new UserUpdateCommand(model.UserId.ToString(), model.EMail,
+                model.GivenName, model.Surname, model.Age, model.Country, model.City,
+                model.Street, model.HouseNumber, model.PostalCode);
+
+            var user = await userUpdateCommandHandler.Handle(command);
 
             return RedirectToAction("Index", "User");
         }

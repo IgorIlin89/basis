@@ -14,6 +14,6 @@ public class User
     public int HouseNumber { get; set; }
     public int PostalCode { get; set; }
     public string? Password { get; set; }
-    public ICollection<TransactionHistory>? TransactionHistories { get; set; }
+    public ICollection<Transaction>? TransactionHistories { get; set; }
 
 }

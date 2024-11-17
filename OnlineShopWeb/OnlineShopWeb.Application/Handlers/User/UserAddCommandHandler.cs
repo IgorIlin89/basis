@@ -4,9 +4,9 @@ using UserAdapter;
 
 namespace OnlineShopWeb.Application.Handlers.User;
 
-public class UserAddCommandHandler(IUserAdapterProject userAdapter) : IUserAddCommandHandler
+public class UserAddCommandHandler(IUserAdapter userAdapter) : IUserAddCommandHandler
 {
-    public Domain.User Handle(UserAddCommand command)
+    public async Task<Domain.User> Handle(UserAddCommand command)
     {
         var userToAdd = new Domain.User
         {
@@ -23,9 +23,7 @@ public class UserAddCommandHandler(IUserAdapterProject userAdapter) : IUserAddCo
 
         };
 
-        //TODO
-        var result = userAdapter.UserAdd(userToAdd);
-
-        return new Domain.User();
+        var result = await userAdapter.UserAdd(userToAdd);
+        return result;
     }
 }

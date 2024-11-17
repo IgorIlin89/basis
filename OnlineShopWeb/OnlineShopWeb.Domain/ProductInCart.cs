@@ -13,6 +13,6 @@ public  class ProductInCart
     public int ProductId { get; set; }
     public Product Product { get; set; }
     public int TransactionHistoryId { get; set; }
-    public TransactionHistory TransactionHistory { get; set; }
+    public Transaction TransactionHistory { get; set; }
 
 }

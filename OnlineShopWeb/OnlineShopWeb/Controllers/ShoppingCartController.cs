@@ -1,36 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NServiceBus;
-using OnlineShopWeb.Adapters.Interfaces;
+using OnlineShopWeb.Application.Commands.Coupon;
+using OnlineShopWeb.Application.Commands.Transaction;
+using OnlineShopWeb.Application.Interfaces;
 using OnlineShopWeb.ExtensionMethods;
-using OnlineShopWeb.Misc;
-using OnlineShopWeb.TransferObjects.Dtos;
 using OnlineShopWeb.TransferObjects.Models;
 using OnlineShopWeb.TransferObjects.Models.ListModels;
 using System.Text;
 using System.Text.Json;
+using TransactionAdapter.DTOs;
 
 namespace OnlineShopWeb.Controllers;
 
-public class ShoppingCartController : Controller
+public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCodeCommandHandler,
+    IAddTransactionCommandHandler addTransactionCommandHandler, IMessageSession _messageSession)
+    : Controller
 {
-    private readonly IHttpClientWrapper _httpClientWrapper;
-    private readonly IUserAdapter _userAdapter;
-    private readonly IProductCouponAdapter _productCouponAdapter;
-    private readonly ITransactionAdapter _transactionHistoryAdapter;
-    private readonly IMessageSession _messageSession;
-
-    public ShoppingCartController(IHttpClientWrapper clientWrapper,
-        IUserAdapter userAdapter, IProductCouponAdapter productCouponAdapter,
-        ITransactionAdapter transactionHistoryAdapter,
-        IMessageSession messageSession)
-    {
-        _httpClientWrapper = clientWrapper;
-        _userAdapter = userAdapter;
-        _productCouponAdapter = productCouponAdapter;
-        _transactionHistoryAdapter = transactionHistoryAdapter;
-        _messageSession = messageSession;
-    }
-
     [HttpGet]
     public IActionResult Index()
     {
@@ -97,9 +82,10 @@ public class ShoppingCartController : Controller
     [HttpPost]
     public async Task<ActionResult> AddCoupon([FromBody] string couponCode)
     {
-        var couponDto = await _productCouponAdapter.GetCouponByCode(couponCode);
+        var command = new GetCouponByCodeCommand(couponCode);
+        var coupon = await getCouponByCodeCommandHandler.Handle(command);
 
-        if (couponDto == null)
+        if (coupon == null)
         {
             return Ok(new
             {
@@ -107,7 +93,7 @@ public class ShoppingCartController : Controller
                 validationError = "The CouponCode does not exist"
             });
         }
-        else if ((couponDto.StartDate > DateTime.Now || couponDto.EndDate < DateTime.Now))
+        else if ((coupon.StartDate > DateTime.Now || coupon.EndDate < DateTime.Now))
         {
             return Ok(new
             {
@@ -115,7 +101,7 @@ public class ShoppingCartController : Controller
                 validationError = "The CouponCode is expired"
             });
         }
-        else if (couponDto.MaxNumberOfUses == 0)
+        else if (coupon.MaxNumberOfUses == 0)
         {
             return Ok(new
             {
@@ -127,9 +113,9 @@ public class ShoppingCartController : Controller
         return Ok(new
         {
             isValid = true,
-            couponId = couponDto.CouponId,
-            amountOfDiscount = couponDto.AmountOfDiscount,
-            typeOfDiscount = couponDto.TypeOfDiscount
+            couponId = coupon.Id,
+            amountOfDiscount = coupon.AmountOfDiscount,
+            typeOfDiscount = coupon.TypeOfDiscount
         });
     }
 
@@ -186,10 +172,12 @@ public class ShoppingCartController : Controller
             }
             else
             {
-                await _transactionHistoryAdapter.AddTransaction(transactionDto);
+                var command = new AddTransactionCommand(transactionDto.UserId.ToString(),
+                    transactionDto.AddProductsInCartDto.ToList(),
+                    transactionDto.AddCouponsDto.ToList());
+
+                await addTransactionCommandHandler.Handle(command);
             }
-
-
 
             // If this doesnt work, THAN make it event based
             // In Ui make 2 buttons, 1 is immedaite, one make it so he´waits 1 min 

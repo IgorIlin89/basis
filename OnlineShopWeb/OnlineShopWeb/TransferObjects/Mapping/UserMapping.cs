@@ -1,4 +1,5 @@
-﻿using OnlineShopWeb.TransferObjects.Dtos;
+﻿using OnlineShopWeb.Domain;
+using OnlineShopWeb.TransferObjects.Dtos;
 using OnlineShopWeb.TransferObjects.Models;
 
 namespace OnlineShopWeb.TransferObjects.Mapping;
@@ -22,4 +23,25 @@ public static class UserMapping
             PostalCode = userDto.PostalCode,
         };
     }
+
+    public static UserModel MapToModel(this User user)
+    {
+        return new UserModel
+        {
+            UserId = user.Id,
+            EMail = user.EMail,
+            Password = user.Password,
+            GivenName = user.GivenName,
+            Surname = user.Surname,
+            Age = user.Age,
+            Country = user.Country,
+            City = user.City,
+            Street = user.Street,
+            HouseNumber = user.HouseNumber,
+            PostalCode = user.PostalCode,
+        };
+    }
+
+    public static ICollection<UserModel> MapToModelList(this ICollection<User> userList) =>
+        userList.Select(o => o.MapToModel()).ToList();
 }

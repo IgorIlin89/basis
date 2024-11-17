@@ -1,12 +1,14 @@
 ﻿using OnlineShopWeb.Application.Commands.Coupon;
+using OnlineShopWeb.Application.Interfaces;
+using ProductCouponAdapter;
 
 namespace OnlineShopWeb.Application.Handlers.Coupon;
 
-public class GetCouponDetailsCommandHandler
+public class GetCouponDetailsCommandHandler(IProductCouponAdapter productCouponAdapter) : IGetCouponDetailsCommandHandler
 {
-    public Domain.Coupon Handle(GetCouponDetailsCommand command)
+    public async Task<Domain.Coupon> Handle(GetCouponDetailsCommand command)
     {
-        //TODO
-        return new Domain.Coupon();
+        var result = await productCouponAdapter.GetCouponById(command.Id);
+        return result;
     }
 }

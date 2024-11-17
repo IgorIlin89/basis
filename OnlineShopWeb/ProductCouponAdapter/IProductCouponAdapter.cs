@@ -1,18 +1,18 @@
-﻿using ProductCouponAdapter.DTOs;
+﻿using OnlineShopWeb.Domain;
 
 namespace ProductCouponAdapter;
 
 public interface IProductCouponAdapter
 {
-    Task<List<CouponDto>> GetCouponList();
-    Task<List<ProductDto>> GetProductList();
+    Task<List<Coupon>> GetCouponList();
+    Task<List<Product>> GetProductList();
     void CouponDelete(string id);
     void ProductDelete(string id);
-    Task<ProductDto> GetProductById(string id);
-    Task<CouponDto> GetCouponById(string id);
-    Task<CouponDto> GetCouponByCode(string couponCode);
-    Task<ProductDto> ProductUpdate(ProductDto productDto);
-    Task<CouponDto> CouponUpdate(CouponDto couponDto);
-    Task<ProductDto> ProductAdd(ProductDto productDto);
-    Task<CouponDto> CouponAdd(CouponDto couponDto);
+    Task<Product> GetProductById(string id);
+    Task<Coupon> GetCouponById(string id);
+    Task<Coupon> GetCouponByCode(string couponCode);
+    Task<Product> ProductUpdate(Product product);
+    Task<Coupon> CouponUpdate(Coupon coupon);
+    Task<Product> ProductAdd(Product product);
+    Task<Coupon> CouponAdd(Coupon coupon);
 }

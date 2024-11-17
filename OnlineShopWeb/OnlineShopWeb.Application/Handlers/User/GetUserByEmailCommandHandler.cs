@@ -4,19 +4,17 @@ using UserAdapter;
 
 namespace OnlineShopWeb.Application.Handlers.User;
 
-public class GetUserByEmailCommandHandler(IUserAdapterProject UserAdapter) : IGetUserByEmailCommandHandler
+public class GetUserByEmailCommandHandler(IUserAdapter userAdapter) : IGetUserByEmailCommandHandler
 {
-    public Domain.User Handle(GetUserByEmailCommand command)
+    public async Task<Domain.User> Handle(GetUserByEmailCommand command)
     {
-        //TODO
         var user = new Domain.User
         {
             EMail = command.EMail
         };
 
-        //TODO
-        var result = UserAdapter.GetUserByEmail(user);
+        var result = await userAdapter.GetUserByEmail(user);
 
-        return new Domain.User();
+        return result;
     }
 }

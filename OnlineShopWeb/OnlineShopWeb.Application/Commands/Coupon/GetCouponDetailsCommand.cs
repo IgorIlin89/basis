@@ -2,9 +2,9 @@
 
 public record GetCouponDetailsCommand
 {
-    public int Id;
+    public readonly string Id;
 
-    public GetCouponDetailsCommand(int id)
+    public GetCouponDetailsCommand(string id)
     {
         Id = id;
     }

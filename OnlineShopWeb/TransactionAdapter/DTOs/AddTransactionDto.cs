@@ -3,7 +3,7 @@
 public class AddTransactionDto
 {
     public int UserId { get; init; }
-    public List<AddProductInCartDto> AddProductsInCartDto { get; init; }
-    public List<AddTransactionToCouponsDto>? AddCouponsDto { get; init; }
+    public ICollection<AddProductInCartDto> AddProductsInCartDto { get; init; }
+    public ICollection<AddTransactionToCouponsDto>? AddCouponsDto { get; init; }
 }
 

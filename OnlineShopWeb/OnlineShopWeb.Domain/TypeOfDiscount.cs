@@ -1,6 +1,6 @@
 ﻿namespace OnlineShopWeb.Domain;
 
-public enum TypeOfDiscountDto
+public enum TypeOfDiscount
 {
     Percentage = 1,
     Total = 2
