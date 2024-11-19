@@ -18,6 +18,9 @@ public static class CouponMapping
             EndDate = couponDto.EndDate,
         };
 
+    public static IReadOnlyCollection<CouponModel> MapToModelList(this IReadOnlyCollection<Coupon> couponList) =>
+        couponList.Select(o => o.MapToModel()).ToList();
+
     public static TypeOfDiscountModel MapToModel(this TypeOfDiscount typeOfDiscount) =>
         typeOfDiscount switch
         {

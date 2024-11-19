@@ -3,7 +3,6 @@ using OnlineShopWeb.Application.Commands.Coupon;
 using OnlineShopWeb.Application.Interfaces;
 using OnlineShopWeb.TransferObjects.Mapping;
 using OnlineShopWeb.TransferObjects.Models;
-using OnlineShopWeb.TransferObjects.Models.ListModels;
 
 namespace OnlineShopWeb.Controllers;
 // mapping dto to model, and other way around
@@ -19,14 +18,8 @@ public class CouponController(IGetCouponListCommandHandler couponListCommandHand
         var command = new GetCouponListCommand();
         var couponList = await couponListCommandHandler.Handle(command);
 
-        var model = new CouponListModel();
 
-        foreach (var element in couponList)
-        {
-            model.CouponModelList.Add(element.MapToModel());
-        }
-
-        return View(model);
+        return View(couponList.MapToModelList());
     }
 
     [HttpGet]

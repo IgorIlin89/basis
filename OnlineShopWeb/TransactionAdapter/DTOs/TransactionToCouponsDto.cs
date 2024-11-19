@@ -8,8 +8,5 @@ public class TransactionToCouponsDto
     public string Code { get; set; }
     public double AmountOfDiscount { get; set; }
     public TypeOfDiscountDto TypeOfDiscountDto { get; set; }
-    //public int Id { get; set; }
-    //public int TransactionHistoryId { get; set; }
-    //public TransactionDto TransactionHistoryDto { get; set; }
-    //public ICollection<int> CouponsDtoId { get; set; }
+
 }

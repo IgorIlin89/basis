@@ -1,5 +1,5 @@
 ﻿@using OnlineShopWeb.TransferObjects.Models.ListModels;
-@model UserListModel
+@model List<UserModel>
 @{
     ViewData["Title"] = "Igors Home Page";
 }
@@ -32,7 +32,7 @@
             </tr>
 
             @{
-                foreach (var user in Model.UserModelList)
+                foreach (var user in Model)
                 {
                     <tr>
                         <td> @(user.UserId)</td>

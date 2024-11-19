@@ -27,7 +27,7 @@ public static class ProductMapping
         _ => throw new NotImplementedException()
     };
 
-    public static ProductCategoryDto MapToModel(this ProductCategoryModel productCategory) =>
+    public static ProductCategoryDto MapToDto(this ProductCategoryModel productCategory) =>
         productCategory switch
         {
             ProductCategoryModel.Cleaning => ProductCategoryDto.Cleaning,

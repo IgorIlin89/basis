@@ -4,5 +4,5 @@ namespace OnlineShopWeb.Application.Interfaces;
 
 public interface IAddTransactionCommandHandler
 {
-    Task<Domain.Transaction> Handle(AddTransactionCommand command);
+    Task<Domain.Transaction> Handle(AddTransactionCommandReview command);
 }

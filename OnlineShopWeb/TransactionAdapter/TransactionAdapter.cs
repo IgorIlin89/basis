@@ -24,10 +24,16 @@ public class TransactionAdapter : ITransactionAdapter
         return received.MapToTransaction();
     }
 
-    public async Task<Transaction> AddTransaction(AddTransaction addTransaction)
+    public async Task<Transaction> AddTransaction(string userId, List<ProductInCartDto> productInCartDtoList,
+        List<TransactionToCouponsDto>? couponDtoList)
     {
-        var received = await _httpClientWrapper.Post<AddTransactionDto, TransactionObjectsDto>(_apiUrl, "transaction",
-            addTransaction.MapToDto());
+        var received = await _httpClientWrapper.Post<Object, TransactionObjectsDto>(_apiUrl, "transaction",
+            new
+            {
+                UserId = userId,
+                AddProductsInCartDto = productInCartDtoList,
+                AddCouponsDto = couponDtoList
+            });
 
         return received.MapToTransaction();
     }

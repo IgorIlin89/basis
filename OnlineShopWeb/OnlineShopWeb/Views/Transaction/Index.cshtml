@@ -1,5 +1,5 @@
 ﻿@using OnlineShopWeb.TransferObjects.Models.ListModels;
-@model TransactionListModel
+@model List<TransactionModel>
 @{
     ViewData["Title"] = "Igors Home Page";
 }
@@ -19,7 +19,7 @@
         </tr>
 
         @{
-            foreach (var element in Model.TransactionModelList)
+            foreach (var element in Model)
             {
                 <tr>
                     <td> @(element.FinalPrice)</td>

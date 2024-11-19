@@ -1,5 +1,5 @@
 ﻿@using OnlineShopWeb.TransferObjects.Models.ListModels;
-@model CouponListModel
+@model List<CouponModel>
 @{
     ViewData["Title"] = "Igors Home Page";
 }
@@ -28,7 +28,7 @@
         </tr>
 
         @{
-            foreach (var coupon in Model.CouponModelList)
+            foreach (var coupon in Model)
             {
                 <tr>
                     <td> @(coupon.CouponId)</td>

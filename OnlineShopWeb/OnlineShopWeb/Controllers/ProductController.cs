@@ -70,7 +70,7 @@ public class ProductController(IGetProductByIdCommandHandler getProductByIdComma
             if (model.ProductId is not null)
             {
                 var commandToUpdate = new ProductUpdateCommand(model.ProductId.Value,
-                    model.Name, model.Producer, model.Category.MapToModel(), model.Picture,
+                    model.Name, model.Producer, model.Category.MapToDto(), model.Picture,
                     model.Price);
 
                 var product = await productUpdateCommandHandler.Handle(commandToUpdate);
@@ -78,7 +78,7 @@ public class ProductController(IGetProductByIdCommandHandler getProductByIdComma
             else
             {
                 var commandToAdd = new ProductAddCommand(model.ProductId.Value.ToString(),
-                    model.Name, model.Producer, model.Category.MapToModel(), model.Picture,
+                    model.Name, model.Producer, model.Category.MapToDto(), model.Picture,
                     model.Price);
 
                 var product = await productAddCommandHandler.Handle(commandToAdd);

@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Html;
-
-namespace OnlineShopWeb.TransferObjects.Models.ListModels;
+﻿namespace OnlineShopWeb.TransferObjects.Models.ListModels;
 
 public class ShoppingCartListModel
 {
-    public List<ProductInCartModel> ShoppingCartModelList { get; set; } = new List<ProductInCartModel>();
-    public List<CouponModel> CouponModelList { get; set; } = new List<CouponModel>();
+    public List<ProductInCartModel> ShoppingCartModelList { get; init; } = new List<ProductInCartModel>();
+    public List<CouponModel>? CouponModelList { get; init; } = new List<CouponModel>();
 }
