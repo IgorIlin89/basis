@@ -1,13 +1,5 @@
 ﻿namespace OnlineShopWeb.Application.Commands.User;
 
-public record ChangeUserPasswordCommand
+public record ChangeUserPasswordCommand(string UserId, string Password)
 {
-    public readonly string UserId;
-    public readonly string Password;
-
-    public ChangeUserPasswordCommand(string userId, string password)
-    {
-        UserId = userId;
-        Password = password;
-    }
 }

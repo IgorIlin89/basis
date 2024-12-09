@@ -1,11 +1,5 @@
 ﻿namespace OnlineShopWeb.Application.Commands.User;
 
-public record GetUserByIdCommand
+public record GetUserByIdCommand(string UserId)
 {
-    public readonly string UserId;
-
-    public GetUserByIdCommand(string userId)
-    {
-        UserId = userId;
-    }
 }

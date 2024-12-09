@@ -1,11 +1,5 @@
 ﻿namespace OnlineShopWeb.Application.Commands.Coupon;
 
-public record GetCouponByIdCommand
+public record GetCouponByIdCommand(string CouponId)
 {
-    public readonly string CouponId;
-
-    public GetCouponByIdCommand(string couponId)
-    {
-        CouponId = couponId;
-    }
 }

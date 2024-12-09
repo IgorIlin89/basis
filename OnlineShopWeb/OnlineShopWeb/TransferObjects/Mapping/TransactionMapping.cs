@@ -41,6 +41,33 @@ public static class TransactionMapping
         this IReadOnlyCollection<ProductInCartModel> modelList) =>
         modelList.Select(o => o.MapToDtoTransactionAdapter()).ToList();
 
+    public static OnlineShopWeb.Messages.V1.AddProductInCartDto MapToServiceBus(this ProductInCartModel model) =>
+        new OnlineShopWeb.Messages.V1.AddProductInCartDto
+        {
+            Count = model.Count,
+            PricePerProduct = model.ProductModelInCart.Price,
+            ProductId = model.ProductModelInCart.ProductId is null ? 0 : model.ProductModelInCart.ProductId.Value
+        };
+
+    //public static OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto MapToServiceBus(this CouponModel model) =>
+    //new OnlineShopWeb.Messages.V1.AddProductInCartDto
+    //{
+    //    Count = model.Count,
+    //    PricePerProduct = model.ProductModelInCart.Price,
+    //    ProductId = model.ProductModelInCart.ProductId is null ? 0 : model.ProductModelInCart.ProductId.Value
+    //};
+
+    //public static OnlineShopWeb.Messages.V1.Events.AddTransactionEvent MapToEvent(this ProductInCartModel model) =>
+    //    new OnlineShopWeb.Messages.V1.Events.AddTransactionEvent
+    //    {
+    //        UserId = model
+    //    }
+
+    //        public int UserId { get; set; }
+    //public DateTimeOffset PaymentDate { get; init; }
+    //public List<AddProductInCartDto> AddProductsInCartDto { get; set; }
+    //public List<AddTransactionToCouponsDto>? AddCouponsDto { get; set; }
+
     public static TransactionAdapter.DTOs.TypeOfDiscountDto MapToDtoAdapter(this TypeOfDiscountModel model) =>
         model switch
         {

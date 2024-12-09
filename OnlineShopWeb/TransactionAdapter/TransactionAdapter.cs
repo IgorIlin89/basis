@@ -27,7 +27,7 @@ public class TransactionAdapter : ITransactionAdapter
     public async Task<Transaction> AddTransaction(string userId, List<ProductInCartDto> productInCartDtoList,
         List<TransactionToCouponsDto>? couponDtoList)
     {
-        var received = await _httpClientWrapper.Post<Object, TransactionObjectsDto>(_apiUrl, "transaction",
+        var received = await _httpClientWrapper.Post<object, TransactionObjectsDto>(_apiUrl, "transaction",
             new
             {
                 UserId = userId,

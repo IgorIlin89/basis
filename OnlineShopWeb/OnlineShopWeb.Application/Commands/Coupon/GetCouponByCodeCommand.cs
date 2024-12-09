@@ -1,11 +1,5 @@
 ﻿namespace OnlineShopWeb.Application.Commands.Coupon;
 
-public record GetCouponByCodeCommand
+public record GetCouponByCodeCommand(string CouponCode)
 {
-    public readonly string CouponCode;
-
-    public GetCouponByCodeCommand(string couponCode)
-    {
-        CouponCode = couponCode;
-    }
 }

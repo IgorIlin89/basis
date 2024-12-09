@@ -171,7 +171,20 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
 
             if (nServiceBus)
             {
-                //await _messageSession.Publish(serviceBusTransactionDto);
+                //    var commandToNserviceBus = new OnlineShopWeb.Messages.V1.Events.AddTransactionEvent
+                //    {
+                //        UserId = HttpContext.Name(),
+                //        PaymentDate = DateTimeOffset.UtcNow,
+                //        AddProductsInCartDto = model.ShoppingCartModelList.MapToDtoListAdapter(),
+                //        model.CouponModelList is null ? null : model.CouponModelList.MapToDtoList())
+
+                //};
+
+                //await _messageSession.Publish(commandToNserviceBus);
+
+                //    serviceBusTransactionDto.UserId = HttpContext.Name();
+                //    serviceBusTransactionDto.AddProductsInCartDto = serviceBusProductInCartDto;
+                //    serviceBusTransactionDto.AddCouponsDto = serviceBusCouponsDto;
             }
             else
             {

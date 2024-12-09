@@ -1,11 +1,5 @@
 ﻿namespace OnlineShopWeb.Application.Commands.Product;
 
-public record GetProductByIdCommand
+public record GetProductByIdCommand(string ProductId)
 {
-    public readonly string ProductId;
-
-    public GetProductByIdCommand(string productId)
-    {
-        ProductId = productId;
-    }
 }

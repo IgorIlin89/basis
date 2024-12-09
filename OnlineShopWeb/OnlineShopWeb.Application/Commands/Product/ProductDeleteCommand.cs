@@ -1,11 +1,5 @@
 ﻿namespace OnlineShopWeb.Application.Commands.Product;
 
-public record ProductDeleteCommand
+public record ProductDeleteCommand(string ProductId)
 {
-    public readonly string ProductId;
-
-    public ProductDeleteCommand(string productId)
-    {
-        ProductId = productId;
-    }
 }

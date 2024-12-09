@@ -1,11 +1,5 @@
 ﻿namespace OnlineShopWeb.Application.Commands.User;
 
-public record UserDeleteCommand
+public record UserDeleteCommand(string UserId)
 {
-    public readonly string UserId;
-
-    public UserDeleteCommand(string userId)
-    {
-        UserId = userId;
-    }
 }

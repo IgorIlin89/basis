@@ -77,7 +77,7 @@ public class ProductController(IGetProductByIdCommandHandler getProductByIdComma
             }
             else
             {
-                var commandToAdd = new ProductAddCommand(model.ProductId.Value.ToString(),
+                var commandToAdd = new ProductAddCommand(null,
                     model.Name, model.Producer, model.Category.MapToDto(), model.Picture,
                     model.Price);
 
