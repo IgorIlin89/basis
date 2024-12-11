@@ -149,42 +149,21 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            //var productsInCartList = new List<AddProductInCartDto>();
-            //var couponDtoList = new List<AddTransactionToCouponsDto>();
-            //var transactionDto = new AddTransactionDto();
-
-            //var serviceBusProductInCartDto = new List<OnlineShopWeb.Messages.V1.AddProductInCartDto>();
-            //var serviceBusCouponsDto = new List<OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto>();
-            //var serviceBusTransactionDto = new OnlineShopWeb.Messages.V1.Events.AddTransactionEvent();
-
-            //CreateTransferObject(model, ref productsInCartList, ref couponDtoList, ref transactionDto,
-            //    ref serviceBusProductInCartDto, ref serviceBusCouponsDto, ref serviceBusTransactionDto);
-
-            //var httpBody = new StringContent(
-            //        JsonSerializer.Serialize(transactionDto),
-            //        Encoding.UTF8,
-            //        System.Net.Mime.MediaTypeNames.Application.Json);
-
             var command = new AddTransactionCommandReview(HttpContext.User.Identity.Name,
                     model.ShoppingCartModelList.MapToDtoListAdapter(),
                     model.CouponModelList is null ? null : model.CouponModelList.MapToDtoList());
 
             if (nServiceBus)
             {
-                //    var commandToNserviceBus = new OnlineShopWeb.Messages.V1.Events.AddTransactionEvent
-                //    {
-                //        UserId = HttpContext.Name(),
-                //        PaymentDate = DateTimeOffset.UtcNow,
-                //        AddProductsInCartDto = model.ShoppingCartModelList.MapToDtoListAdapter(),
-                //        model.CouponModelList is null ? null : model.CouponModelList.MapToDtoList())
+                var commandToNserviceBus = new OnlineShopWeb.Messages.V1.Events.AddTransactionEvent
+                {
+                    UserId = HttpContext.Name(),
+                    PaymentDate = DateTimeOffset.UtcNow,
+                    AddProductsInCartDto = model.ShoppingCartModelList.MapToServiceBusList(),
+                    AddCouponsDto = model.CouponModelList is null ? null : model.CouponModelList.MapToServiceBusList()
+                };
 
-                //};
-
-                //await _messageSession.Publish(commandToNserviceBus);
-
-                //    serviceBusTransactionDto.UserId = HttpContext.Name();
-                //    serviceBusTransactionDto.AddProductsInCartDto = serviceBusProductInCartDto;
-                //    serviceBusTransactionDto.AddCouponsDto = serviceBusCouponsDto;
+                await _messageSession.Publish(commandToNserviceBus);
             }
             else
             {

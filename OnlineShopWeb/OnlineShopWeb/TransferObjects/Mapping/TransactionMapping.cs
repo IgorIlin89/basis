@@ -41,32 +41,40 @@ public static class TransactionMapping
         this IReadOnlyCollection<ProductInCartModel> modelList) =>
         modelList.Select(o => o.MapToDtoTransactionAdapter()).ToList();
 
-    public static OnlineShopWeb.Messages.V1.AddProductInCartDto MapToServiceBus(this ProductInCartModel model) =>
-        new OnlineShopWeb.Messages.V1.AddProductInCartDto
+    public static OnlineShopWeb.Messages.V1.TypeOfDiscountDto MapToDtoMessages(this TypeOfDiscountModel model) =>
+        model switch
         {
-            Count = model.Count,
-            PricePerProduct = model.ProductModelInCart.Price,
-            ProductId = model.ProductModelInCart.ProductId is null ? 0 : model.ProductModelInCart.ProductId.Value
+            TypeOfDiscountModel.Percentage => OnlineShopWeb.Messages.V1.TypeOfDiscountDto.Percentage,
+            TypeOfDiscountModel.Total => OnlineShopWeb.Messages.V1.TypeOfDiscountDto.Total,
+            _ => throw new NotImplementedException(),
         };
 
-    //public static OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto MapToServiceBus(this CouponModel model) =>
-    //new OnlineShopWeb.Messages.V1.AddProductInCartDto
-    //{
-    //    Count = model.Count,
-    //    PricePerProduct = model.ProductModelInCart.Price,
-    //    ProductId = model.ProductModelInCart.ProductId is null ? 0 : model.ProductModelInCart.ProductId.Value
-    //};
+    public static OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto MapToServiceBus(this CouponModel model) =>
+    new OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto
+    {
+        CouponId = model.CouponId is null ? 0 : model.CouponId.Value,
+        Code = model.Code,
+        AmountOfDiscount = model.AmountOfDiscount,
+        TypeOfDiscountDto = model.TypeOfDiscount.MapToDtoMessages()
+    };
 
-    //public static OnlineShopWeb.Messages.V1.Events.AddTransactionEvent MapToEvent(this ProductInCartModel model) =>
-    //    new OnlineShopWeb.Messages.V1.Events.AddTransactionEvent
-    //    {
-    //        UserId = model
-    //    }
+    public static List<OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto> MapToServiceBusList(
+        this List<CouponModel> modelList) =>
+        modelList.Select(o => o.MapToServiceBus()).ToList();
 
-    //        public int UserId { get; set; }
-    //public DateTimeOffset PaymentDate { get; init; }
-    //public List<AddProductInCartDto> AddProductsInCartDto { get; set; }
-    //public List<AddTransactionToCouponsDto>? AddCouponsDto { get; set; }
+    public static OnlineShopWeb.Messages.V1.AddProductInCartDto MapToServiceBus(this ProductInCartModel model) =>
+    new OnlineShopWeb.Messages.V1.AddProductInCartDto
+    {
+        Count = model.Count,
+        PricePerProduct = model.ProductModelInCart.Price,
+        ProductId = model.ProductModelInCart.ProductId is null ? 0 : model.ProductModelInCart.ProductId.Value
+    };
+
+
+    //TODO If ICollection here error occurs
+    public static List<OnlineShopWeb.Messages.V1.AddProductInCartDto> MapToServiceBusList(
+        this List<ProductInCartModel> modelList) =>
+        modelList.Select(o => o.MapToServiceBus()).ToList();
 
     public static TransactionAdapter.DTOs.TypeOfDiscountDto MapToDtoAdapter(this TypeOfDiscountModel model) =>
         model switch
