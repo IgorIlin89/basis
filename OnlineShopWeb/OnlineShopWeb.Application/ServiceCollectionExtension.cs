@@ -28,7 +28,8 @@ public static class ServiceCollectionExtension
             AddScoped<IProductAddCommandHandler, ProductAddCommandHandler>().
             AddScoped<IProductDeleteCommandHandler, ProductDeleteCommandHandler>().
             AddScoped<IProductUpdateCommandHandler, ProductUpdateCommandHandler>().
-            AddScoped<IAddTransactionCommandHandler, AddTransactionCommandHandler>().
-            AddScoped<IGetTransactionListCommandHandler, GetTransactionListCommandHandler>();
+            AddScoped<IAddTransactionCommandHandler, AddTransactionHttpCommandHandler>().
+            AddScoped<IGetTransactionListCommandHandler, GetTransactionListCommandHandler>().
+            AddScoped<IAddTransactionMessagesCommandHandler, AddTransactionMessagesCommandHandler>();
     }
 }

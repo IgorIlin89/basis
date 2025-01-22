@@ -1,11 +1,30 @@
 syntax = "proto3";
 
-service Greeter {
-  rpc SayHello (HelloRequest) returns (HelloReply);
+//import "google/protobuf/wrappers.proto";
+ 
+option csharp_namespace = "GrpcTestService.Contracts";
+
+package GrpcAdapter;
+
+service AddTransactionService {
+  rpc AddTransactionRpc (AddTransaction) returns (Transaction);
+}
+//work with List<T>, accepts IEnumerable in strings
+message AddTransaction {
+  int32 id=1;
+  string addProductsInCartDto=2;
+  string addCouponsDto=3;
+  //bytes  
 }
 
-message AddTransaction {
-  string name = 1;
+message Transaction{
+	int32 id=1;
+    int32 userId=2;
+    string user=3;
+    string paymentDate=4;
+    int64 finalPrice=5;
+    string coupons=6;
+    repeated string productsInCart=7;
 }
 
 message GetTransactions {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NServiceBus;
 using OnlineShopWeb.Application.Commands.Coupon;
 using OnlineShopWeb.Application.Commands.Transaction;
 using OnlineShopWeb.Application.Interfaces;
@@ -12,14 +11,14 @@ using System.Text.Json;
 namespace OnlineShopWeb.Controllers;
 
 public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCodeCommandHandler,
-    IAddTransactionCommandHandler addTransactionCommandHandler, IMessageSession _messageSession)
+    IAddTransactionCommandHandler addTransactionCommandHandler,
+    IAddTransactionMessagesCommandHandler addTransactionMessagesCommandHandler)
     : Controller
 {
     [HttpGet]
     public IActionResult Index()
     {
         var model = GetShoppingCart();
-
         return View(model);
     }
 
@@ -149,7 +148,7 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            var command = new AddTransactionCommandReview(HttpContext.User.Identity.Name,
+            var command = new AddTransactionCommandHttp(HttpContext.User.Identity.Name,
                     model.ShoppingCartModelList.MapToDtoListAdapter(),
                     model.CouponModelList is null ? null : model.CouponModelList.MapToDtoList());
 
@@ -163,11 +162,16 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
                     AddCouponsDto = model.CouponModelList is null ? null : model.CouponModelList.MapToServiceBusList()
                 };
 
-                await _messageSession.Publish(commandToNserviceBus);
+                var commandToMessages = new AddTransactionCommandMessages(HttpContext.Name().ToString(),
+                    model.ShoppingCartModelList.MapToServiceBusList(),
+                    model.CouponModelList is null ? null : model.CouponModelList.MapToServiceBusList());
+
+                addTransactionMessagesCommandHandler.Handle(commandToMessages);
+                //await _messageSession.Publish(commandToNserviceBus);
             }
             else
             {
-                var commandToAdapter = new AddTransactionCommandReview(HttpContext.User.Identity.Name,
+                var commandToAdapter = new AddTransactionCommandHttp(HttpContext.User.Identity.Name,
                     model.ShoppingCartModelList.MapToDtoListAdapter(),
                     model.CouponModelList is null ? null : model.CouponModelList.MapToDtoList());
 
@@ -186,73 +190,6 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
             return RedirectToAction("Index", "Transaction");
         }
     }
-
-    //private void CreateTransferObject(ShoppingCartListModel model, ref List<AddProductInCartDto> productsInCartList,
-    //    ref List<AddTransactionToCouponsDto> couponDtoList,
-    //    ref AddTransactionDto transactionDto,
-    //    ref List<OnlineShopWeb.Messages.V1.AddProductInCartDto> serviceBusProductInCartDto,
-    //    ref List<OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto> serviceBusCouponsDto,
-    //    ref OnlineShopWeb.Messages.V1.Events.AddTransactionEvent serviceBusTransactionDto)
-    //{
-
-
-    //    foreach (var element in model.ShoppingCartModelList)
-    //    {
-    //        serviceBusProductInCartDto.Add(new OnlineShopWeb.Messages.V1.AddProductInCartDto
-    //        {
-    //            Count = element.Count,
-    //            ProductId = element.ProductModelInCart.ProductId.Value,
-    //            PricePerProduct = element.ProductModelInCart.Price,
-    //        });
-    //    }
-
-    //    foreach (var element in model.ShoppingCartModelList)
-    //    {
-    //        productsInCartList.Add(new AddProductInCartDto
-    //        {
-    //            Count = element.Count,
-    //            ProductId = element.ProductModelInCart.ProductId.Value,
-    //            PricePerProduct = element.ProductModelInCart.Price,
-    //        });
-    //    }
-
-    //    foreach (var element in model.CouponModelList)
-    //    {
-    //        couponDtoList.Add(new AddTransactionToCouponsDto
-    //        {
-    //            CouponId = element.CouponId.Value,
-    //            Code = element.Code,
-    //            AmountOfDiscount = element.AmountOfDiscount,
-    //            TypeOfDiscountDto = (TypeOfDiscountDto)element.TypeOfDiscount
-    //        });
-    //    }
-
-    //    foreach (var element in model.CouponModelList)
-    //    {
-    //        serviceBusCouponsDto.Add(new OnlineShopWeb.Messages.V1.AddTransactionToCouponsDto
-    //        {
-    //            CouponId = element.CouponId.Value,
-    //            Code = element.Code,
-    //            AmountOfDiscount = element.AmountOfDiscount,
-    //            TypeOfDiscountDto = (OnlineShopWeb.Messages.V1.TypeOfDiscountDto)element.TypeOfDiscount
-    //        });
-    //    }
-
-    //    transactionDto = new AddTransactionDto
-    //    {
-    //        UserId = HttpContext.Name(),
-    //        AddProductsInCartDto = productsInCartList,
-    //        AddCouponsDto = couponDtoList
-    //    };
-
-    //    //transactionDto.UserId = HttpContext.Name();
-    //    //transactionDto.AddProductsInCartDto = serviceBusProductInCartDto;
-    //    //transactionDto.AddCouponsDto = serviceBusCouponsDto;
-
-    //    serviceBusTransactionDto.UserId = HttpContext.Name();
-    //    serviceBusTransactionDto.AddProductsInCartDto = serviceBusProductInCartDto;
-    //    serviceBusTransactionDto.AddCouponsDto = serviceBusCouponsDto;
-    //}
 
     private ShoppingCartListModel GetShoppingCart()
     {

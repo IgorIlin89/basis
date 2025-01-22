@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GrpcAdapter\GrpcAdapter.csproj" />
     <ProjectReference Include="..\OnlineShopWeb.Domain\OnlineShopWeb.Domain.csproj" />
     <ProjectReference Include="..\OnlineShopWeb.NServiceBus.Messages\OnlineShopWeb.Messages.csproj" />
     <ProjectReference Include="..\ProductCouponAdapter\ProductCouponAdapter.csproj" />

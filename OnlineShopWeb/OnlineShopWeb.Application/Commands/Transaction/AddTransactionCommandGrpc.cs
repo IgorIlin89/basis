@@ -1,8 +1,8 @@
-﻿using TransactionAdapter.DTOs;
+﻿using GrpcAdapter.DTOs;
 
 namespace OnlineShopWeb.Application.Commands.Transaction;
 
-public record AddTransactionCommandReview(string UserId,
+public record AddTransactionCommandGrpc(string UserId,
     List<ProductInCartDto> ProductInCartDtos,
     List<TransactionToCouponsDto>? TransactionToCouponsDto)
 {
