@@ -4,5 +4,5 @@ namespace OnlineShopWeb.Application.Interfaces;
 
 public interface IAddTransactionMessagesCommandHandler
 {
-    void Handle(AddTransactionCommandMessages command);
+    void Handle(AddTransactionCommandMessages command, CancellationToken cancellationToken);
 }

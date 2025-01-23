@@ -7,7 +7,8 @@ namespace OnlineShopWeb.Application.Handlers.Transaction;
 public class AddTransactionMessagesCommandHandler(IMessageSession _messageSession)
     : IAddTransactionMessagesCommandHandler
 {
-    public async void Handle(AddTransactionCommandMessages command)
+    public async void Handle(AddTransactionCommandMessages command,
+        CancellationToken cancellationToken)
     {
         var message = new OnlineShopWeb.Messages.V1.Events.AddTransactionEvent
         {
@@ -17,6 +18,6 @@ public class AddTransactionMessagesCommandHandler(IMessageSession _messageSessio
             AddCouponsDto = command.TransactionToCouponsDto
         };
 
-        await _messageSession.Publish(message, new CancellationToken());
+        await _messageSession.Publish(message, cancellationToken);
     }
 }

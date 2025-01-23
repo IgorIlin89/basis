@@ -124,71 +124,77 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
     }
 
     [HttpGet]
-    public async Task<ActionResult> BuyAllItemsInShoppingCartServiceBus()
+    public async Task<ActionResult> BuyAllItemsInShoppingCartGrpc(
+    CancellationToken cancellationToken)
     {
-        return await BuyAllItemsInShoppingCart(true);
-    }
-
-    [HttpGet]
-    public async Task<ActionResult> BuyAllItemsInShoppingCartSynchronous()
-    {
-        return await BuyAllItemsInShoppingCart(false);
-    }
-
-    [HttpGet]
-    public async Task<ActionResult> BuyAllItemsInShoppingCart(Boolean nServiceBus)
-    {
-        var model = GetShoppingCart();
-
         if (ModelState.IsValid)
         {
+            var model = GetShoppingCart();
+
+            if (model.ShoppingCartModelList.Count == 0)
+            {
+                ModelState.AddModelError("model", "You have selected no products to buy");
+                return View("Views/ShoppingCart/Index.cshtml", model);
+            }
+        }
+
+        return await BuyAllItemsInShoppingCart(false, cancellationToken);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> BuyAllItemsInShoppingCartServiceBus(
+        CancellationToken cancellationToken)
+    {
+        if (ModelState.IsValid)
+        {
+            var model = GetShoppingCart();
+
             if (model.ShoppingCartModelList.Count == 0)
             {
                 ModelState.AddModelError("model", "You have selected no products to buy");
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            var command = new AddTransactionCommandHttp(HttpContext.User.Identity.Name,
-                    model.ShoppingCartModelList.MapToDtoListAdapter(),
-                    model.CouponModelList is null ? null : model.CouponModelList.MapToDtoList());
-
-            if (nServiceBus)
-            {
-                var commandToNserviceBus = new OnlineShopWeb.Messages.V1.Events.AddTransactionEvent
-                {
-                    UserId = HttpContext.Name(),
-                    PaymentDate = DateTimeOffset.UtcNow,
-                    AddProductsInCartDto = model.ShoppingCartModelList.MapToServiceBusList(),
-                    AddCouponsDto = model.CouponModelList is null ? null : model.CouponModelList.MapToServiceBusList()
-                };
-
-                var commandToMessages = new AddTransactionCommandMessages(HttpContext.Name().ToString(),
+            var commandToMessages = new AddTransactionCommandMessages(HttpContext.Name().ToString(),
                     model.ShoppingCartModelList.MapToServiceBusList(),
                     model.CouponModelList is null ? null : model.CouponModelList.MapToServiceBusList());
 
-                addTransactionMessagesCommandHandler.Handle(commandToMessages);
-                //await _messageSession.Publish(commandToNserviceBus);
-            }
-            else
+            addTransactionMessagesCommandHandler.Handle(commandToMessages, cancellationToken);
+        }
+
+        HttpContext.AppendShoppingCart(new ShoppingCartListModel());
+
+        return RedirectToAction("Index", "Transaction");
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> BuyAllItemsInShoppingCartHttp(
+        CancellationToken cancellationToken)
+    {
+        if (ModelState.IsValid)
+        {
+            var model = GetShoppingCart();
+
+            if (model.ShoppingCartModelList.Count == 0)
             {
-                var commandToAdapter = new AddTransactionCommandHttp(HttpContext.User.Identity.Name,
+                ModelState.AddModelError("model", "You have selected no products to buy");
+                return View("Views/ShoppingCart/Index.cshtml", model);
+            }
+
+            var commandToAdapter = new AddTransactionCommandHttp(HttpContext.User.Identity.Name,
                     model.ShoppingCartModelList.MapToDtoListAdapter(),
                     model.CouponModelList is null ? null : model.CouponModelList.MapToDtoList());
 
-                await addTransactionCommandHandler.Handle(commandToAdapter);
-            }
+            await addTransactionCommandHandler.Handle(commandToAdapter, cancellationToken);
 
-            //TODO
-            //with transaction SEPA-Lastschrift
-
-            HttpContext.AppendShoppingCart(new ShoppingCartListModel());
-
-            return RedirectToAction("Index", "Transaction");
         }
-        else
-        {
-            return RedirectToAction("Index", "Transaction");
-        }
+
+        HttpContext.AppendShoppingCart(new ShoppingCartListModel());
+
+        return RedirectToAction("Index", "Transaction");
+
+        //TODO
+        //with transaction SEPA-Lastschrift
     }
 
     private ShoppingCartListModel GetShoppingCart()
