@@ -14,7 +14,11 @@ public class HttpClientWrapper : IHttpClientWrapper
     {
         Uri uri = CreateUri(apiUrl, basePath, args);
 
-        var response = await _httpClient.GetAsync(uri);
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+        //httpRequestMessage.Headers.Add("x-api-key", "1234567890!");
+
+        var response = await _httpClient.SendAsync(httpRequestMessage);
 
         if (response.StatusCode != HttpStatusCode.OK)
         {

@@ -5,13 +5,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>8.0.0-v1</Version>
+    <Version>8.0.0-v2</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NServiceBus" Version="8.1.6" />
     <PackageReference Include="NServiceBus.Persistence.Sql" Version="7.0.4" />
     <PackageReference Include="NServiceBus.Transport.SqlServer" Version="7.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OnlineShopWeb.Domain\OnlineShopWeb.Domain.csproj" />
   </ItemGroup>
 
 </Project>

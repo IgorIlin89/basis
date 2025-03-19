@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using OnlineShopWeb.Controllers;
+
+namespace OnlineShopWeb.Authentication;
 
 public class AuthorizeControllerModelConvention : IControllerModelConvention
 {

@@ -11,7 +11,6 @@ public class CouponUpdateCommandHandler(IProductCouponAdapter productCouponAdapt
     {
         var couponToUpdate = new Domain.Coupon
         {
-            Id = command.CouponId,
             Code = command.Code,
             AmountOfDiscount = command.AmountOfDiscount,
             TypeOfDiscount = command.TypeOfDiscount.MapToDomain(),

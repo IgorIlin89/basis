@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CouponCache;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Application.Commands.Coupon;
 using OnlineShopWeb.Application.Interfaces;
 using OnlineShopWeb.TransferObjects.Mapping;
@@ -10,14 +13,19 @@ public class CouponController(IGetCouponListCommandHandler couponListCommandHand
     ICouponDeleteCommandHandler couponDeleteCommandHandler,
     IGetCouponByIdCommandHandler getCouponByIdCommandHandler,
     ICouponUpdateCommandHandler couponUpdateCommandHandler,
-    ICouponAddCommandHandler couponAddCommandHandler) : Controller
+    ICouponAddCommandHandler couponAddCommandHandler,
+    ICache cache,
+    IAuthenticationService authenticationService) : Controller
 {
     [HttpGet]
     public async Task<ActionResult> Index()
     {
-        var command = new GetCouponListCommand();
-        var couponList = await couponListCommandHandler.Handle(command);
+        var token = await authenticationService.GetTokenAsync(HttpContext,
+            OpenIdConnectDefaults.AuthenticationScheme,
+            "access_token");
+        //var couponList = await couponListCommandHandler.Handle();
 
+        var couponList = await cache.GetCoupons();
 
         return View(couponList.MapToModelList());
     }
@@ -31,25 +39,28 @@ public class CouponController(IGetCouponListCommandHandler couponListCommandHand
     }
 
     [HttpGet]
-    public async Task<ActionResult> Details(int id)
+    public async Task<ActionResult> Details(int id,
+        CancellationToken cancellationToken)
     {
+        //TODO
+        //GrpcTransactionAdapter, GrpcCouponAdapter usw.
+        //CancellationToken
+
         var command = new GetCouponByIdCommand(id.ToString());
-        var coupon = await getCouponByIdCommandHandler.Handle(command);
+        var coupon = await getCouponByIdCommandHandler.Handle(command, cancellationToken);
 
         return View(coupon.MapToModel());
     }
 
     [HttpGet]
-    public async Task<IActionResult> Update(int? id)
+    public async Task<IActionResult> Update(int id,
+        CancellationToken cancellationToken)
     {
         var model = new CouponModel();
 
-        if (id is not null)
-        {
-            var command = new GetCouponByIdCommand(id.ToString());
-            var coupon = await getCouponByIdCommandHandler.Handle(command);
-            model = coupon.MapToModel();
-        }
+        var command = new GetCouponByIdCommand(id.ToString());
+        var coupon = await getCouponByIdCommandHandler.Handle(command, cancellationToken);
+        model = coupon.MapToModel();
 
         return View(model);
     }

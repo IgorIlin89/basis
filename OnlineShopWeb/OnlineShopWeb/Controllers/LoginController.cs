@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Application.Commands.User;
 using OnlineShopWeb.Application.Interfaces;
 using OnlineShopWeb.Domain;
-using OnlineShopWeb.TransferObjects.Dtos;
 using OnlineShopWeb.TransferObjects.Models;
 using System.Security.Claims;
 
 namespace OnlineShopWeb.Controllers;
 
 public class LoginController(IGetUserByEmailCommandHandler getUserByEmailCommandHandler,
-    IUserAddCommandHandler userAddCommandHandler) : Controller
+    IUserAddCommandHandler userAddCommandHandler,
+    IAuthenticationService authenticationService) : Controller
 {
     [HttpGet]
     public IActionResult SignIn()
@@ -67,6 +68,10 @@ public class LoginController(IGetUserByEmailCommandHandler getUserByEmailCommand
 
     public async Task<IActionResult> Logout()
     {
+        var token = await authenticationService.GetTokenAsync(HttpContext,
+            OpenIdConnectDefaults.AuthenticationScheme,
+            "access_token");
+
         await HttpContext.SignOutAsync();
         return RedirectToAction("SignIn", "Login");
     }
@@ -75,45 +80,5 @@ public class LoginController(IGetUserByEmailCommandHandler getUserByEmailCommand
     public IActionResult Register()
     {
         return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Register(RegistrationModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            if (model.Password == model.RepeatPassword)
-            {
-                var userToAdd = new UserDto
-                {
-                    EMail = model.EMail,
-                    Password = model.Password.Trim(),
-                    GivenName = model.FirstName,
-                    Surname = model.LastName,
-                    Age = model.Age,
-                    Country = model.Country,
-                    City = model.City,
-                    Street = model.Street,
-                    HouseNumber = model.HouseNumber,
-                    PostalCode = model.PostalCode
-                };
-
-                var command = new UserAddCommand(model.EMail, model.FirstName, model.LastName, model.Age,
-                    model.Country, model.City, model.Street, model.HouseNumber, model.PostalCode, model.Password);
-
-                var userToLogin = await userAddCommandHandler.Handle(command);
-
-                await SignIn(userToLogin);
-
-                return RedirectToAction("Index", "User");
-            }
-            else
-            {
-                ModelState.AddModelError("Model", "The repeated Password was not the same");
-                return View(model);
-            }
-        }
-
-        return View(model);
     }
 }

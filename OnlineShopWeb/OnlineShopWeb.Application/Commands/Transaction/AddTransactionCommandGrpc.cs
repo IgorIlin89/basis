@@ -1,10 +1,10 @@
-﻿using GrpcAdapter.DTOs;
+﻿using OnlineShopWeb.Domain;
 
 namespace OnlineShopWeb.Application.Commands.Transaction;
 
 public record AddTransactionCommandGrpc(string UserId,
-    List<ProductInCartDto> ProductInCartDtos,
-    List<TransactionToCouponsDto>? TransactionToCouponsDto)
+    IReadOnlyCollection<ProductInCart> ProductsInCart,
+    IReadOnlyCollection<OnlineShopWeb.Domain.TransactionCoupon> TransactionCoupons)
 {
 
 }

@@ -4,5 +4,5 @@ namespace OnlineShopWeb.Application.Interfaces;
 
 public interface IGetTransactionListCommandHandler
 {
-    Task<ICollection<Domain.Transaction>> Handle(GetTransactionListCommand command);
+    Task<IReadOnlyCollection<Domain.Transaction>> Handle(GetTransactionListCommand command);
 }

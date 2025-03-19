@@ -1,0 +1,13 @@
+version: '3.4'
+ 
+services:
+  igor-onlineshopweb:
+   image: ${DOCKER_REGISTRY-}onlineshop-web
+   environment:
+     - ASPNETCORE_ENVIRONMENT=k8s
+     - ASPNETCORE_URLS=http://+:80
+   ports:
+     - "5500:80"
+   build:
+     context: .
+     dockerfile: OnlineShopWeb/Dockerfile

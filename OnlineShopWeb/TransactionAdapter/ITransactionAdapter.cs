@@ -1,11 +1,10 @@
 ﻿using OnlineShopWeb.Domain;
-using TransactionAdapter.DTOs;
 
 namespace TransactionAdapter;
 
 public interface ITransactionAdapter
 {
-    Task<Transaction> AddTransaction(string userId, List<ProductInCartDto> productInCartDtoList,
-        List<TransactionToCouponsDto>? couponDtoList);
-    Task<List<Transaction>> GetTransactionList(string id);
+    Task<Transaction> AddTransaction(string userId, IReadOnlyCollection<ProductInCart> productInCartList,
+        IReadOnlyCollection<TransactionCoupon> couponList);
+    Task<IReadOnlyCollection<Transaction>> GetTransactionList(string id);
 }

@@ -13,7 +13,7 @@ public class CouponAddCommandHandler(IProductCouponAdapter productCouponAdapter)
         {
             Code = command.Code,
             AmountOfDiscount = command.AmountOfDiscount,
-            TypeOfDiscount = command.TypeOfDiscount.MapToDomain(),
+            TypeOfDiscount = command.TypeOfDiscountCoupon.MapToDomain(),
             MaxNumberOfUses = command.MaxNumberOfUses,
             StartDate = command.StartDate,
             EndDate = command.EndDate

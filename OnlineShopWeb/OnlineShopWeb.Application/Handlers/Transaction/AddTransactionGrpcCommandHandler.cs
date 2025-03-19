@@ -1,9 +1,19 @@
-﻿//namespace OnlineShopWeb.Application.Handlers.Transaction;
+﻿using GrpcAdapter;
+using OnlineShopWeb.Application.Commands.Transaction;
+using OnlineShopWeb.Application.Interfaces;
 
-//public class AddTransactionGrpcCommandHandler//(IGrpcAdapter grpcAdater)
-//{
-//    public async Task<Domain.Transaction> Handle(AddTransactionGrpcCommandHandler command)
-//    {
-//        var result =
-//    }
-//}
+namespace OnlineShopWeb.Application.Handlers.Transaction;
+
+public class AddTransactionGrpcCommandHandler(IInputAdapterGrpc GrpcAdapter) : IAddTransactionGrpcCommandHandler
+{
+    public async Task<Domain.Transaction> Handle(AddTransactionCommandGrpc command,
+        CancellationToken cancellationToken)
+    {
+        var result = await GrpcAdapter.AddTransactionRpc(
+            command.UserId,
+            command.ProductsInCart.ToList(),
+            command.TransactionCoupons);
+
+        return result;
+    }
+}

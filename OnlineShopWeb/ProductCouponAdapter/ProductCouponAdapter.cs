@@ -52,13 +52,13 @@ public class ProductCouponAdapter : IProductCouponAdapter
     public async Task<Coupon> GetCouponById(string id)
     {
         var received = await _httpClientWrapper.Get<CouponDto>(_apiUrl, "coupon", id);
-        return received.MapToDto();
+        return received.MapToDomain();
     }
 
     public async Task<Coupon> GetCouponByCode(string couponCode)
     {
         var received = await _httpClientWrapper.Get<CouponDto>(_apiUrl, "coupon", "code", couponCode);
-        return received.MapToDto();
+        return received.MapToDomain();
     }
 
     public async Task<Product> ProductUpdate(Product product)
@@ -69,8 +69,8 @@ public class ProductCouponAdapter : IProductCouponAdapter
 
     public async Task<Coupon> CouponUpdate(Coupon coupon)
     {
-        var received = await _httpClientWrapper.Put<CouponDto, CouponDto>(_apiUrl, "coupon", coupon.MapToCoupon());
-        return received.MapToDto();
+        var received = await _httpClientWrapper.Put<CouponDto, CouponDto>(_apiUrl, "coupon", coupon.MapToDto());
+        return received.MapToDomain();
     }
 
     public async Task<Product> ProductAdd(Product product)
@@ -81,7 +81,7 @@ public class ProductCouponAdapter : IProductCouponAdapter
 
     public async Task<Coupon> CouponAdd(Coupon coupon)
     {
-        var received = await _httpClientWrapper.Post<CouponDto, CouponDto>(_apiUrl, "coupon", coupon.MapToCoupon());
-        return received.MapToDto();
+        var received = await _httpClientWrapper.Post<CouponDto, CouponDto>(_apiUrl, "coupon", coupon.MapToDto());
+        return received.MapToDomain();
     }
 }

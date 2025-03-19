@@ -16,13 +16,15 @@ public class ProductController(IGetProductByIdCommandHandler getProductByIdComma
     [HttpGet]
     public async Task<ActionResult> Index()
     {
+        // var accessToken = await HttpContext.Authentication.GetTokenAsync("access_token");
+
         var command = new GetProductListCommand();
         var productList = await getProductListCommandHandler.Handle(command);
 
-        //TODO change view to model List<ProductModel>
-        //TODO first check ireadonly, dictionary etc. from todoapp
         var model = new ProductListModel();
         model.ProductModelList = productList.MapToModelList();
+
+        //TODO Tests have to mock HttpClient, GRPC Client, NServiceBus, basically all outpuut adapters+
 
         return View(model);
     }

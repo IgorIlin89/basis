@@ -5,6 +5,15 @@ namespace OnlineShopWeb.TransferObjects.Mapping;
 
 public static class TransactionMapping
 {
+
+    public static OnlineShopWeb.Domain.ProductInCart MapToDomain(this ProductInCartModel model)
+        => OnlineShopWeb.Domain.ProductInCart.Create(model.ProductModelInCart.ProductId.Value,
+            model.Count,
+            model.ProductModelInCart.Price);
+    public static List<OnlineShopWeb.Domain.ProductInCart> MapToDomainList(
+        this List<ProductInCartModel> model)
+        => model.Select(o => o.MapToDomain()).ToList();
+
     public static TransactionModel MapToModel(this Transaction transaction) =>
         new TransactionModel
         {
@@ -14,38 +23,36 @@ public static class TransactionMapping
             FinalPrice = transaction.FinalPrice
         };
 
-    public static ICollection<TransactionModel> MapToModelList(this ICollection<Transaction> transactionList) =>
+    public static IReadOnlyCollection<TransactionModel> MapToModelList(this IReadOnlyCollection<Transaction> transactionList) =>
         transactionList.Select(o => o.MapToModel()).ToList();
 
-    public static Messages.V1.AddProductInCartDto MapToDtoMessages(this ProductInCartModel model) =>
-        new Messages.V1.AddProductInCartDto
+    public static GrpcAdapter.DTOs.AddProductInCartDto MapToDtoGrpc(this ProductInCartModel model) =>
+        new GrpcAdapter.DTOs.AddProductInCartDto
         {
             Count = model.Count,
             ProductId = model.ProductModelInCart.ProductId is null ? 0 : model.ProductModelInCart.ProductId.Value,
-            PricePerProduct = model.ProductModelInCart.Price,
         };
 
-    public static IReadOnlyCollection<Messages.V1.AddProductInCartDto> MapToDtoMessagesList(
-        this IReadOnlyCollection<ProductInCartModel> modelList) =>
-        modelList.Select(o => o.MapToDtoMessages()).ToList();
+    public static ICollection<GrpcAdapter.DTOs.AddProductInCartDto> MapToDtoGrpcList(
+        this ICollection<ProductInCartModel> modelList) =>
+        modelList.Select(o => o.MapToDtoGrpc()).ToList();
 
     public static TransactionAdapter.DTOs.ProductInCartDto MapToDtoTransactionAdapter(this ProductInCartModel model) =>
         new TransactionAdapter.DTOs.ProductInCartDto
         {
             Count = model.Count,
             ProductId = model.ProductModelInCart.ProductId is null ? 0 : model.ProductModelInCart.ProductId.Value,
-            PricePerProduct = model.ProductModelInCart.Price,
         };
 
-    public static List<TransactionAdapter.DTOs.ProductInCartDto> MapToDtoListAdapter(
+    public static List<TransactionAdapter.DTOs.ProductInCartDto> MapToDtoListHttp(
         this IReadOnlyCollection<ProductInCartModel> modelList) =>
         modelList.Select(o => o.MapToDtoTransactionAdapter()).ToList();
 
-    public static OnlineShopWeb.Messages.V1.TypeOfDiscountDto MapToDtoMessages(this TypeOfDiscountModel model) =>
+    public static OnlineShopWeb.Messages.V1.TypeOfDiscountDto MapToDtoMessages(this TypeOfDiscountCouponModel model) =>
         model switch
         {
-            TypeOfDiscountModel.Percentage => OnlineShopWeb.Messages.V1.TypeOfDiscountDto.Percentage,
-            TypeOfDiscountModel.Total => OnlineShopWeb.Messages.V1.TypeOfDiscountDto.Total,
+            TypeOfDiscountCouponModel.Percentage => OnlineShopWeb.Messages.V1.TypeOfDiscountDto.Percentage,
+            TypeOfDiscountCouponModel.Total => OnlineShopWeb.Messages.V1.TypeOfDiscountDto.Total,
             _ => throw new NotImplementedException(),
         };
 
@@ -70,30 +77,57 @@ public static class TransactionMapping
         ProductId = model.ProductModelInCart.ProductId is null ? 0 : model.ProductModelInCart.ProductId.Value
     };
 
-
-    //TODO If ICollection here error occurs
     public static List<OnlineShopWeb.Messages.V1.AddProductInCartDto> MapToServiceBusList(
         this List<ProductInCartModel> modelList) =>
         modelList.Select(o => o.MapToServiceBus()).ToList();
 
-    public static TransactionAdapter.DTOs.TypeOfDiscountDto MapToDtoAdapter(this TypeOfDiscountModel model) =>
+    public static TransactionAdapter.DTOs.TypeOfDiscountTransactionCouponDto MapToDtoAdapter(this TypeOfDiscountCouponModel model) =>
         model switch
         {
-            TypeOfDiscountModel.Percentage => TransactionAdapter.DTOs.TypeOfDiscountDto.Percentage,
-            TypeOfDiscountModel.Total => TransactionAdapter.DTOs.TypeOfDiscountDto.Total,
+            TypeOfDiscountCouponModel.Percentage => TransactionAdapter.DTOs.TypeOfDiscountTransactionCouponDto.Percentage,
+            TypeOfDiscountCouponModel.Total => TransactionAdapter.DTOs.TypeOfDiscountTransactionCouponDto.Total,
             _ => throw new NotImplementedException()
         };
 
-    public static TransactionAdapter.DTOs.TransactionToCouponsDto MapToDtoAdapter(this CouponModel model) =>
-        new TransactionAdapter.DTOs.TransactionToCouponsDto
+    public static GrpcAdapter.DTOs.TypeOfDiscountDto MapToDtoGrpcAdapter(this TypeOfDiscountCouponModel model) =>
+        model switch
+        {
+            TypeOfDiscountCouponModel.Percentage => GrpcAdapter.DTOs.TypeOfDiscountDto.Percentage,
+            TypeOfDiscountCouponModel.Total => GrpcAdapter.DTOs.TypeOfDiscountDto.Total,
+            _ => throw new NotImplementedException()
+        };
+
+    ///
+    public static GrpcAdapter.DTOs.TransactionToCouponsDto MapToDtoGrpcAdapter(this CouponModel model) =>
+        new GrpcAdapter.DTOs.TransactionToCouponsDto
         {
             CouponId = model.CouponId is null ? 0 : model.CouponId.Value,
             Code = model.Code,
             AmountOfDiscount = model.AmountOfDiscount,
-            TypeOfDiscountDto = model.TypeOfDiscount.MapToDtoAdapter()
+            TypeOfDiscountDto = model.TypeOfDiscount.MapToDtoGrpcAdapter()
         };
 
-    public static List<TransactionAdapter.DTOs.TransactionToCouponsDto> MapToDtoList(
+    public static List<GrpcAdapter.DTOs.TransactionToCouponsDto>? MapToDtoListGrpc(
         this List<CouponModel> modelList) =>
-        modelList is null ? null : modelList.Select(o => o.MapToDtoAdapter()).ToList();
+        modelList?.Select(o => o.MapToDtoGrpcAdapter()).ToList();
+
+    public static TypeOfDiscountTransactionCoupon MapToDomain(this TypeOfDiscountTransactionCouponModel model)
+        => model switch
+        {
+            TypeOfDiscountTransactionCouponModel.Percentage => TypeOfDiscountTransactionCoupon.Percentage,
+            TypeOfDiscountTransactionCouponModel.Total => TypeOfDiscountTransactionCoupon.Total,
+            _ => throw new NotImplementedException(),
+        };
+
+    public static TransactionCoupon MapToDomain(this TransactionCouponModel model)
+        => new TransactionCoupon
+        {
+            Code = model.Code,
+            AmountOfDiscount = model.AmountOfDiscount,
+            TypeOfDiscount = model.TypeOfDiscount.MapToDomain(),
+        };
+
+    public static IReadOnlyCollection<TransactionCoupon> MapToDomainList(this IReadOnlyCollection<TransactionCouponModel> list)
+        => list.Select(o => o.MapToDomain()).ToList();
+
 }

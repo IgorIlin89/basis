@@ -1,51 +1,62 @@
 ﻿using OnlineShopWeb.Domain;
 using OnlineShopWeb.TransferObjects.Models;
-using ProductCouponAdapter.DTOs;
 
 namespace OnlineShopWeb.TransferObjects.Mapping;
 
 public static class CouponMapping
 {
-    public static CouponModel MapToModel(this CouponDto couponDto) =>
-        new CouponModel
+    public static Coupon MapToDomain(this CouponModel model)
+        => new Coupon
         {
-            CouponId = couponDto.CouponId,
-            Code = couponDto.Code,
-            AmountOfDiscount = couponDto.AmountOfDiscount,
-            TypeOfDiscount = couponDto.TypeOfDiscount.MapToModel(),
-            MaxNumberOfUses = couponDto.MaxNumberOfUses,
-            StartDate = couponDto.StartDate,
-            EndDate = couponDto.EndDate,
+            Code = model.Code,
+            AmountOfDiscount = model.AmountOfDiscount,
+            TypeOfDiscount = model.TypeOfDiscount.MapToDomain(),
+            MaxNumberOfUses = model.MaxNumberOfUses,
+            StartDate = model.StartDate,
+            EndDate = model.EndDate,
         };
+
+    public static List<Coupon> MapToDomainList(this List<CouponModel> model)
+        => model.Select(o => o.MapToDomain()).ToList();
 
     public static IReadOnlyCollection<CouponModel> MapToModelList(this IReadOnlyCollection<Coupon> couponList) =>
         couponList.Select(o => o.MapToModel()).ToList();
 
-    public static TypeOfDiscountModel MapToModel(this TypeOfDiscount typeOfDiscount) =>
+    public static TypeOfDiscountCouponModel MapToModel(this Domain.TypeOfDiscountCoupon typeOfDiscount) =>
         typeOfDiscount switch
         {
-            TypeOfDiscount.Percentage => TypeOfDiscountModel.Percentage,
-            TypeOfDiscount.Total => TypeOfDiscountModel.Total
+            Domain.TypeOfDiscountCoupon.Percentage => TypeOfDiscountCouponModel.Percentage,
+            Domain.TypeOfDiscountCoupon.Total => TypeOfDiscountCouponModel.Total,
+            _ => throw new NotImplementedException()
         };
 
-    public static TypeOfDiscountModel MapToModel(this TypeOfDiscountDto typeOfDiscount) =>
+    public static TypeOfDiscountCouponModel MapToModel(this ProductCouponAdapter.DTOs.TypeOfDiscountCoupon typeOfDiscount) =>
     typeOfDiscount switch
     {
-        TypeOfDiscountDto.Percentage => TypeOfDiscountModel.Percentage,
-        TypeOfDiscountDto.Total => TypeOfDiscountModel.Total
+        ProductCouponAdapter.DTOs.TypeOfDiscountCoupon.Percentage => TypeOfDiscountCouponModel.Percentage,
+        ProductCouponAdapter.DTOs.TypeOfDiscountCoupon.Total => TypeOfDiscountCouponModel.Total,
+        _ => throw new NotImplementedException()
     };
 
-    public static TypeOfDiscountDto MapToDto(this TypeOfDiscountModel typeOfDiscount) =>
+    public static ProductCouponAdapter.DTOs.TypeOfDiscountCoupon MapToDto(this TypeOfDiscountCouponModel typeOfDiscount) =>
     typeOfDiscount switch
     {
-        TypeOfDiscountModel.Percentage => TypeOfDiscountDto.Percentage,
-        TypeOfDiscountModel.Total => TypeOfDiscountDto.Total
+        TypeOfDiscountCouponModel.Percentage => ProductCouponAdapter.DTOs.TypeOfDiscountCoupon.Percentage,
+        TypeOfDiscountCouponModel.Total => ProductCouponAdapter.DTOs.TypeOfDiscountCoupon.Total,
+        _ => throw new NotImplementedException()
+    };
+
+    public static OnlineShopWeb.Domain.TypeOfDiscountCoupon MapToDomain(this TypeOfDiscountCouponModel typeOfDiscount) =>
+    typeOfDiscount switch
+    {
+        TypeOfDiscountCouponModel.Percentage => OnlineShopWeb.Domain.TypeOfDiscountCoupon.Percentage,
+        TypeOfDiscountCouponModel.Total => OnlineShopWeb.Domain.TypeOfDiscountCoupon.Total,
+        _ => throw new NotImplementedException()
     };
 
     public static CouponModel MapToModel(this Coupon coupon) =>
         new CouponModel
         {
-            CouponId = coupon.Id,
             Code = coupon.Code,
             AmountOfDiscount = coupon.AmountOfDiscount,
             TypeOfDiscount = coupon.TypeOfDiscount.MapToModel(),

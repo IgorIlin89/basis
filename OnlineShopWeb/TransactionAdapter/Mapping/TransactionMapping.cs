@@ -5,126 +5,88 @@ namespace TransactionAdapter.Mapping;
 
 public static class TransactionMapping
 {
-    public static User MapToUser(this UserDto userDto) =>
-    new User
-    {
-        Id = userDto.UserId is null ? 0 : userDto.UserId.Value,
-        EMail = userDto.EMail,
-        Password = userDto.Password,
-        GivenName = userDto.GivenName,
-        Surname = userDto.Surname,
-        Age = userDto.Age,
-        Country = userDto.Country,
-        City = userDto.City,
-        Street = userDto.Street,
-        HouseNumber = userDto.HouseNumber,
-        PostalCode = userDto.PostalCode,
-    };
-
-    public static Coupon MapToDto(this CouponDto couponDto) =>
-        new Coupon
+    public static TransactionCoupon MapToDomain(this TransactionCouponDto couponDto) =>
+        new TransactionCoupon
         {
-            Id = couponDto.CouponId.Value,
             Code = couponDto.Code,
             AmountOfDiscount = couponDto.AmountOfDiscount,
-            TypeOfDiscount = (TypeOfDiscount)couponDto.TypeOfDiscount,
-            MaxNumberOfUses = couponDto.MaxNumberOfUses,
-            StartDate = couponDto.StartDate,
-            EndDate = couponDto.EndDate
+            TypeOfDiscount = couponDto.TypeOfDiscountDto.MapToDomain(),
         };
 
-    public static ICollection<Coupon> MapToCouponList(this ICollection<CouponDto> couponDtoList) =>
-        couponDtoList.Select(o => o.MapToDto()).ToList();
+    public static IReadOnlyCollection<TransactionCoupon> MapToDomain(this IReadOnlyCollection<TransactionCouponDto> couponDtoList) =>
+        couponDtoList.Select(o => o.MapToDomain()).ToList();
 
-    //Here question concerning product inclusion
-    public static ProductInCart MapToProductInCart(this ProductInCartDto productInCartDto) =>
-        new ProductInCart
-        {
-            Id = productInCartDto.Id,
-            Count = productInCartDto.Count,
-            ProductId = productInCartDto.ProductId,
-            TransactionId = productInCartDto.TransactionId
-        };
+    public static ProductInCart MapToDomain(this ProductInCartDto productInCartDto)
+        => OnlineShopWeb.Domain.ProductInCart.Create(
+            productInCartDto.ProductId,
+            productInCartDto.Count,
+            productInCartDto.PricePerProduct);
 
-    public static ICollection<ProductInCart> MapToProductInCartList(this ICollection<ProductInCartDto> productsInCartCollection) =>
-        productsInCartCollection.Select(o => o.MapToProductInCart()).ToList();
 
-    public static Transaction MapToTransaction(this TransactionObjectsDto transactionObjectsDto) =>
-        new Transaction
-        {
-            Id = transactionObjectsDto.Id,
-            UserId = transactionObjectsDto.UserId,
-            //User = transactionObjectsDto.User is 0 ? 0 : transactionObjectsDto.User.MapToUser(),
-            PaymentDate = transactionObjectsDto.PaymentDate,
-            FinalPrice = transactionObjectsDto.FinalPrice,
-            Coupons = transactionObjectsDto.Coupons is null ? null : transactionObjectsDto.Coupons.MapToCouponList(),
-            //ProductsInCart = transactionObjectsDto.ProductsInCart.MapToProductInCartList()
-        };
+    public static IReadOnlyCollection<ProductInCart> MapToDomain(this IReadOnlyCollection<ProductInCartDto> productsInCartCollection) =>
+        productsInCartCollection.Select(o => o.MapToDomain()).ToList();
 
-    public static List<Transaction> MapToTransaction(this List<TransactionObjectsDto> transactionDtoList) =>
-        transactionDtoList.Select(o => o.MapToTransaction()).ToList();
+    public static Transaction MapToDomain(this TransactionDto transactionDto) =>
+        Transaction.Create(
+            transactionDto.Id,
+            transactionDto.UserId,
+            transactionDto.PaymentDate,
+            transactionDto.FinalPrice,
+            transactionDto.ProductsInCartDto.MapToDomain(),
+            transactionDto.CouponsDto.MapToDomain());
 
-    //public static AddTransactionToCouponsDto MapToDto(this AddTransactionToCoupons addTransactionToCoupons) =>
-    //    new AddTransactionToCouponsDto
-    //    {
-    //        CouponId = addTransactionToCoupons.CouponId,
-    //        Code = addTransactionToCoupons.Code,
-    //        AmountOfDiscount = addTransactionToCoupons.AmountOfDiscount,
-    //        TypeOfDiscountDto = (TypeOfDiscountDto)addTransactionToCoupons.TypeOfDiscountDto
-    //    };
+    public static IReadOnlyCollection<Transaction> MapToDomain(this IReadOnlyCollection<TransactionDto> transactionDtoList) =>
+        transactionDtoList.Select(o => o.MapToDomain()).ToList();
 
-    //public static ICollection<AddTransactionToCouponsDto> MapToDtoList(this ICollection<AddTransactionToCoupons> list) =>
-    //    list.Select(o => o.MapToDto()).ToList();
-
-    public static TypeOfDiscount MapToDomain(this TypeOfDiscountDto dto) =>
+    public static TypeOfDiscountTransactionCoupon MapToDomain(this TypeOfDiscountTransactionCouponDto dto) =>
         dto switch
         {
-            TypeOfDiscountDto.Percentage => TypeOfDiscount.Percentage,
-            TypeOfDiscountDto.Total => TypeOfDiscount.Total,
+            TypeOfDiscountTransactionCouponDto.Percentage => TypeOfDiscountTransactionCoupon.Percentage,
+            TypeOfDiscountTransactionCouponDto.Total => TypeOfDiscountTransactionCoupon.Total,
             _ => throw new NotImplementedException()
         };
 
-    //public static AddTransactionToCoupons MapToDomain(this AddTransactionToCouponsDto dto) =>
-    //new AddTransactionToCoupons
-    //{
-    //    CouponId = dto.CouponId,
-    //    Code = dto.Code,
-    //    AmountOfDiscount = dto.AmountOfDiscount,
-    //    TypeOfDiscountDto = dto.TypeOfDiscountDto.MapToDomain()
-    //};
+    public static TypeOfDiscountTransactionCouponDto MapToDto(this TypeOfDiscountTransactionCoupon dto) =>
+        dto switch
+        {
+            TypeOfDiscountTransactionCoupon.Percentage => TypeOfDiscountTransactionCouponDto.Percentage,
+            TypeOfDiscountTransactionCoupon.Total => TypeOfDiscountTransactionCouponDto.Total,
+            _ => throw new NotImplementedException()
+        };
 
-    //public static ICollection<AddTransactionToCoupons> MapToDomainList(this ICollection<AddTransactionToCouponsDto> dtoList) =>
-    //    dtoList.Select(o => o.MapToDomain()).ToList();
+    public static TransactionCouponDto MapToDto(this TransactionCoupon domain)
+        => new TransactionCouponDto
+        {
+            Code = domain.Code,
+            AmountOfDiscount = domain.AmountOfDiscount,
+            TypeOfDiscountDto = domain.TypeOfDiscount.MapToDto()
+        };
 
-    //public static AddProductInCartDto MapToDto(this AddProductInCart addProductInCart) =>
-    //    new AddProductInCartDto
-    //    {
-    //        Count = addProductInCart.Count,
-    //        ProductId = addProductInCart.ProductId,
-    //        PricePerProduct = addProductInCart.PricePerProduct,
-    //        TransactionId = addProductInCart.TransactionId
-    //    };
+    public static IReadOnlyCollection<TransactionCouponDto> MapToDto(this IReadOnlyCollection<TransactionCoupon> domain)
+        => domain.Select(o => o.MapToDto()).ToList();
 
-    //public static ICollection<AddProductInCartDto> MapToDtoList(this ICollection<AddProductInCart> list) =>
-    //    list.Select(o => o.MapToDto()).ToList();
+    public static ProductInCartDto MapToDto(this ProductInCart domain)
+        => new ProductInCartDto
+        {
+            ProductId = domain.ProductId,
+            PricePerProduct = domain.PricePerProduct,
+            Count = domain.Count,
+        };
 
-    //public static AddProductInCart MapToDomain(this AddProductInCartDto addProductInCart) =>
-    //new AddProductInCart
-    //{
-    //    Count = addProductInCart.Count,
-    //    ProductId = addProductInCart.ProductId,
-    //    PricePerProduct = addProductInCart.PricePerProduct,
-    //    TransactionId = addProductInCart.TransactionId
-    //};
+    public static IReadOnlyCollection<ProductInCartDto> MapToDto(this IReadOnlyCollection<ProductInCart> domainList)
+        => domainList.Select(o => o.MapToDto()).ToList();
 
-    //public static ICollection<AddProductInCart> MapToDomainList(this ICollection<AddProductInCartDto> dtoList) =>
-    //    dtoList.Select(o => o.MapToDomain()).ToList();
+    public static TransactionDto MapToDto(this Transaction domain)
+        => new TransactionDto
+        {
+            Id = domain.Id,
+            UserId = domain.UserId,
+            PaymentDate = domain.PaymentDate,
+            FinalPrice = domain.FinalPrice,
+            ProductsInCartDto = domain.ProductsInCart.MapToDto(),
+            CouponsDto = domain.Coupons.MapToDto()
+        };
 
-    //public static AddTransactionDto MapToDto(this AddTransaction addTransaction) =>
-    //    new AddTransactionDto
-    //    {
-    //        UserId = addTransaction.UserId,
-    //        AddProductsInCartDto = addTransaction.AddProductsInCart.MapToDtoList(),
-    //        AddCouponsDto = addTransaction.AddCoupons.MapToDtoList()
-    //    };
+    public static IReadOnlyCollection<TransactionDto> MapToDto(this IReadOnlyCollection<Transaction> domainList)
+        => domainList.Select(o => o.MapToDto()).ToList();
 }

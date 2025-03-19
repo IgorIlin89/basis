@@ -42,6 +42,6 @@ public static class UserMapping
         };
     }
 
-    public static ICollection<UserModel> MapToModelList(this ICollection<User> userList) =>
+    public static IReadOnlyCollection<UserModel> MapToModelList(this IReadOnlyCollection<User> userList) =>
         userList.Select(o => o.MapToModel()).ToList();
 }

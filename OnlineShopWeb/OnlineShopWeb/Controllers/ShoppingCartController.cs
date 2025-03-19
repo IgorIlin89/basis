@@ -12,7 +12,8 @@ namespace OnlineShopWeb.Controllers;
 
 public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCodeCommandHandler,
     IAddTransactionCommandHandler addTransactionCommandHandler,
-    IAddTransactionMessagesCommandHandler addTransactionMessagesCommandHandler)
+    IAddTransactionMessagesCommandHandler addTransactionMessagesCommandHandler,
+    IAddTransactionGrpcCommandHandler addTransactionGrpcCommandHandler)
     : Controller
 {
     [HttpGet]
@@ -91,27 +92,10 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
                 validationError = "The CouponCode does not exist"
             });
         }
-        else if ((coupon.StartDate > DateTime.Now || coupon.EndDate < DateTime.Now))
-        {
-            return Ok(new
-            {
-                isValid = false,
-                validationError = "The CouponCode is expired"
-            });
-        }
-        else if (coupon.MaxNumberOfUses == 0)
-        {
-            return Ok(new
-            {
-                isValid = false,
-                validationError = "All coupons with this code are allready taken"
-            });
-        }
 
         return Ok(new
         {
             isValid = true,
-            couponId = coupon.Id,
             amountOfDiscount = coupon.AmountOfDiscount,
             typeOfDiscount = coupon.TypeOfDiscount
         });
@@ -127,6 +111,7 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
     public async Task<ActionResult> BuyAllItemsInShoppingCartGrpc(
     CancellationToken cancellationToken)
     {
+        //Convert to Domain object
         if (ModelState.IsValid)
         {
             var model = GetShoppingCart();
@@ -136,9 +121,18 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
                 ModelState.AddModelError("model", "You have selected no products to buy");
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
+
+            var command = new AddTransactionCommandGrpc(HttpContext.Name().ToString(),
+                model.ShoppingCartModelList.MapToDomainList(),
+                model.CouponModelList.MapToDomainList()
+                    );
+
+            await addTransactionGrpcCommandHandler.Handle(command, cancellationToken);
         }
 
-        return await BuyAllItemsInShoppingCart(false, cancellationToken);
+        HttpContext.AppendShoppingCart(new ShoppingCartListModel());
+
+        return RedirectToAction("Index", "Transaction");
     }
 
     [HttpGet]
@@ -155,9 +149,9 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            var commandToMessages = new AddTransactionCommandMessages(HttpContext.Name().ToString(),
-                    model.ShoppingCartModelList.MapToServiceBusList(),
-                    model.CouponModelList is null ? null : model.CouponModelList.MapToServiceBusList());
+            var commandToMessages = new AddTransactionCommandHttp(HttpContext.Name().ToString(),
+                    model.ShoppingCartModelList.MapToDomainList(),
+                    model.CouponModelList.MapToDomainList());
 
             addTransactionMessagesCommandHandler.Handle(commandToMessages, cancellationToken);
         }
@@ -182,11 +176,10 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
             }
 
             var commandToAdapter = new AddTransactionCommandHttp(HttpContext.User.Identity.Name,
-                    model.ShoppingCartModelList.MapToDtoListAdapter(),
-                    model.CouponModelList is null ? null : model.CouponModelList.MapToDtoList());
+                    model.ShoppingCartModelList.MapToDomainList(),
+                    model.CouponModelList.MapToDomainList());
 
             await addTransactionCommandHandler.Handle(commandToAdapter, cancellationToken);
-
         }
 
         HttpContext.AppendShoppingCart(new ShoppingCartListModel());

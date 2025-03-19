@@ -7,6 +7,27 @@ namespace OnlineShopWeb.TransferObjects.Mapping;
 public static class ProductMapping
 {
 
+    public static OnlineShopWeb.Domain.Product MapToDomain(this ProductModel model)
+        => new OnlineShopWeb.Domain.Product
+        {
+            Id = model.ProductId is null ? 0 : model.ProductId.Value,
+            Name = model.Name,
+            Producer = model.Producer,
+            Category = model.Category.MapToDomain(),
+            Picture = model.Picture,
+            Price = model.Price,
+        };
+
+    public static OnlineShopWeb.Domain.ProductCategory MapToDomain(this ProductCategoryModel model)
+        => model switch
+        {
+            ProductCategoryModel.Cleaning => ProductCategory.Cleaning,
+            ProductCategoryModel.Sweets => ProductCategory.Sweets,
+            ProductCategoryModel.Food => ProductCategory.Food,
+            ProductCategoryModel.Electronics => ProductCategory.Electronics,
+            _ => throw new NotImplementedException()
+        };
+
     public static ProductCategoryModel MapToModel(this ProductCategory productCategory) =>
         productCategory switch
         {

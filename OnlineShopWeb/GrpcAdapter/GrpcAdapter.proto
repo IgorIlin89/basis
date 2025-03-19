@@ -1,32 +1,60 @@
 syntax = "proto3";
 
-//import "google/protobuf/wrappers.proto";
+import "google/protobuf/wrappers.proto";
  
 option csharp_namespace = "GrpcTestService.Contracts";
 
 package GrpcAdapter;
 
-service AddTransactionService {
+service TransactionService {
   rpc AddTransactionRpc (AddTransaction) returns (Transaction);
+  rpc GetTransactionsRpc (GetTransactions) returns (TransactionList);
 }
-//work with List<T>, accepts IEnumerable in strings
+
 message AddTransaction {
-  int32 id=1;
-  string addProductsInCartDto=2;
-  string addCouponsDto=3;
-  //bytes  
+  int32 userId=1;
+  repeated ProductInCart productsInCart=2;
+  repeated TransactionCoupon Coupons=3;
 }
 
 message Transaction{
 	int32 id=1;
     int32 userId=2;
-    string user=3;
-    string paymentDate=4;
-    int64 finalPrice=5;
-    string coupons=6;
-    repeated string productsInCart=7;
+    string paymentDate=3;
+    string finalPrice=4;
+    repeated ProductInCart productsInCart=5;
+    repeated TransactionCoupon couponList=6;
+
+}
+
+message TransactionList{
+    repeated Transaction transactionList = 1;
+}
+
+message ProductInCart{
+    int32 count=1;
+    int32 productId=2;
+    string pricePerProduct=3;
+}
+
+message TransactionCoupon{
+    string code = 2;
+    double amountOfDiscount = 3;
+    int32 typeOfDiscount = 4;
 }
 
 message GetTransactions {
-  string message = 1;
+  string userId = 1;
 }
+
+// google.protobuff.StringValue for nullable
+
+//message Coupon{
+//    int32 id = 1;
+//    string code = 2;
+//    double amountOfDiscount = 3;
+//    int32 typeOfDiscount = 4;
+//    google.protobuf.Int64Value maxNumberOfUses = 5;
+//    string startDate = 6;
+//    string endDate = 7;
+//}

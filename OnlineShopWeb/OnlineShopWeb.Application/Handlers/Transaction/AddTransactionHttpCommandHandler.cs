@@ -11,7 +11,8 @@ public class AddTransactionHttpCommandHandler(ITransactionAdapter transactionAda
         CancellationToken cancellationToken)
     {
         var result = await transactionAdapter.AddTransaction(command.UserId,
-            command.ProductInCartDtos, command.TransactionToCouponsDto);
+            command.ProductInCarts, command.Coupons);
+
         return result;
     }
 }

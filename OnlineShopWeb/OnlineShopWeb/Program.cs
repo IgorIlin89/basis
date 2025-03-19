@@ -1,7 +1,10 @@
+using CouponCache;
+using GrpcAdapter;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Data.SqlClient;
 using NServiceBus;
-using OnlineShopWeb.Messages.V1.Events;
+using OnlineShopWeb.Messages.V2.Events;
 using OnlineShopWeb.Misc;
 using Serilog;
 using Utility.Misc.Options;
@@ -37,32 +40,66 @@ try
     builder.Services.AddScoped<Utility.Misc.IHttpClientWrapper, Utility.Misc.HttpClientWrapper>().
         AddScoped<UserAdapter.IUserAdapter, UserAdapter.UserAdapter>().
         AddScoped<ProductCouponAdapter.IProductCouponAdapter, ProductCouponAdapter.ProductCouponAdapter>().
-        AddScoped<TransactionAdapter.ITransactionAdapter, TransactionAdapter.TransactionAdapter>().
+        AddScoped<TransactionAdapter.ITransactionAdapter, TransactionAdapter.TransactionAdapterHttp>().
+        AddGrpcAdapter("TransactionAdapter", builder.Configuration).
         AddApplication();
 
-    builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-        .AddCookie(options =>
-        {
-            options.Cookie.HttpOnly = true;
-            //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            options.Cookie.SameSite = SameSiteMode.Lax;
-            options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.LoginPath = "/Login/SignIn/";
-            options.AccessDeniedPath = "/Error/Forbidden/";
-        });
+    //background service
+    builder.Services.AddHostedService<CacheBackgroundService>();
+    builder.Services.AddCache();
+
+    ////COOKIE AUTHENTICATION
+    //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    //    .AddCookie(options =>
+    //    {
+    //        options.Cookie.HttpOnly = true;
+    //        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    //        options.Cookie.SameSite = SameSiteMode.Lax;
+    //        options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+    //        options.LoginPath = "/Login/SignIn/";
+    //        options.AccessDeniedPath = "/Error/Forbidden/";
+    //    });
 
 
-    builder.Services.AddAuthorization(o =>
+    //builder.Services.AddAuthorization(o =>
+    //{
+    //    o.AddPolicy(AuthorizeControllerModelConvention.PolicyName, policy =>
+    //    {
+    //        policy.RequireAuthenticatedUser();
+    //    });
+    //});
+
+    //builder.Services.AddMvc(options =>
+    //{
+    //    options.Conventions.Add(new AuthorizeControllerModelConvention());
+    //});
+
+    builder.Services.AddAuthentication(options =>
     {
-        o.AddPolicy(AuthorizeControllerModelConvention.PolicyName, policy =>
-        {
-            policy.RequireAuthenticatedUser();
-        });
-    });
-
-    builder.Services.AddMvc(options =>
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+    })
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
-        options.Conventions.Add(new AuthorizeControllerModelConvention());
+    })
+    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+    {
+        options.Authority = "https://localhost:7073";
+
+        options.ClientId = "aspnetcoreweb";
+        options.ClientSecret = "aspnetwebsecret";
+        options.ResponseType = "code";
+
+        options.SaveTokens = true;
+
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+        options.Scope.Add("offline_access");
+        options.Scope.Add("sampleaspnetscope");
+
+        options.MapInboundClaims = false; // Don't rename claim types
+        options.GetClaimsFromUserInfoEndpoint = true;
     });
 
     var loggingConfiguration = new LoggerConfiguration()
@@ -131,10 +168,18 @@ try
     {
         app.UseExceptionHandler("/Home/Error");
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-        app.UseHsts();
+
+        //app.UseHsts();
     }
 
-    app.UseHttpsRedirection();
+
+    if (app.Environment.IsDevelopment())
+    {
+        //TODO
+        //
+        //app.UseHttpsRedirection();
+    }
+
     app.UseDefaultFiles();
     app.UseStaticFiles();
 
@@ -142,12 +187,13 @@ try
 
     app.UseAuthentication();
     app.UseAuthorization();
+    app.MapControllers().RequireAuthorization();
 
     app.UseSession();
 
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Product}/{action=Index}/{id?}");
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
     app.UseSerilogRequestLogging();
 

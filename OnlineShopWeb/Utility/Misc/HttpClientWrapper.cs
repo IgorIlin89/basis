@@ -11,11 +11,18 @@ public class HttpClientWrapper : IHttpClientWrapper
 {
     private readonly HttpClient _httpClient = new HttpClient();
 
-    public async Task<T> Get<T>(string apiUrl, string basePath, params string[] args)
+    public async Task<T> Get<T>(string apiUrl, string basePath,
+        string[] args)
     {
+        //TODO
+        ////CancellationToken cancellationToken, 
         Uri uri = CreateUri(apiUrl, basePath, args);
 
-        var response = await _httpClient.GetAsync(uri);
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+        httpRequestMessage.Headers.Add("x-api-key", "1234567890!");
+
+        var response = await _httpClient.SendAsync(httpRequestMessage);
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
@@ -25,11 +32,35 @@ public class HttpClientWrapper : IHttpClientWrapper
         return await response.Content.ReadFromJsonAsync<T>();
     }
 
+    public async Task<T> GetAsync<T>(string apiUrl, string basePath,
+        CancellationToken cancellationToken,
+        string[] args)
+    {
+        Uri uri = CreateUri(apiUrl, basePath, args);
+
+        var response = await _httpClient.GetAsync(uri, cancellationToken);
+
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            await CreateDomainExceptionFromErrorResponse(uri, response);
+        }
+
+        return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
+    }
+
     public async void Delete(string apiUrl, string basePath, params string[] args)
     {
         var list = new List<string>();
         Uri uri = CreateUri(apiUrl, basePath, args);
         var response = await _httpClient.DeleteAsync(uri);
+    }
+
+    public async void DeleteAsync(string apiUrl, string basePath,
+        CancellationToken cancellationToken, params string[] args)
+    {
+        var list = new List<string>();
+        Uri uri = CreateUri(apiUrl, basePath, args);
+        var response = await _httpClient.DeleteAsync(uri, cancellationToken);
     }
 
     public async Task<TOut> Post<TIn, TOut>(string apiUrl, string basePath, TIn postObject, params string[] args)
@@ -41,6 +72,15 @@ public class HttpClientWrapper : IHttpClientWrapper
         return result;
     }
 
+    public async Task<TOut> PostAsync<TIn, TOut>(string apiUrl, string basePath,
+        CancellationToken cancellationToken, TIn postObject, params string[] args)
+    {
+        var uri = CreateUri(apiUrl, basePath, args);
+        var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Post);
+
+        var result = await response.Content.ReadFromJsonAsync<TOut>(cancellationToken);
+        return result;
+    }
 
     public async Task<TOut> Put<TIn, TOut>(string apiUrl, string basePath, TIn postObject, params string[] args)
     {
@@ -50,6 +90,17 @@ public class HttpClientWrapper : IHttpClientWrapper
         var result = await response.Content.ReadFromJsonAsync<TOut>();
         return result;
     }
+
+    public async Task<TOut> PutAsync<TIn, TOut>(string apiUrl, string basePath,
+        CancellationToken cancellationToken, TIn postObject, params string[] args)
+    {
+        var uri = CreateUri(apiUrl, basePath, args);
+        var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Put);
+
+        var result = await response.Content.ReadFromJsonAsync<TOut>();
+        return result;
+    }
+
     private Uri CreateUri(string apiUrl, string basePath, string[] args)
     {
         var list = new List<string>();
@@ -97,9 +148,18 @@ public class HttpClientWrapper : IHttpClientWrapper
     private async Task CreateDomainExceptionFromErrorResponse(Uri uri, HttpResponseMessage response)
     {
         //var errorResponse = await response.Content.ReadAsStringAsync();
-        var errorDto = JsonSerializer.Deserialize<ErrorDto>(await response.Content.ReadAsStringAsync());
-
-        throw new DomainException($"Exception in '{uri}'. Statuscode: '{response.StatusCode}'." +
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            var errorDto = JsonSerializer.Deserialize<ErrorDto>(await response.Content.ReadAsStringAsync());
+            throw new DomainException($"Exception in '{uri}'. Statuscode: '{response.StatusCode}'." +
             $" Response: '{errorDto.Message}' ExceptionType: '{errorDto.StatusCode}'");
+        }
+        else
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            throw new DomainException($"Exception in '{uri}'. Statuscode: '{response.StatusCode}'." +
+            $" Response: '{content}'");
+        }
+
     }
 }

@@ -30,6 +30,7 @@ public static class ServiceCollectionExtension
             AddScoped<IProductUpdateCommandHandler, ProductUpdateCommandHandler>().
             AddScoped<IAddTransactionCommandHandler, AddTransactionHttpCommandHandler>().
             AddScoped<IGetTransactionListCommandHandler, GetTransactionListCommandHandler>().
-            AddScoped<IAddTransactionMessagesCommandHandler, AddTransactionMessagesCommandHandler>();
+            AddScoped<IAddTransactionMessagesCommandHandler, AddTransactionMessagesCommandHandler>().
+            AddScoped<IAddTransactionGrpcCommandHandler, AddTransactionGrpcCommandHandler>();
     }
 }
