@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Application.Commands.User;
 using OnlineShopWeb.Application.Interfaces;
 using OnlineShopWeb.Domain;
-using OnlineShopWeb.TransferObjects.Models;
+using OnlineShopWeb.Models;
 using System.Security.Claims;
+using Utility.Misc;
 
 namespace OnlineShopWeb.Controllers;
 
 public class LoginController(IGetUserByEmailCommandHandler getUserByEmailCommandHandler,
     IUserAddCommandHandler userAddCommandHandler,
-    IAuthenticationService authenticationService) : Controller
+    IAuthenticationService authenticationService,
+    IHttpClientWrapper httpClientWrapper) : Controller
 {
     [HttpGet]
     public IActionResult SignIn()
@@ -73,12 +76,44 @@ public class LoginController(IGetUserByEmailCommandHandler getUserByEmailCommand
             "access_token");
 
         await HttpContext.SignOutAsync();
-        return RedirectToAction("SignIn", "Login");
+
+        var redirectUri = "https://localhost:7195";
+
+        return Redirect($"https://localhost:7073/connect/endsession?id_token_hint={token}&post_logout_redirect_uri={redirectUri}");
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public IActionResult Register()
     {
         return View();
+    }
+
+    [AllowAnonymous]
+    [HttpPost]
+    public async Task<IActionResult> Register(RegistrationModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            if (model.Password == model.RepeatPassword)
+            {
+
+                var command = new UserAddCommand(model.EMail, model.FirstName, model.LastName, model.Age,
+                    model.Country, model.City, model.Street, model.HouseNumber, model.PostalCode, model.Password);
+
+                var userToLogin = await userAddCommandHandler.Handle(command);
+
+                //await SignIn(userToLogin);
+
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ModelState.AddModelError("Model", "The repeated Password was not the same");
+                return View(model);
+            }
+        }
+
+        return View(model);
     }
 }

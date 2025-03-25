@@ -71,13 +71,13 @@ async function deleteCouponCode(couponCode) {
 
 async function deleteProduct(productId) {
 
-    let realProductId = productId.substring(2);
-
     const response = await fetch('/ShoppingCart/DeleteFromShoppingCart', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/ json'
     },
-        body: realProductId
+        body: productId
     })
+
+    location.reload();
 }

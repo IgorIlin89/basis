@@ -13,11 +13,9 @@
     <ProjectReference Include="..\OnlineShopWeb.Application\OnlineShopWeb.Application.csproj" />
     <ProjectReference Include="..\OnlineShopWeb.Domain\OnlineShopWeb.Domain.csproj" />
     <ProjectReference Include="..\OnlineShopWeb.NServiceBus.Messages\OnlineShopWeb.Messages.csproj" />
+    <ProjectReference Include="..\UserAdapter\UserAdapter.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\js\ShoppingCartIndex.js" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.13" />

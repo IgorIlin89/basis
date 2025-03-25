@@ -1,7 +1,7 @@
 ﻿namespace Utility.Misc.Options;
 
-public class ApiUserOptions
+public class ApiUserOptions : IApiOptions
 {
-    public required string ApiUrl { get; set; }
-    public required string ApiKey { get; set; }
+    public string ApiUrl { get; set; } = null!;
+    public string ApiKey { get; set; } = null!;
 }

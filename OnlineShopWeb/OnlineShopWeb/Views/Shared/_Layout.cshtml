@@ -22,17 +22,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         @{
-                            if (Context.User.Identity.IsAuthenticated is not true)
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="SignIn">Sign In</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Userlist</a>
-                                </li>
-                            }
-                            else
+                            if (Context.User.Identity.IsAuthenticated is true)
                             {
 
                                 <li class="nav-item">
@@ -52,7 +42,7 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Transaction" asp-action="Index">Transaction History</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Update">Edit yout Data</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Update" asp-route-id="@Context.GetUserId()">Edit your Data</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Password" asp-action="ChangePassword">Change Password</a>

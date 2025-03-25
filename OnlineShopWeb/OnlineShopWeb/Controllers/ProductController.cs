@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Application.Commands.Product;
 using OnlineShopWeb.Application.Interfaces;
-using OnlineShopWeb.TransferObjects.Mapping;
-using OnlineShopWeb.TransferObjects.Models;
-using OnlineShopWeb.TransferObjects.Models.ListModels;
+using OnlineShopWeb.Models;
+using OnlineShopWeb.Models.Mapping;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -21,8 +20,7 @@ public class ProductController(IGetProductByIdCommandHandler getProductByIdComma
         var command = new GetProductListCommand();
         var productList = await getProductListCommandHandler.Handle(command);
 
-        var model = new ProductListModel();
-        model.ProductModelList = productList.MapToModelList();
+        var model = productList.MapToModelList();
 
         //TODO Tests have to mock HttpClient, GRPC Client, NServiceBus, basically all outpuut adapters+
 

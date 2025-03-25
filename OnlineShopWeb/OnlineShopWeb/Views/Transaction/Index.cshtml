@@ -1,4 +1,4 @@
-﻿@using OnlineShopWeb.TransferObjects.Models.ListModels;
+﻿@using OnlineShopWeb.Models
 @model List<TransactionModel>
 @{
     ViewData["Title"] = "Igors Home Page";
@@ -12,10 +12,8 @@
     <table>
         <tr>
             <th>Final Price</th>
-            <th>Product Name</th>
-            <th>Coupon Id</th>
-            <th>Payment Date</th>
-            <th></th>
+            <th style="padding-left: 10pt">Number of Coupons</th>
+            <th style="padding-left: 10pt">Payment Date</th>
         </tr>
 
         @{
@@ -23,10 +21,8 @@
             {
                 <tr>
                     <td> @(element.FinalPrice)</td>
-                    <td> @(element.ProductNames)</td>
-                    <td> @(element.CouponIds)</td>
+                    <td> @(element.NumberOfCoupons)</td>
                     <td> @(element.PaymentDate)</td>
-                    <td> @(Html.ActionLink("Delete", "Delete", "Transaction", new { id = element.Id }, new { @class = "btn btn-secondary" }))</td>
                 </tr>
             }
 
@@ -36,3 +32,4 @@
 
 
     </table>
+</div>

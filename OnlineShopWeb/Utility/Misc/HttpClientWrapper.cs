@@ -11,16 +11,14 @@ public class HttpClientWrapper : IHttpClientWrapper
 {
     private readonly HttpClient _httpClient = new HttpClient();
 
-    public async Task<T> Get<T>(string apiUrl, string basePath,
+    public async Task<T> Get<T>((string ApiUrl, string ApiKey) connectionData, string basePath,
         string[] args)
     {
-        //TODO
-        ////CancellationToken cancellationToken, 
-        Uri uri = CreateUri(apiUrl, basePath, args);
+        Uri uri = CreateUri(connectionData.ApiUrl, basePath, args);
 
         var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
 
-        httpRequestMessage.Headers.Add("x-api-key", "1234567890!");
+        httpRequestMessage.Headers.Add("x-api-key", connectionData.ApiKey);
 
         var response = await _httpClient.SendAsync(httpRequestMessage);
 
@@ -32,13 +30,32 @@ public class HttpClientWrapper : IHttpClientWrapper
         return await response.Content.ReadFromJsonAsync<T>();
     }
 
-    public async Task<T> GetAsync<T>(string apiUrl, string basePath,
-        CancellationToken cancellationToken,
-        string[] args)
+    public async Task Get(string apiUrl, string basePath,
+       string[] args)
     {
         Uri uri = CreateUri(apiUrl, basePath, args);
 
-        var response = await _httpClient.GetAsync(uri, cancellationToken);
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+        var response = await _httpClient.SendAsync(httpRequestMessage);
+
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            await CreateDomainExceptionFromErrorResponse(uri, response);
+        }
+    }
+
+    public async Task<T> GetAsync<T>((string ApiUrl, string ApiKey) connectionData, string basePath,
+        CancellationToken cancellationToken,
+        string[] args)
+    {
+        Uri uri = CreateUri(connectionData.ApiUrl, basePath, args);
+
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+        httpRequestMessage.Headers.Add("x-api-key", connectionData.ApiKey);
+
+        var response = await _httpClient.SendAsync(httpRequestMessage, cancellationToken);
 
         if (response.StatusCode != HttpStatusCode.OK)
         {
@@ -48,54 +65,63 @@ public class HttpClientWrapper : IHttpClientWrapper
         return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
     }
 
-    public async void Delete(string apiUrl, string basePath, params string[] args)
+    public async void Delete((string ApiUrl, string ApiKey) connectionData, string basePath, params string[] args)
     {
         var list = new List<string>();
-        Uri uri = CreateUri(apiUrl, basePath, args);
-        var response = await _httpClient.DeleteAsync(uri);
+        Uri uri = CreateUri(connectionData.ApiUrl, basePath, args);
+
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+        httpRequestMessage.Headers.Add("x-api-key", connectionData.ApiKey);
+
+        var response = await _httpClient.SendAsync(httpRequestMessage);
     }
 
-    public async void DeleteAsync(string apiUrl, string basePath,
+    public async void DeleteAsync((string ApiUrl, string ApiKey) connectionData, string basePath,
         CancellationToken cancellationToken, params string[] args)
     {
         var list = new List<string>();
-        Uri uri = CreateUri(apiUrl, basePath, args);
-        var response = await _httpClient.DeleteAsync(uri, cancellationToken);
+        Uri uri = CreateUri(connectionData.ApiUrl, basePath, args);
+
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+        httpRequestMessage.Headers.Add("x-api-key", connectionData.ApiKey);
+
+        var response = await _httpClient.SendAsync(httpRequestMessage, cancellationToken);
     }
 
-    public async Task<TOut> Post<TIn, TOut>(string apiUrl, string basePath, TIn postObject, params string[] args)
+    public async Task<TOut> Post<TIn, TOut>((string ApiUrl, string ApiKey) connectionData, string basePath, TIn postObject, params string[] args)
     {
-        var uri = CreateUri(apiUrl, basePath, args);
-        var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Post);
+        var uri = CreateUri(connectionData.ApiUrl, basePath, args);
+        var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Post, connectionData.ApiKey);
 
         var result = await response.Content.ReadFromJsonAsync<TOut>();
         return result;
     }
 
-    public async Task<TOut> PostAsync<TIn, TOut>(string apiUrl, string basePath,
+    public async Task<TOut> PostAsync<TIn, TOut>((string ApiUrl, string ApiKey) connectionData, string basePath,
         CancellationToken cancellationToken, TIn postObject, params string[] args)
     {
-        var uri = CreateUri(apiUrl, basePath, args);
-        var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Post);
+        var uri = CreateUri(connectionData.ApiUrl, basePath, args);
+        var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Post, connectionData.ApiKey);
 
         var result = await response.Content.ReadFromJsonAsync<TOut>(cancellationToken);
         return result;
     }
 
-    public async Task<TOut> Put<TIn, TOut>(string apiUrl, string basePath, TIn postObject, params string[] args)
+    public async Task<TOut> Put<TIn, TOut>((string ApiUrl, string ApiKey) connectionData, string basePath, TIn postObject, params string[] args)
     {
-        var uri = CreateUri(apiUrl, basePath, args);
-        var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Put);
+        var uri = CreateUri(connectionData.ApiUrl, basePath, args);
+
+        var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Put, connectionData.ApiKey);
 
         var result = await response.Content.ReadFromJsonAsync<TOut>();
         return result;
     }
 
-    public async Task<TOut> PutAsync<TIn, TOut>(string apiUrl, string basePath,
+    public async Task<TOut> PutAsync<TIn, TOut>((string ApiUrl, string ApiKey) connectionData, string basePath,
         CancellationToken cancellationToken, TIn postObject, params string[] args)
     {
-        var uri = CreateUri(apiUrl, basePath, args);
-        var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Put);
+        var uri = CreateUri(connectionData.ApiUrl, basePath, args);
+        var response = await CreatePostOrPutRequest(postObject, uri, HttpMethod.Put, connectionData.ApiKey);
 
         var result = await response.Content.ReadFromJsonAsync<TOut>();
         return result;
@@ -113,7 +139,8 @@ public class HttpClientWrapper : IHttpClientWrapper
         return uri;
     }
 
-    private async Task<HttpResponseMessage> CreatePostOrPutRequest<TIn>(TIn postObject, Uri uri, HttpMethod requestType)
+    private async Task<HttpResponseMessage> CreatePostOrPutRequest<TIn>(TIn postObject, Uri uri, HttpMethod requestType,
+        string apiKey)
     {
         var httpBody = new StringContent(
                             JsonSerializer.Serialize(postObject),
@@ -126,6 +153,8 @@ public class HttpClientWrapper : IHttpClientWrapper
             Method = requestType,
             Content = httpBody
         };
+
+        request.Headers.Add("x-api-key", apiKey);
 
         var response = await _httpClient.SendAsync(request);
 

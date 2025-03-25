@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Application.Commands.Coupon;
 using OnlineShopWeb.Application.Interfaces;
-using OnlineShopWeb.TransferObjects.Mapping;
-using OnlineShopWeb.TransferObjects.Models;
+using OnlineShopWeb.Models;
+using OnlineShopWeb.Models.Mapping;
 
 namespace OnlineShopWeb.Controllers;
 // mapping dto to model, and other way around

@@ -1,6 +1,6 @@
 ﻿using OnlineShopWeb.Application.Commands.Transaction;
 using OnlineShopWeb.Application.Interfaces;
-using TransactionAdapter;
+using OnlineShopWeb.Domain.Interfaces;
 
 namespace OnlineShopWeb.Application.Handlers.Transaction;
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShopWeb.Application.Commands.User;
 using OnlineShopWeb.Application.Interfaces;
-using OnlineShopWeb.TransferObjects.Mapping;
-using OnlineShopWeb.TransferObjects.Models;
+using OnlineShopWeb.Models;
+using OnlineShopWeb.Models.Mapping;
 
 namespace OnlineShopWeb.Controllers;
 public class UserController(IGetUserListCommandHandler getUserListCommandHandler,
@@ -40,16 +40,13 @@ public class UserController(IGetUserListCommandHandler getUserListCommandHandler
     }
 
     [HttpGet]
-    public async Task<IActionResult> Update(int? id)
+    public async Task<IActionResult> Update(int id)
     {
         var model = new UserModel();
 
-        if (HttpContext.User.Identity.Name is not null)
-        {
-            var command = new GetUserByIdCommand(id.ToString());
-            var user = await getUserByIdCommandHandler.Handle(command);
-            model = user.MapToModel();
-        }
+        var command = new GetUserByIdCommand(id.ToString());
+        var user = await getUserByIdCommandHandler.Handle(command);
+        model = user.MapToModel();
 
         return View(model);
     }

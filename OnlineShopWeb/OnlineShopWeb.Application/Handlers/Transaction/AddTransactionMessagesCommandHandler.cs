@@ -1,8 +1,8 @@
 ﻿using NServiceBus;
 using OnlineShopWeb.Application.Commands.Transaction;
+using OnlineShopWeb.Application.Handlers.Transaction.Mapping;
 using OnlineShopWeb.Application.Interfaces;
-using OnlineShopWeb.Domain;
-using OnlineShopWeb.Messages.V2;
+using OnlineShopWeb.Domain.Commands;
 
 namespace OnlineShopWeb.Application.Handlers.Transaction;
 
@@ -12,7 +12,7 @@ public class AddTransactionMessagesCommandHandler(IMessageSession _messageSessio
     public async void Handle(AddTransactionCommandHttp command,
         CancellationToken cancellationToken)
     {
-        var addTransactionObject = AddTransaction.Create(
+        var addTransactionObject = AddTransactionCommand.Create(
             Int32.Parse(command.UserId),
             command.ProductInCarts,
             command.Coupons);
@@ -20,8 +20,8 @@ public class AddTransactionMessagesCommandHandler(IMessageSession _messageSessio
         var message = new OnlineShopWeb.Messages.V2.Events.AddTransactionEvent
         {
             UserId = Int32.Parse(command.UserId),
-            AddProductsInCartDto = (List<AddProductInCartDto>)command.ProductInCarts,
-            AddCouponsDto = (List<TransactionCouponDto>)command.Coupons
+            AddProductsInCartDto = command.ProductInCarts.MapToDto(),
+            AddCouponsDto = command.Coupons.MapToDto()
         };
 
         await _messageSession.Publish(message, cancellationToken);

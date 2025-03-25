@@ -1,6 +1,6 @@
 ﻿using OnlineShopWeb.Application.Commands.User;
 using OnlineShopWeb.Application.Interfaces;
-using UserAdapter;
+using OnlineShopWeb.Domain.Interfaces;
 
 namespace OnlineShopWeb.Application.Handlers.User;
 

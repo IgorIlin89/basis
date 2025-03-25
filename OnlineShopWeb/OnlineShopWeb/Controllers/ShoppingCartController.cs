@@ -3,9 +3,8 @@ using OnlineShopWeb.Application.Commands.Coupon;
 using OnlineShopWeb.Application.Commands.Transaction;
 using OnlineShopWeb.Application.Interfaces;
 using OnlineShopWeb.ExtensionMethods;
-using OnlineShopWeb.TransferObjects.Mapping;
-using OnlineShopWeb.TransferObjects.Models;
-using OnlineShopWeb.TransferObjects.Models.ListModels;
+using OnlineShopWeb.Models;
+using OnlineShopWeb.Models.Mapping;
 using System.Text.Json;
 
 namespace OnlineShopWeb.Controllers;
@@ -102,7 +101,7 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
     }
 
     [HttpPost]
-    public IActionResult CouponTableVC([FromBody] ShoppingCartListModel shoppingCart)
+    public IActionResult CouponTableVC([FromBody] ShoppingCartModel shoppingCart)
     {
         return ViewComponent("CouponTable", shoppingCart);
     }
@@ -122,7 +121,7 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            var command = new AddTransactionCommandGrpc(HttpContext.Name().ToString(),
+            var command = new AddTransactionCommandGrpc(HttpContext.GetUserId().ToString(),
                 model.ShoppingCartModelList.MapToDomainList(),
                 model.CouponModelList.MapToDomainList()
                     );
@@ -130,7 +129,7 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
             await addTransactionGrpcCommandHandler.Handle(command, cancellationToken);
         }
 
-        HttpContext.AppendShoppingCart(new ShoppingCartListModel());
+        HttpContext.AppendShoppingCart(new ShoppingCartModel());
 
         return RedirectToAction("Index", "Transaction");
     }
@@ -149,14 +148,14 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            var commandToMessages = new AddTransactionCommandHttp(HttpContext.Name().ToString(),
+            var commandToMessages = new AddTransactionCommandHttp(HttpContext.GetUserId().ToString(),
                     model.ShoppingCartModelList.MapToDomainList(),
                     model.CouponModelList.MapToDomainList());
 
             addTransactionMessagesCommandHandler.Handle(commandToMessages, cancellationToken);
         }
 
-        HttpContext.AppendShoppingCart(new ShoppingCartListModel());
+        HttpContext.AppendShoppingCart(new ShoppingCartModel());
 
         return RedirectToAction("Index", "Transaction");
     }
@@ -175,14 +174,14 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
                 return View("Views/ShoppingCart/Index.cshtml", model);
             }
 
-            var commandToAdapter = new AddTransactionCommandHttp(HttpContext.User.Identity.Name,
+            var commandToAdapter = new AddTransactionCommandHttp(HttpContext.GetUserId().ToString(),
                     model.ShoppingCartModelList.MapToDomainList(),
                     model.CouponModelList.MapToDomainList());
 
             await addTransactionCommandHandler.Handle(commandToAdapter, cancellationToken);
         }
 
-        HttpContext.AppendShoppingCart(new ShoppingCartListModel());
+        HttpContext.AppendShoppingCart(new ShoppingCartModel());
 
         return RedirectToAction("Index", "Transaction");
 
@@ -190,17 +189,17 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
         //with transaction SEPA-Lastschrift
     }
 
-    private ShoppingCartListModel GetShoppingCart()
+    private ShoppingCartModel GetShoppingCart()
     {
         if (HttpContext.GetShoppingCart() is null)
         {
-            var model = new ShoppingCartListModel();
+            var model = new ShoppingCartModel();
             HttpContext.AppendShoppingCart(model);
             return model;
         }
         else
         {
-            return JsonSerializer.Deserialize<ShoppingCartListModel>(HttpContext.GetShoppingCart());
+            return JsonSerializer.Deserialize<ShoppingCartModel>(HttpContext.GetShoppingCart());
         }
     }
 }

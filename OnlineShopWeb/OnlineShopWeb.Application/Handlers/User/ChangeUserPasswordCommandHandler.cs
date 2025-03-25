@@ -1,16 +1,17 @@
 ﻿using OnlineShopWeb.Application.Commands.User;
 using OnlineShopWeb.Application.Interfaces;
-using UserAdapter;
-using UserAdapter.DTOs;
+using OnlineShopWeb.Domain.Commands;
+using OnlineShopWeb.Domain.Interfaces;
 
 namespace OnlineShopWeb.Application.Handlers.User;
 
-public class ChangeUserPasswordCommandHandler(IUserAdapter userAdapter) : IChangeUserPasswordCommandHandler
+public class ChangeUserPasswordCommandHandler(IUserAdapter userAdapter) :
+    IChangeUserPasswordCommandHandler
 {
     public async Task<Domain.User> Handle(ChangeUserPasswordCommand command)
     {
         //TODO make it without DTO into this handler, just user userId and Password
-        var changePasswordDto = new ChangePasswordDto
+        var changePasswordDto = new ChangePasswordCommand
         {
             UserId = command.UserId,
             Password = command.Password

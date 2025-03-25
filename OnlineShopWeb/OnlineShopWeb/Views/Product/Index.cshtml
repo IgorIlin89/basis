@@ -1,6 +1,6 @@
 ﻿@using System.Text.Json
-@using OnlineShopWeb.TransferObjects.Models.ListModels;
-@model ProductListModel
+@using OnlineShopWeb.Models
+@model List<ProductModel>
 @{
     ViewData["Title"] = "Igors Home Page";
 }
@@ -30,7 +30,7 @@
         </tr>
 
         @{
-            foreach (var product in Model.ProductModelList)
+            foreach (var product in Model)
             {
                 <tr>
                     <td> @(product.ProductId)</td>

@@ -2,7 +2,7 @@
 using OnlineShopWeb.Application.Commands.User;
 using OnlineShopWeb.Application.Interfaces;
 using OnlineShopWeb.ExtensionMethods;
-using OnlineShopWeb.TransferObjects.Models;
+using OnlineShopWeb.Models;
 
 namespace OnlineShopWeb.Controllers;
 
@@ -14,7 +14,7 @@ public class PasswordController(IGetUserByIdCommandHandler getUserByIdCommandHan
     {
         var model = new PasswordChangeModel
         {
-            UserId = HttpContext.Name(),
+            UserId = HttpContext.GetUserId(),
         };
 
         return View("Views/User/ChangePassword.cshtml", model);

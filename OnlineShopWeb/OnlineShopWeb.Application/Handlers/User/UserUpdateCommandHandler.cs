@@ -1,6 +1,6 @@
 ﻿using OnlineShopWeb.Application.Commands.User;
 using OnlineShopWeb.Application.Interfaces;
-using UserAdapter;
+using OnlineShopWeb.Domain.Interfaces;
 
 namespace OnlineShopWeb.Application.Handlers.User;
 
@@ -19,6 +19,7 @@ public class UserUpdateCommandHandler(IUserAdapter userAdapter) : IUserUpdateCom
             City = command.City,
             Street = command.Street,
             HouseNumber = command.HouseNumber,
+            PostalCode = command.PostalCode
         };
 
         var result = await userAdapter.UserUpdate(userToUpdate);

@@ -1,6 +1,6 @@
 ﻿using OnlineShopWeb.Application.Commands.Product;
 using OnlineShopWeb.Application.Interfaces;
-using ProductCouponAdapter;
+using OnlineShopWeb.Domain.Interfaces;
 using ProductCouponAdapter.Mapping;
 
 namespace OnlineShopWeb.Application.Handlers.Product;

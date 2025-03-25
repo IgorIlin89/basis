@@ -1,7 +1,7 @@
 ﻿namespace Utility.Misc.Options;
 
-public class ApiTransactionOptions
+public class ApiTransactionOptions : IApiOptions
 {
-    public required string ApiUrl { get; set; }
-    public required string ApiKey { get; set; }
+    public string ApiUrl { get; set; }
+    public string ApiKey { get; set; }
 }
