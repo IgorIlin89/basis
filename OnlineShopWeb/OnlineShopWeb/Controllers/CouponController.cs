@@ -60,7 +60,11 @@ public class CouponController(IGetCouponListCommandHandler couponListCommandHand
 
         var command = new GetCouponByIdCommand(id.ToString());
         var coupon = await getCouponByIdCommandHandler.Handle(command, cancellationToken);
-        model = coupon.MapToModel();
+
+        if (coupon.Code is not null)
+        {
+            model = coupon.MapToModel();
+        }
 
         return View(model);
     }

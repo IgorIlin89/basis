@@ -22,7 +22,7 @@ public class HttpClientWrapper : IHttpClientWrapper
 
         var response = await _httpClient.SendAsync(httpRequestMessage);
 
-        if (response.StatusCode != HttpStatusCode.OK)
+        if ((response.StatusCode != HttpStatusCode.OK) && (basePath != "coupon"))
         {
             await CreateDomainExceptionFromErrorResponse(uri, response);
         }

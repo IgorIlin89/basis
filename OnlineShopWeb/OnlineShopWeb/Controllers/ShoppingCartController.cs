@@ -83,12 +83,28 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
         var command = new GetCouponByCodeCommand(couponCode);
         var coupon = await getCouponByCodeCommandHandler.Handle(command);
 
-        if (coupon == null)
+        if (coupon.Code == null)
         {
             return Ok(new
             {
                 isValid = false,
                 validationError = "The CouponCode does not exist"
+            });
+        }
+        else if (coupon.MaxNumberOfUses < 1)
+        {
+            return Ok(new
+            {
+                isValid = false,
+                validationError = "No coupons with this code left"
+            });
+        }
+        else if (coupon.EndDate < DateTime.Now)
+        {
+            return Ok(new
+            {
+                isValid = false,
+                validationError = "Coupon expired"
             });
         }
 
