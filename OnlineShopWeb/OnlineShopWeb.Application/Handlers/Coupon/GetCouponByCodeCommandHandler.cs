@@ -6,9 +6,11 @@ namespace OnlineShopWeb.Application.Handlers.Coupon;
 
 public class GetCouponByCodeCommandHandler(IProductCouponAdapter productCouponAdapter) : IGetCouponByCodeCommandHandler
 {
-    public async Task<Domain.Coupon> Handle(GetCouponByCodeCommand command)
+    public async Task<Domain.Coupon> Handle(GetCouponByCodeCommand command,
+        CancellationToken cancellationToken)
     {
-        var result = await productCouponAdapter.GetCouponByCode(command.CouponCode);
+        var result = await productCouponAdapter.GetCouponByCode(command.CouponCode,
+            cancellationToken);
         return result;
     }
 }

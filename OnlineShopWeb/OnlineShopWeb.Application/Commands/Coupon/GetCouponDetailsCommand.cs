@@ -1,5 +1,5 @@
 ﻿namespace OnlineShopWeb.Application.Commands.Coupon;
 
-public record GetCouponDetailsCommand(string Id)
+public record GetCouponDetailsCommand(int Id)
 {
 }

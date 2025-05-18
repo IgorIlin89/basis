@@ -78,10 +78,12 @@ public class ShoppingCartController(IGetCouponByCodeCommandHandler getCouponByCo
     }
 
     [HttpPost]
-    public async Task<ActionResult> AddCoupon([FromBody] string couponCode)
+    public async Task<ActionResult> AddCoupon([FromBody] string couponCode,
+        CancellationToken cancellationToken)
     {
         var command = new GetCouponByCodeCommand(couponCode);
-        var coupon = await getCouponByCodeCommandHandler.Handle(command);
+        var coupon = await getCouponByCodeCommandHandler.Handle(command,
+            cancellationToken);
 
         if (coupon.Code == null)
         {

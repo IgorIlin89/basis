@@ -4,5 +4,5 @@ namespace OnlineShopWeb.Application.Interfaces;
 
 public interface IGetCouponByCodeCommandHandler
 {
-    Task<Domain.Coupon> Handle(GetCouponByCodeCommand command);
+    Task<Domain.Coupon> Handle(GetCouponByCodeCommand command, CancellationToken cancellationToken);
 }

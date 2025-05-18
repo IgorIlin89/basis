@@ -12,6 +12,7 @@ namespace OnlineShopWeb.Controllers;
 public class CouponController(IGetCouponListCommandHandler couponListCommandHandler,
     ICouponDeleteCommandHandler couponDeleteCommandHandler,
     IGetCouponByIdCommandHandler getCouponByIdCommandHandler,
+    IGetCouponByCodeCommandHandler getCouponByCodeCommandHandler,
     ICouponUpdateCommandHandler couponUpdateCommandHandler,
     ICouponAddCommandHandler couponAddCommandHandler,
     ICache cache,
@@ -31,23 +32,19 @@ public class CouponController(IGetCouponListCommandHandler couponListCommandHand
     }
 
     [HttpGet]
-    public IActionResult Delete(int id)
+    public IActionResult Delete(string code)
     {
-        var command = new CouponDeleteCommand(id.ToString());
+        var command = new CouponDeleteCommand(code);
         couponDeleteCommandHandler.Handle(command);
         return RedirectToAction("Index", "Coupon");
     }
 
     [HttpGet]
-    public async Task<ActionResult> Details(int id,
+    public async Task<ActionResult> Details(string code,
         CancellationToken cancellationToken)
     {
-        //TODO
-        //GrpcTransactionAdapter, GrpcCouponAdapter usw.
-        //CancellationToken
-
-        var command = new GetCouponByIdCommand(id.ToString());
-        var coupon = await getCouponByIdCommandHandler.Handle(command, cancellationToken);
+        var command = new GetCouponByCodeCommand(code);
+        var coupon = await getCouponByCodeCommandHandler.Handle(command, cancellationToken);
 
         return View(coupon.MapToModel());
     }
@@ -58,7 +55,7 @@ public class CouponController(IGetCouponListCommandHandler couponListCommandHand
     {
         var model = new CouponModel();
 
-        var command = new GetCouponByIdCommand(id.ToString());
+        var command = new GetCouponByIdCommand(id);
         var coupon = await getCouponByIdCommandHandler.Handle(command, cancellationToken);
 
         if (coupon.Code is not null)

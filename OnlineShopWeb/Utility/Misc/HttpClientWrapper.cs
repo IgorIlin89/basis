@@ -45,8 +45,10 @@ public class HttpClientWrapper : IHttpClientWrapper
         }
     }
 
-    public async Task<T> GetAsync<T>((string ApiUrl, string ApiKey) connectionData, string basePath,
+    public async Task<T> GetAsync<T>(
+        (string ApiUrl, string ApiKey) connectionData,
         CancellationToken cancellationToken,
+        string basePath,
         string[] args)
     {
         Uri uri = CreateUri(connectionData.ApiUrl, basePath, args);

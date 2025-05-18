@@ -1,5 +1,5 @@
 ﻿namespace OnlineShopWeb.Application.Commands.Coupon;
 
-public record CouponDeleteCommand(string CouponId)
+public record CouponDeleteCommand(string Code)
 {
 }

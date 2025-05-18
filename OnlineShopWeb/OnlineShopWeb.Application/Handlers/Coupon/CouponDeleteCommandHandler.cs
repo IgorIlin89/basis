@@ -8,6 +8,6 @@ public class CouponDeleteCommandHandler(IProductCouponAdapter productCouponAdapt
 {
     public void Handle(CouponDeleteCommand command)
     {
-        productCouponAdapter.CouponDelete(command.CouponId);
+        productCouponAdapter.CouponDelete(command.Code);
     }
 }

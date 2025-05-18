@@ -7,8 +7,8 @@ public interface IProductCouponAdapter
     void CouponDelete(string id);
     void ProductDelete(string id);
     Task<Product> GetProductById(string id);
-    Task<Coupon> GetCouponById(string id);
-    Task<Coupon> GetCouponByCode(string couponCode);
+    Task<Coupon> GetCouponById(int id);
+    Task<Coupon> GetCouponByCode(string couponCode, CancellationToken cancellationToken);
     Task<Product> ProductUpdate(Product product);
     Task<Coupon> CouponUpdate(Coupon coupon);
     Task<Product> ProductAdd(Product product);

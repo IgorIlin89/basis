@@ -37,9 +37,9 @@ internal class ProductCouponAdapter : IProductCouponAdapter
         _httpClientWrapper.Delete(_connectionData, "product", id);
     }
 
-    public async void CouponDelete(string id)
+    public async void CouponDelete(string code)
     {
-        _httpClientWrapper.Delete(_connectionData, "coupon", id);
+        _httpClientWrapper.Delete(_connectionData, "coupon", code);
     }
 
     public async Task<Product> GetProductById(string id)
@@ -48,15 +48,20 @@ internal class ProductCouponAdapter : IProductCouponAdapter
         return received.MapToProduct();
     }
 
-    public async Task<Coupon> GetCouponById(string id)
+    public async Task<Coupon> GetCouponById(int id)
     {
-        var received = await _httpClientWrapper.Get<CouponDto>(_connectionData, "coupon", id);
+        var received = await _httpClientWrapper.Get<CouponDto>(_connectionData, "coupon", id.ToString());
         return received.MapToDomain();
     }
 
-    public async Task<Coupon> GetCouponByCode(string couponCode)
+    public async Task<Coupon> GetCouponByCode(string couponCode,
+        CancellationToken cancellationToken)
     {
-        var received = await _httpClientWrapper.Get<CouponDto>(_connectionData, "coupon", "code", couponCode);
+        var received = await _httpClientWrapper.GetAsync<CouponDto>(
+            _connectionData,
+            cancellationToken,
+            "coupon",
+            new string[] { "code", couponCode });
         return received.MapToDomain();
     }
 
